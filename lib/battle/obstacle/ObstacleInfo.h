@@ -1,0 +1,30 @@
+/*
+ * ObstacleInfo.cpp, part of VCMI engine
+ *
+ * Authors: listed in file AUTHORS in main folder
+ *
+ * License: GNU General Public License v2.0 or later
+ * Full text of license available in license.txt file, in main folder
+ *
+ */
+#pragma once
+#include "ObstacleArea.h"
+#include "ObstacleSurface.h"
+#include "JsonNode.h"
+
+class JsonNode;
+
+class DLL_LINKAGE ObstacleInfo
+{
+	JsonNode node;
+public:
+	virtual ObstacleArea getArea() const;
+	virtual ObstacleSurface getSurface() const;
+	virtual int32_t getHeight() const;
+	virtual int32_t getWidth() const;
+	virtual int32_t getID() const;
+	virtual std::string getDefName() const;
+
+	ObstacleInfo(JsonNode jsonNode);
+
+};
