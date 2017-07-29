@@ -18,7 +18,7 @@ set(test_SRCS
  		CVcmiTestConfig.cpp
  
 		battle/obstacle/ObstacleArea.cpp
-		battle/obstacle/ObstacleTerrain.cpp
+		battle/obstacle/ObstacleSurface.cpp
 
  		battle/BattleHexTest.cpp
  		battle/CHealthTest.cpp
