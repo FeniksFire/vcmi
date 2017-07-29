@@ -316,11 +316,11 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 
 		auto appropriateAbsoluteObstacle = [&](int id)
 		{
-			return VLC->heroh->absoluteObstacles[id].isAppropriate(curB->terrainType, specialBattlefield);
+			return VLC->heroh->absoluteObstacles[id].getSurface().isAppropriateForSurface(curB->terrainType, static_cast<BFieldType>(specialBattlefield));
 		};
 		auto appropriateUsualObstacle = [&](int id) -> bool
 		{
-			return VLC->heroh->obstacles[id].isAppropriate(curB->terrainType, specialBattlefield);
+			return VLC->heroh->obstacles[id].getSurface().isAppropriateForSurface(curB->terrainType, static_cast<BFieldType>(specialBattlefield));
 		};
 
 		if(r.rand(1,100) <= 40) //put cliff-like obstacle
@@ -337,7 +337,7 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 
 				for(BattleHex blocked : obstPtr->getBlockedTiles())
 					blockedTiles.push_back(blocked);
-				tilesToBlock -= VLC->heroh->absoluteObstacles[obstPtr->ID].blockedTiles.size() / 2;
+				tilesToBlock -= VLC->heroh->absoluteObstacles[obstPtr->ID].getArea().getArea().size() / 2;
 			}
 			catch(RangeGenerator::ExhaustedPossibilities &)
 			{
@@ -353,20 +353,20 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 			{
 				auto tileAccessibility = curB->getAccesibility();
 				const int obid = obidgen.getSuchNumber(appropriateUsualObstacle);
-				const CObstacleInfo &obi = VLC->heroh->obstacles[obid];
+				const ObstacleInfo &obi = VLC->heroh->obstacles[obid];
 
 				auto validPosition = [&](BattleHex pos) -> bool
 				{
-					if(obi.height >= pos.getY())
+					if(obi.getHeight() >= pos.getY())
 						return false;
 					if(pos.getX() == 0)
 						return false;
-					if(pos.getX() + obi.width > 15)
+					if(pos.getX() + obi.getWidth() > 15)
 						return false;
 					if(vstd::contains(blockedTiles, pos))
 						return false;
 
-					for(BattleHex blocked : obi.getBlocked(pos))
+					for(BattleHex blocked : obi.getArea().getMovedArea(pos))
 					{
 						if(tileAccessibility[blocked] == EAccessibility::UNAVAILABLE) //for ship-to-ship battlefield - exclude hardcoded unavailable tiles
 							return false;
@@ -390,7 +390,7 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 
 				for(BattleHex blocked : obstPtr->getBlockedTiles())
 					blockedTiles.push_back(blocked);
-				tilesToBlock -= obi.blockedTiles.size();
+				tilesToBlock -= obi.getArea().getArea().size();
 			}
 		}
 		catch(RangeGenerator::ExhaustedPossibilities &)

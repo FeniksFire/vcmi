@@ -16,14 +16,15 @@ class JsonNode;
 
 class DLL_LINKAGE ObstacleInfo
 {
-	JsonNode node;
 public:
+	JsonNode node;
+
 	virtual ObstacleArea getArea() const;
 	virtual ObstacleSurface getSurface() const;
 	virtual int32_t getHeight() const;
 	virtual int32_t getWidth() const;
-	virtual int32_t getID() const;
 	virtual std::string getDefName() const;
 
 	ObstacleInfo(JsonNode jsonNode);
+	ObstacleInfo();
 };

@@ -345,7 +345,7 @@ CBattleInterface::CBattleInterface(const CCreatureSet *army1, const CCreatureSet
 		const int ID = elem->ID;
 		if (elem->obstacleType == ObstacleType::USUAL)
 		{
-			idToObstacle[ID] = CDefHandler::giveDef(elem->getInfo().defName);
+			idToObstacle[ID] = CDefHandler::giveDef(elem->getInfo().getDefName());
 			for (auto & _n : idToObstacle[ID]->ourImages)
 			{
 				CSDL_Ext::setDefaultColorKey(_n.bitmap);
@@ -353,7 +353,7 @@ CBattleInterface::CBattleInterface(const CCreatureSet *army1, const CCreatureSet
 		}
 		else if (elem->obstacleType == ObstacleType::ABSOLUTE_OBSTACLE)
 		{
-			idToAbsoluteObstacle[ID] = BitmapHandler::loadBitmap(elem->getInfo().defName);
+			idToAbsoluteObstacle[ID] = BitmapHandler::loadBitmap(elem->getInfo().getDefName());
 		}
 	}
 
@@ -3088,7 +3088,7 @@ void CBattleInterface::showAbsoluteObstacles(SDL_Surface *to)
 	//Blit absolute obstacles
 	for (auto &oi : curInt->cb->battleGetAllObstacles())
 		if (oi->obstacleType == ObstacleType::ABSOLUTE_OBSTACLE)
-			blitAt(getObstacleImage(*oi), pos.x + oi->getInfo().width, pos.y + oi->getInfo().height, to);
+			blitAt(getObstacleImage(*oi), pos.x + oi->getInfo().getWidth(), pos.y + oi->getInfo().getHeight(), to);
 
 	if (siegeH && siegeH->town->hasBuilt(BuildingID::CITADEL))
 		siegeH->printPartOfWall(to, SiegeHelper::BACKGROUND_MOAT);
@@ -3648,7 +3648,7 @@ Point CBattleInterface::getObstaclePosition(SDL_Surface *image, const CObstacleI
 	int offset = image->h % 42;
 	if (obstacle.obstacleType == ObstacleType::USUAL)
 	{
-		if (obstacle.getInfo().blockedTiles.front() < 0  || offset > 37) //second or part is for holy ground ID=62,65,63
+		if (obstacle.getInfo().getArea().getArea().front() < 0  || offset > 37) //second or part is for holy ground ID=62,65,63
 			offset -= 42;
 	}
 	else if (obstacle.obstacleType == ObstacleType::QUICKSAND)
@@ -3674,8 +3674,8 @@ void CBattleInterface::redrawBackgroundWithHexes(const CStack *activeStack)
 	for (auto &oi : curInt->cb->battleGetAllObstacles())
 	{
 		if (oi->obstacleType == ObstacleType::ABSOLUTE_OBSTACLE/*  ||  oi.obstacleType == CObstacleInstance::MOAT*/)
-			blitAt(getObstacleImage(*oi), oi->getInfo().width,
-                   oi->getInfo().height, backgroundWithHexes);
+			blitAt(getObstacleImage(*oi), oi->getInfo().getWidth(),
+				   oi->getInfo().getHeight(), backgroundWithHexes);
 	}
 
 	if (settings["battle"]["stackRange"].Bool())
