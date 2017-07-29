@@ -325,15 +325,14 @@ public:
 class ObstacleChanges : public BattleChanges
 {
 public:
-	uint32_t id;
+	boost::uuids::uuid id;
 
 	ObstacleChanges()
-		: BattleChanges(EOperation::RESET_STATE),
-		id(0)
+		: BattleChanges(EOperation::RESET_STATE)
 	{
 	}
 
-	ObstacleChanges(uint32_t id_, EOperation operation_)
+	ObstacleChanges(boost::uuids::uuid id_, EOperation operation_)
 		: BattleChanges(operation_),
 		id(id_)
 	{

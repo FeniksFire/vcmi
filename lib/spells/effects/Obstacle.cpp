@@ -245,7 +245,7 @@ bool Obstacle::isHexAvailable(const CBattleInfoCallback * cb, const BattleHex & 
 	auto obst = cb->battleGetAllObstaclesOnPos(hex, false);
 
 	for(auto & i : obst)
-		if(i->obstacleType != CObstacleInstance::MOAT)
+		if(i->obstacleType != Obstacle::MOAT)
 			return false;
 
 	if(cb->battleGetSiegeLevel() != 0)
@@ -282,17 +282,11 @@ void Obstacle::placeObstacles(BattleStateProxy * battleState, const Mechanics * 
 
 	auto all = m->cb->battleGetAllObstacles(BattlePerspective::ALL_KNOWING);
 
-	int obstacleIdToGive = 1;
-	for(auto & one : all)
-		if(one->uniqueID >= obstacleIdToGive)
-			obstacleIdToGive = one->uniqueID + 1;
-
 	for(const Destination & destination : target)
 	{
 		SpellCreatedObstacle obstacle;
-		obstacle.uniqueID = obstacleIdToGive++;
 		obstacle.pos = destination.hexValue;
-		obstacle.obstacleType = CObstacleInstance::USUAL;
+		obstacle.obstacleType = ObstacleType::STATIC;
 		obstacle.ID = m->getSpellIndex();
 
 		obstacle.turnsRemaining = turnsRemaining;
