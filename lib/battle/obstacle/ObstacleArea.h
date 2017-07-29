@@ -21,6 +21,7 @@ public:
 	void moveAreaToField(BattleHex offset);
 
 	std::vector<BattleHex> getArea() const;
+	std::vector<BattleHex> getMovedArea(BattleHex offset) const;
 
 	ObstacleArea();
 };

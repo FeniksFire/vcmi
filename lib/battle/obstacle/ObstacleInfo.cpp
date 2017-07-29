@@ -36,17 +36,17 @@ int32_t ObstacleInfo::getWidth() const
 	return node["width"].Integer();
 }
 
-int32_t ObstacleInfo::getID() const
-{
-	return node["id"].Integer();
-}
-
 std::string ObstacleInfo::getDefName() const
 {
 	return node["defname"].String();
 }
 
 ObstacleInfo::ObstacleInfo(JsonNode jsonNode) : node(jsonNode)
+{
+
+}
+
+ObstacleInfo::ObstacleInfo()
 {
 
 }

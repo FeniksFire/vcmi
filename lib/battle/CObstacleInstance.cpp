@@ -26,7 +26,7 @@ CObstacleInstance::~CObstacleInstance()
 
 }
 
-const CObstacleInfo & CObstacleInstance::getInfo() const
+const ObstacleInfo & CObstacleInstance::getInfo() const
 {
 	switch(obstacleType)
 	{
@@ -58,8 +58,9 @@ std::vector<BattleHex> CObstacleInstance::getAffectedTiles() const
 	switch(obstacleType)
 	{
 	case ObstacleType::ABSOLUTE_OBSTACLE:
+		return getInfo().getArea().getArea();
 	case ObstacleType::USUAL:
-		return getInfo().getBlocked(pos);
+		return getInfo().getArea().getMovedArea(pos);
 	default:
 		assert(0);
 		return std::vector<BattleHex>();
