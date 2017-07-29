@@ -17,6 +17,9 @@ set(test_SRCS
  		CMemoryBufferTest.cpp
  		CVcmiTestConfig.cpp
  
+		battle/obstacle/ObstacleArea.cpp
+		battle/obstacle/ObstacleTerrain.cpp
+
  		battle/BattleHexTest.cpp
  		battle/CHealthTest.cpp
 

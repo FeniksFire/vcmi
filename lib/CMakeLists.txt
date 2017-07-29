@@ -19,6 +19,10 @@ set(lib_SRCS
 		battle/SideInBattle.cpp
 		battle/SiegeInfo.cpp
 
+		battle/obstacle/ObstacleArea.cpp
+		battle/obstacle/ObstacleSurface.cpp
+		battle/obstacle/ObstacleInfo.cpp
+
 		filesystem/AdapterLoaders.cpp
 		filesystem/CArchiveLoader.cpp
 		filesystem/CBinaryReader.cpp
@@ -151,6 +155,13 @@ set(lib_HEADERS
 		battle/ReachabilityInfo.h
 		battle/SideInBattle.h
 		battle/SiegeInfo.h
+
+		battle/obstacle/Obstacle.h
+		battle/obstacle/ObstacleArea.h
+		battle/obstacle/ObstacleSurface.h
+		battle/obstacle/ObstacleType.h
+		battle/obstacle/ObstacleInfo.h
+
 
 		filesystem/AdapterLoaders.h
 		filesystem/CArchiveLoader.h
