@@ -1,0 +1,8 @@
+{
+	"type":"object",
+	"$schema": "http://json-schema.org/draft-04/schema",
+	"title" : "VCMI battlefield object format",
+	"description" : "Description of battlefield class",
+	"additionalProperties" : false,
+}
+

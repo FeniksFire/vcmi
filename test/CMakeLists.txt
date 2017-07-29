@@ -16,15 +16,26 @@ set(test_SRCS
  		main.cpp
  		CMemoryBufferTest.cpp
  		CVcmiTestConfig.cpp
+ 
+		battle/obstacle/ObstacleArea.cpp
+		battle/obstacle/ObstacleSurface.cpp
+		battle/obstacle/StaticObstacle.cpp
+		battle/obstacle/ObstacleTest.cpp
+		battle/obstacle/MoatObstacleTest.cpp
+		battle/obstacle/ObstacleGraphicsInfoTest.cpp
 
  		battle/BattleHexTest.cpp
  		battle/CBattleInfoCallbackTest.cpp
  		battle/CHealthTest.cpp
+
 		battle/CUnitStateTest.cpp
 		battle/CUnitStateMagicTest.cpp
 		battle/battle_UnitTest.cpp
 
  		game/CGameStateTest.cpp
+
+		battle/BattleInfoTest.cpp
+		battle/BattlefieldTypeTest.cpp
 
  		map/CMapEditManagerTest.cpp
  		map/CMapFormatTest.cpp
@@ -88,6 +99,9 @@ set(mock_HEADERS
 		mock/mock_spells_Problem.h
 		mock/mock_spells_Spell.h
 		mock/mock_vstd_RNG.h
+		mock/mock_UnitHealthInfo.h
+		mock/mock_ObstacleJson.h
+		mock/mock_Obstacle.h
 )
 
 add_subdirectory_with_folder("3rdparty" googletest EXCLUDE_FROM_ALL)

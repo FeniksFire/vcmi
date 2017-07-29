@@ -14,6 +14,7 @@
 #include "CBattleInterfaceClasses.h"
 #include "CCreatureAnimation.h"
 
+#include "filesystem/ResourceID.h"
 #include "../CBitmapHandler.h"
 #include "../CGameInfo.h"
 #include "../CMessage.h"
@@ -43,6 +44,7 @@
 #include "../../lib/mapping/CMap.h"
 #include "../../lib/NetPacks.h"
 #include "../../lib/UnlockGuard.h"
+#include "battle/obstacle/ObstacleJson.h"
 
 CondSh<bool> CBattleInterface::animsAreDisplayed(false);
 CondSh<BattleAction *> CBattleInterface::givenCommand(nullptr);
@@ -173,34 +175,27 @@ CBattleInterface::CBattleInterface(const CCreatureSet *army1, const CCreatureSet
 		ui8 siegeLevel = curInt->cb->battleGetSiegeLevel();
 		if (siegeLevel >= 2) //citadel or castle
 		{
-			//print moat/mlip
-			SDL_Surface *moat = BitmapHandler::loadBitmap( siegeH->getSiegeName(13) ),
-				* mlip = BitmapHandler::loadBitmap( siegeH->getSiegeName(14) );
+			//print mlip
+			SDL_Surface * mlip = BitmapHandler::loadBitmap( siegeH->getSiegeName(14) );
 
 			auto & info = siegeH->town->town->clientInfo;
-			Point moatPos(info.siegePositions[13].x, info.siegePositions[13].y);
 			Point mlipPos(info.siegePositions[14].x, info.siegePositions[14].y);
 
-			if (moat) //eg. tower has no moat
-				blitAt(moat, moatPos.x,moatPos.y, background);
 			if (mlip) //eg. tower has no mlip
 				blitAt(mlip, mlipPos.x, mlipPos.y, background);
-
-			SDL_FreeSurface(moat);
 			SDL_FreeSurface(mlip);
 		}
 	}
 	else
 	{
 		auto bfieldType = (int)curInt->cb->battleGetBattlefieldType();
-		if (graphics->battleBacks.size() <= bfieldType || bfieldType < 0)
+		if (graphics->battleBackgrounds.size() <= bfieldType || bfieldType < 0)
 			logGlobal->error("%d is not valid battlefield type index!", bfieldType);
-		else if (graphics->battleBacks[bfieldType].empty())
+		else if (graphics->battleBackgrounds[bfieldType].empty())
 			logGlobal->error("%d battlefield type does not have any backgrounds!", bfieldType);
 		else
 		{
-			const std::string bgName = *RandomGeneratorUtil::nextItem(graphics->battleBacks[bfieldType], CRandomGenerator::getDefault());
-			background = BitmapHandler::loadBitmap(bgName, false);
+			background = BitmapHandler::loadBitmap(graphics->battleBackgrounds[bfieldType], false);
 		}
 	}
 
@@ -342,49 +337,6 @@ CBattleInterface::CBattleInterface(const CCreatureSet *army1, const CCreatureSet
 
 	backgroundWithHexes = CSDL_Ext::newSurface(background->w, background->h, screen);
 
-	//preparing obstacle defs
-	auto obst = curInt->cb->battleGetAllObstacles();
-	for(auto & elem : obst)
-	{
-		if(elem->obstacleType == CObstacleInstance::USUAL)
-		{
-			std::string animationName = elem->getInfo().defName;
-
-			auto cached = animationsCache.find(animationName);
-
-			if(cached == animationsCache.end())
-			{
-				auto animation = std::make_shared<CAnimation>(animationName);
-				animationsCache[animationName] = animation;
-				obstacleAnimations[elem->uniqueID] = animation;
-				animation->preload();
-			}
-			else
-			{
-				obstacleAnimations[elem->uniqueID] = cached->second;
-			}
-		}
-		else if (elem->obstacleType == CObstacleInstance::ABSOLUTE_OBSTACLE)
-		{
-			std::string animationName = elem->getInfo().defName;
-
-			auto cached = animationsCache.find(animationName);
-
-			if(cached == animationsCache.end())
-			{
-				auto animation = std::make_shared<CAnimation>();
-				animation->setCustom(animationName, 0, 0);
-				animationsCache[animationName] = animation;
-				obstacleAnimations[elem->uniqueID] = animation;
-				animation->preload();
-			}
-			else
-			{
-				obstacleAnimations[elem->uniqueID] = cached->second;
-			}
-		}
-	}
-
 	for (auto hex : bfield)
 		addChild(hex);
 
@@ -453,7 +405,6 @@ CBattleInterface::~CBattleInterface()
 		delete elem.second;
 
 	delete siegeH;
-
 	//TODO: play AI tracks if battle was during AI turn
 	//if (!curInt->makingTurn)
 	//CCS->musich->playMusicFromSet(CCS->musich->aiMusics, -1);
@@ -2743,47 +2694,27 @@ Rect CBattleInterface::hexPosition(BattleHex hex) const
 	return Rect(x, y, w, h);
 }
 
-void CBattleInterface::obstaclePlaced(const CObstacleInstance & oi)
+void CBattleInterface::obstaclePlaced(const Obstacle & oi)
 {
-	//so when multiple obstacles are added, they show up one after another
 	waitForAnims();
+	assert(!oi.getGraphicsInfo().getGraphicsName().empty());
 
-	soundBase::soundID sound; // FIXME(v.markovtsev): soundh->playSound() is commented in the end => warning
-
-	std::string defname;
-
-	switch(oi.obstacleType)
+	int imageHeight = 0;
+	ResourceID resID(oi.getGraphicsInfo().getGraphicsName());
+	if(resID.getType() == EResType::ANIMATION)
 	{
-	case CObstacleInstance::SPELL_CREATED:
-		{
-			auto &spellObstacle = dynamic_cast<const SpellCreatedObstacle&>(oi);
-			defname = spellObstacle.appearAnimation;
-			//TODO: sound
-			//soundBase::QUIKSAND
-			//soundBase::LANDMINE
-			//soundBase::FORCEFLD
-			//soundBase::fireWall
-		}
-		break;
-	default:
-		logGlobal->error("I don't know how to animate appearing obstacle of type %d", (int)oi.obstacleType);
-		return;
+		CAnimation anim(oi.getGraphicsInfo().getGraphicsName());
+		anim.preload();
+		int frameIndex = ((animCount + 1) * 25 / getAnimSpeed()) % anim.size();
+		imageHeight = anim.getImage(frameIndex)->height();
+	}
+	else if(resID.getType() == EResType::IMAGE)
+	{
+		imageHeight = BitmapHandler::loadBitmap(oi.getGraphicsInfo().getGraphicsName())->h;
 	}
 
-	auto animation = std::make_shared<CAnimation>(defname);
-	animation->preload();
-
-	IImage * first = animation->getImage(0, 0);
-	if(!first)
-		return;
-
-	//we assume here that effect graphics have the same size as the usual obstacle image
-	// -> if we know how to blit obstacle, let's blit the effect in the same place
-	Point whereTo = getObstaclePosition(first, oi);
-	addNewAnim(new CEffectAnimation(this, animation, whereTo.x, whereTo.y));
-
-	//TODO we need to wait after playing sound till it's finished, otherwise it overlaps and sounds really bad
-	//CCS->soundh->playSound(sound);
+	Point whereTo = getObstaclePosition(imageHeight, oi);
+	addNewAnim(new CEffectAnimation(this, oi.getGraphicsInfo().getGraphicsName(), whereTo.x, whereTo.y));
 }
 
 void CBattleInterface::gateStateChanged(const EGateState state)
@@ -2957,8 +2888,6 @@ std::string CBattleInterface::SiegeHelper::getSiegeName(ui16 what, int state) co
 		return prefix + "WA2.BMP";
 	case SiegeHelper::UPPER_STATIC_WALL:
 		return prefix + "WA5.BMP";
-	case SiegeHelper::MOAT:
-		return prefix + "MOAT.BMP";
 	case SiegeHelper::BACKGROUND_MOAT:
 		return prefix + "MLIP.BMP";
 	case SiegeHelper::KEEP_BATTLEMENT:
@@ -3076,7 +3005,8 @@ void CBattleInterface::showBackground(SDL_Surface *to)
 	else
 	{
 		showBackgroundImage(to);
-		showAbsoluteObstacles(to);
+		if (siegeH && siegeH->town->hasBuilt(BuildingID::CITADEL))
+			siegeH->printPartOfWall(to, SiegeHelper::BACKGROUND_MOAT);
 	}
 	showHighlightedHexes(to);
 }
@@ -3088,24 +3018,6 @@ void CBattleInterface::showBackgroundImage(SDL_Surface *to)
 	{
 		CSDL_Ext::blit8bppAlphaTo24bpp(cellBorders, nullptr, to, &pos);
 	}
-}
-
-void CBattleInterface::showAbsoluteObstacles(SDL_Surface * to)
-{
-	//Blit absolute obstacles
-	for(auto & oi : curInt->cb->battleGetAllObstacles())
-	{
-		if(oi->obstacleType == CObstacleInstance::ABSOLUTE_OBSTACLE)
-		{
-			IImage * img = getObstacleImage(*oi);
-			if(img)
-				img->draw(to, pos.x + oi->getInfo().width, pos.y + oi->getInfo().height);
-		}
-	}
-
-
-	if (siegeH && siegeH->town->hasBuilt(BuildingID::CITADEL))
-		siegeH->printPartOfWall(to, SiegeHelper::BACKGROUND_MOAT);
 }
 
 void CBattleInterface::showHighlightedHexes(SDL_Surface *to)
@@ -3411,15 +3323,28 @@ void CBattleInterface::showStacks(SDL_Surface *to, std::vector<const CStack *> s
 	}
 }
 
-void CBattleInterface::showObstacles(SDL_Surface * to, std::vector<std::shared_ptr<const CObstacleInstance>> & obstacles)
+void CBattleInterface::showObstacles(SDL_Surface * to, std::vector<std::shared_ptr<const Obstacle> > &obstacles)
 {
 	for(auto & obstacle : obstacles)
 	{
-		IImage * img = getObstacleImage(*obstacle);
-		if(img)
+		ResourceID resID(obstacle->getGraphicsInfo().getGraphicsName());
+		Point p(0,0);
+		if(resID.getType() == EResType::ANIMATION)
 		{
-			Point p = getObstaclePosition(img, *obstacle);
-			img->draw(to, p.x, p.y);
+			CAnimation anim(obstacle->getGraphicsInfo().getGraphicsName());
+			anim.preload();
+			int frameIndex = ((animCount + 1) * 25 / getAnimSpeed()) % anim.size();
+			auto img = anim.getImage(frameIndex);
+			if(obstacle->getArea().getPosition() != 0)
+				p = getObstaclePosition(img->height(), *obstacle);
+			img->draw(to, p.x + obstacle->getGraphicsInfo().getOffsetGraphicsInX(), p.y + obstacle->getGraphicsInfo().getOffsetGraphicsInY());
+		}
+		else if(resID.getType() == EResType::IMAGE)
+		{
+			auto bitmap = BitmapHandler::loadBitmap(obstacle->getGraphicsInfo().getGraphicsName());
+			if(obstacle->getArea().getPosition() != 0)
+				p = getObstaclePosition(bitmap->h, *obstacle);
+			blitAt(bitmap, p.x + obstacle->getGraphicsInfo().getOffsetGraphicsInX(), p.y + obstacle->getGraphicsInfo().getOffsetGraphicsInY(), to);
 		}
 	}
 }
@@ -3550,20 +3475,10 @@ BattleObjectsByHex CBattleInterface::sortObjectsByHex()
 		else
 			sorted.afterAll.effects.push_back(&battleEffect);
 	}
-
 	// Sort obstacles
+	for (auto obstacle : curInt->cb->battleGetAllObstacles())
 	{
-		std::map<BattleHex, std::shared_ptr<const CObstacleInstance>> backgroundObstacles;
-		for (auto &obstacle : curInt->cb->battleGetAllObstacles()) {
-			if (obstacle->obstacleType != CObstacleInstance::ABSOLUTE_OBSTACLE
-				&& obstacle->obstacleType != CObstacleInstance::MOAT) {
-				backgroundObstacles[obstacle->pos] = obstacle;
-			}
-		}
-		for (auto &op : backgroundObstacles)
-		{
-			sorted.beforeAll.obstacles.push_back(op.second);
-		}
+		sorted.beforeAll.obstacles.push_back(obstacle);
 	}
 	// Sort wall parts
 	if (siegeH)
@@ -3583,8 +3498,6 @@ BattleObjectsByHex CBattleInterface::sortObjectsByHex()
 
 		if (siegeH && siegeH->town->hasBuilt(BuildingID::CITADEL))
 		{
-			sorted.beforeAll.walls.push_back(SiegeHelper::MOAT);
-			//sorted.beforeAll.walls.push_back(SiegeHelper::BACKGROUND_MOAT); // blit as absolute obstacle
 			sorted.hex[135].walls.push_back(SiegeHelper::KEEP_BATTLEMENT);
 		}
 		if (siegeH && siegeH->town->hasBuilt(BuildingID::CASTLE))
@@ -3633,55 +3546,21 @@ void CBattleInterface::updateBattleAnimations()
 	}
 }
 
-IImage * CBattleInterface::getObstacleImage(const CObstacleInstance & oi)
+Point CBattleInterface::getObstaclePosition(int imageHeight, const Obstacle & obstacle)
 {
-	int frameIndex = (animCount+1) *25 / getAnimSpeed();
-	std::shared_ptr<CAnimation> animation;
-
-	if(oi.obstacleType == CObstacleInstance::USUAL || oi.obstacleType == CObstacleInstance::ABSOLUTE_OBSTACLE)
+	int offset = imageHeight % 42;
+	if (obstacle.getType() == ObstacleType::STATIC)
 	{
-		animation = obstacleAnimations[oi.uniqueID];
+		if (obstacle.getArea().getFields().front() < 0  || offset > 37) //second or part is for holy ground ID=62,65,63
+			offset -= 42;
 	}
-	else if(oi.obstacleType == CObstacleInstance::SPELL_CREATED)
+	else if (obstacle.getType() == ObstacleType::QUICKSAND)
 	{
-		const SpellCreatedObstacle * spellObstacle = dynamic_cast<const SpellCreatedObstacle *>(&oi);
-		if(!spellObstacle)
-			return nullptr;
-
-		std::string animationName = spellObstacle->animation;
-
-		auto cacheIter = animationsCache.find(animationName);
-
-		if(cacheIter == animationsCache.end())
-		{
-			logAi->trace("Creating obstacle animation %s", animationName);
-
-			animation = std::make_shared<CAnimation>(animationName);
-			animation->preload();
-			animationsCache[animationName] = animation;
-		}
-		else
-		{
-			animation = cacheIter->second;
-		}
+		offset -= 42;
 	}
 
-	if(animation)
-	{
-		frameIndex %= animation->size(0);
-		return animation->getImage(frameIndex, 0);
-	}
-
-	return nullptr;
-}
-
-Point CBattleInterface::getObstaclePosition(IImage * image, const CObstacleInstance & obstacle)
-{
-	int offset = obstacle.getAnimationYOffset(image->height());
-
-	Rect r = hexPosition(obstacle.pos);
-	r.y += 42 - image->height() + offset;
-
+	Rect r = hexPosition(obstacle.getArea().getPosition());
+	r.y += 42 - imageHeight + offset;
 	return r.topLeft();
 }
 
@@ -3693,17 +3572,6 @@ void CBattleInterface::redrawBackgroundWithHexes(const CStack *activeStack)
 	curInt->cb->battleGetStackCountOutsideHexes(stackCountOutsideHexes);
 	//prepare background graphic with hexes and shaded hexes
 	blitAt(background, 0, 0, backgroundWithHexes);
-
-	//draw absolute obstacles (cliffs and so on)
-	for(auto & oi : curInt->cb->battleGetAllObstacles())
-	{
-		if(oi->obstacleType == CObstacleInstance::ABSOLUTE_OBSTACLE)
-		{
-			IImage * img = getObstacleImage(*oi);
-			if(img)
-				img->draw(backgroundWithHexes, oi->getInfo().width, oi->getInfo().height);
-		}
-	}
 
 	if (settings["battle"]["stackRange"].Bool())
 	{

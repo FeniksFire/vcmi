@@ -556,7 +556,7 @@ bool BaseMechanics::adaptProblem(ESpellCastProblem::ESpellCastProblem source, Pr
 				caster->getCasterName(text);
 				target.add(std::move(text), spells::Problem::NORMAL);
 			}
-			else if(b && b->source == Bonus::TERRAIN_OVERLAY && b->sid == BFieldType::CURSED_GROUND)
+			else if(b && b->source == Bonus::TERRAIN_OVERLAY && b->sid == BattlefieldTypedType::CURSED_GROUND)
 			{
 				text.addTxt(MetaString::GENERAL_TXT, 537);
 				target.add(std::move(text), spells::Problem::NORMAL);

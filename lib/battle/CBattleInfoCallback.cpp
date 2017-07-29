@@ -911,14 +911,14 @@ TDmgRange CBattleInfoCallback::battleEstimateDamage(const BattleAttackInfo & bai
 	return ret;
 }
 
-std::vector<std::shared_ptr<const CObstacleInstance>> CBattleInfoCallback::battleGetAllObstaclesOnPos(BattleHex tile, bool onlyBlocking) const
+std::vector<std::shared_ptr<const Obstacle>> CBattleInfoCallback::battleGetAllObstaclesOnPos(BattleHex tile, bool onlyBlocking) const
 {
-	std::vector<std::shared_ptr<const CObstacleInstance>> obstacles = std::vector<std::shared_ptr<const CObstacleInstance>>();
+	std::vector<std::shared_ptr<const Obstacle>> obstacles = std::vector<std::shared_ptr<const Obstacle>>();
 	RETURN_IF_NOT_BATTLE(obstacles);
 	for(auto & obs : battleGetAllObstacles())
 	{
-		if(vstd::contains(obs->getBlockedTiles(), tile)
-				|| (!onlyBlocking && vstd::contains(obs->getAffectedTiles(), tile)))
+		if(obs->blocksTiles() || !onlyBlocking)
+			if(vstd::contains(obs->getArea().getFields(), tile))
 		{
 			obstacles.push_back(obs);
 		}
@@ -926,9 +926,9 @@ std::vector<std::shared_ptr<const CObstacleInstance>> CBattleInfoCallback::battl
 	return obstacles;
 }
 
-std::vector<std::shared_ptr<const CObstacleInstance>> CBattleInfoCallback::getAllAffectedObstaclesByStack(const CStack * stack) const
+std::vector<std::shared_ptr<const Obstacle>> CBattleInfoCallback::getAllAffectedObstaclesByStack(const CStack * stack) const
 {
-	std::vector<std::shared_ptr<const CObstacleInstance>> affectedObstacles = std::vector<std::shared_ptr<const CObstacleInstance>>();
+	std::vector<std::shared_ptr<const Obstacle>> affectedObstacles = std::vector<std::shared_ptr<const Obstacle>>();
 	RETURN_IF_NOT_BATTLE(affectedObstacles);
 	if(stack->alive())
 	{
@@ -944,7 +944,7 @@ std::vector<std::shared_ptr<const CObstacleInstance>> CBattleInfoCallback::getAl
 			if(hex == ESiegeHex::GATE_BRIDGE)
 				if(battleGetGateState() == EGateState::OPENED || battleGetGateState() == EGateState::DESTROYED)
 					for(int i=0; i<affectedObstacles.size(); i++)
-						if(affectedObstacles.at(i)->obstacleType == CObstacleInstance::MOAT)
+						if(affectedObstacles.at(i)->getType() == ObstacleType::MOAT)
 							affectedObstacles.erase(affectedObstacles.begin()+i);
 	}
 	return affectedObstacles;
@@ -964,7 +964,7 @@ AccessibilityInfo CBattleInfoCallback::getAccesibility() const
 
 	//special battlefields with logically unavailable tiles
 	std::vector<BattleHex> impassableHexes;
-	if(battleGetBattlefieldType().num == BFieldType::SHIP_TO_SHIP)
+	if(battleGetBattlefieldType().num == BattlefieldType::SHIP_TO_SHIP)
 	{
 		impassableHexes =
 		{
@@ -1008,10 +1008,11 @@ AccessibilityInfo CBattleInfoCallback::getAccesibility() const
 	}
 
 	//obstacles
-	for(const auto &obst : battleGetAllObstacles())
+	for(const auto & obst : battleGetAllObstacles())
 	{
-		for(auto hex : obst->getBlockedTiles())
-			ret[hex] = EAccessibility::OBSTACLE;
+		if(obst->blocksTiles())
+			for(auto hex : obst->getArea().getFields())
+				ret[hex] = EAccessibility::OBSTACLE;
 	}
 
 	//walls
@@ -1119,7 +1120,8 @@ std::set<BattleHex> CBattleInfoCallback::getStoppers(BattlePerspective::BattlePe
 	{
 		if(battleIsObstacleVisibleForSide(*oi, whichSidePerspective))
 		{
-			range::copy(oi->getStoppingTile(), vstd::set_inserter(ret));
+			if(oi->stopsMovement())
+				range::copy(oi->getArea().getFields(), vstd::set_inserter(ret));
 		}
 	}
 
