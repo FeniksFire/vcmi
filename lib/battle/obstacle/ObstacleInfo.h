@@ -26,5 +26,4 @@ public:
 	virtual std::string getDefName() const;
 
 	ObstacleInfo(JsonNode jsonNode);
-
 };

@@ -16,7 +16,7 @@
 
 CObstacleInstance::CObstacleInstance()
 {
-	obstacleType = USUAL;
+	obstacleType = ObstacleType::USUAL;
 	uniqueID = -1;
 	ID = -1;
 }
@@ -30,9 +30,9 @@ const CObstacleInfo & CObstacleInstance::getInfo() const
 {
 	switch(obstacleType)
 	{
-	case ABSOLUTE_OBSTACLE:
+	case ObstacleType::ABSOLUTE_OBSTACLE:
 		return VLC->heroh->absoluteObstacles[ID];
-	case USUAL:
+	case ObstacleType::USUAL:
 		return VLC->heroh->obstacles[ID];
 	default:
 		throw std::runtime_error("Unknown obstacle type in CObstacleInstance::getInfo()");
@@ -57,8 +57,8 @@ std::vector<BattleHex> CObstacleInstance::getAffectedTiles() const
 {
 	switch(obstacleType)
 	{
-	case ABSOLUTE_OBSTACLE:
-	case USUAL:
+	case ObstacleType::ABSOLUTE_OBSTACLE:
+	case ObstacleType::USUAL:
 		return getInfo().getBlocked(pos);
 	default:
 		assert(0);
@@ -82,12 +82,12 @@ bool CObstacleInstance::visibleForSide(ui8 side, bool hasNativeStack) const
 
 bool CObstacleInstance::stopsMovement() const
 {
-	return obstacleType == QUICKSAND || obstacleType == MOAT;
+	return obstacleType == ObstacleType::QUICKSAND || obstacleType == ObstacleType::MOAT;
 }
 
 bool CObstacleInstance::blocksTiles() const
 {
-	return obstacleType == USUAL || obstacleType == ABSOLUTE_OBSTACLE || obstacleType == FORCE_FIELD;
+	return obstacleType == ObstacleType::USUAL || obstacleType == ObstacleType::ABSOLUTE_OBSTACLE || obstacleType == ObstacleType::FORCE_FIELD;
 }
 
 SpellCreatedObstacle::SpellCreatedObstacle()
@@ -103,12 +103,12 @@ bool SpellCreatedObstacle::visibleForSide(ui8 side, bool hasNativeStack) const
 {
 	switch(obstacleType)
 	{
-	case FIRE_WALL:
-	case FORCE_FIELD:
+	case ObstacleType::FIRE_WALL:
+	case ObstacleType::FORCE_FIELD:
 		//these are always visible
 		return true;
-	case QUICKSAND:
-	case LAND_MINE:
+	case ObstacleType::QUICKSAND:
+	case ObstacleType::LAND_MINE:
 		//we hide mines and not discovered quicksands
 		//quicksands are visible to the caster or if owned unit stepped into that particular patch
 		//additionally if side has a native unit, mines/quicksands will be visible
@@ -123,11 +123,11 @@ std::vector<BattleHex> SpellCreatedObstacle::getAffectedTiles() const
 {
 	switch(obstacleType)
 	{
-	case QUICKSAND:
-	case LAND_MINE:
-	case FIRE_WALL:
+	case ObstacleType::QUICKSAND:
+	case ObstacleType::LAND_MINE:
+	case ObstacleType::FIRE_WALL:
 		return std::vector<BattleHex>(1, pos);
-	case FORCE_FIELD:
+	case ObstacleType::FORCE_FIELD:
 		return SpellID(SpellID::FORCE_FIELD).toSpell()->rangeInHexes(pos, spellLevel, casterSide);
 	default:
 		assert(0);

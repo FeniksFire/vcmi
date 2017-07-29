@@ -840,7 +840,7 @@ std::vector<std::shared_ptr<const CObstacleInstance>> CBattleInfoCallback::getAl
 			if(hex == ESiegeHex::GATE_BRIDGE)
 				if(battleGetGateState() == EGateState::OPENED || battleGetGateState() == EGateState::DESTROYED)
 					for(int i=0; i<affectedObstacles.size(); i++)
-						if(affectedObstacles.at(i)->obstacleType == CObstacleInstance::MOAT)
+						if(affectedObstacles.at(i)->obstacleType == ObstacleType::MOAT)
 							affectedObstacles.erase(affectedObstacles.begin()+i);
 	}
 	return affectedObstacles;
