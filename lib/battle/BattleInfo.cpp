@@ -330,7 +330,7 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 			try
 			{
 				auto obstPtr = std::make_shared<CObstacleInstance>();
-				obstPtr->obstacleType = CObstacleInstance::ABSOLUTE_OBSTACLE;
+				obstPtr->obstacleType = ObstacleType::ABSOLUTE_OBSTACLE;
 				obstPtr->ID = obidgen.getSuchNumber(appropriateAbsoluteObstacle);
 				obstPtr->uniqueID = curB->obstacles.size();
 				curB->obstacles.push_back(obstPtr);
@@ -516,7 +516,7 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 		//moat
 		auto moat = std::make_shared<MoatObstacle>();
 		moat->ID = curB->town->subID;
-		moat->obstacleType = CObstacleInstance::MOAT;
+		moat->obstacleType = ObstacleType::MOAT;
 		moat->uniqueID = curB->obstacles.size();
 		curB->obstacles.push_back(moat);
 	}

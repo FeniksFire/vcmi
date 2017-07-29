@@ -9,22 +9,16 @@
  */
 #pragma once
 #include "BattleHex.h"
+#include "obstacle/ObstacleType.h"
 
 struct CObstacleInfo;
 
 struct DLL_LINKAGE CObstacleInstance
 {
 	BattleHex pos; //position on battlefield, typically left bottom corner
-	ui8 obstacleType; //if true, then position is meaningless
+	ObstacleType obstacleType; //if ABSOLUTE_OBSTACLE, then position is meaningless
 	si32 uniqueID;
 	si32 ID; //ID of obstacle (defines type of it)
-
-	enum EObstacleType
-	{
-		//ABSOLUTE needs an underscore because it's a Win
-		USUAL, ABSOLUTE_OBSTACLE, QUICKSAND, LAND_MINE, FORCE_FIELD, FIRE_WALL, MOAT
-	};
-
 
 	//used only for spell-created obstacles
 

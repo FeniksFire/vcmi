@@ -275,9 +275,9 @@ void DispellMechanics::applyBattleEffects(const SpellCastEnvironment * env, cons
 
 		for(const auto obstacle : parameters.cb->obstacles)
 		{
-			if(obstacle->obstacleType == CObstacleInstance::FIRE_WALL
-				|| obstacle->obstacleType == CObstacleInstance::FORCE_FIELD
-				|| obstacle->obstacleType == CObstacleInstance::LAND_MINE)
+			if(obstacle->obstacleType == ObstacleType::FIRE_WALL
+				|| obstacle->obstacleType == ObstacleType::FORCE_FIELD
+				|| obstacle->obstacleType == ObstacleType::LAND_MINE)
 				packet.obstacles.insert(obstacle->uniqueID);
 		}
 
@@ -483,7 +483,7 @@ bool ObstacleMechanics::isHexAviable(const CBattleInfoCallback * cb, const Battl
 	auto obst = cb->battleGetAllObstaclesOnPos(hex, false);
 
 	for(auto & i : obst)
-		if(i->obstacleType != CObstacleInstance::MOAT)
+		if(i->obstacleType != ObstacleType::MOAT)
 			return false;
 
 	if(cb->battleGetDefendedTown() != nullptr && cb->battleGetDefendedTown()->fortLevel() != CGTownInstance::NONE)
@@ -574,7 +574,7 @@ bool LandMineMechanics::requiresCreatureTarget() const
 
 void LandMineMechanics::setupObstacle(SpellCreatedObstacle * obstacle) const
 {
-	obstacle->obstacleType = CObstacleInstance::LAND_MINE;
+	obstacle->obstacleType = ObstacleType::LAND_MINE;
 	obstacle->turnsRemaining = -1;
 	obstacle->visibleForAnotherSide = false;
 }
@@ -592,7 +592,7 @@ bool QuicksandMechanics::requiresCreatureTarget() const
 
 void QuicksandMechanics::setupObstacle(SpellCreatedObstacle * obstacle) const
 {
-	obstacle->obstacleType = CObstacleInstance::QUICKSAND;
+	obstacle->obstacleType = ObstacleType::QUICKSAND;
 	obstacle->turnsRemaining = -1;
 	obstacle->visibleForAnotherSide = false;
 }
@@ -667,7 +667,7 @@ void FireWallMechanics::applyBattleEffects(const SpellCastEnvironment * env, con
 
 void FireWallMechanics::setupObstacle(SpellCreatedObstacle * obstacle) const
 {
-	obstacle->obstacleType = CObstacleInstance::FIRE_WALL;
+	obstacle->obstacleType = ObstacleType::FIRE_WALL;
 	obstacle->turnsRemaining = 2;
 	obstacle->visibleForAnotherSide = true;
 }
@@ -697,7 +697,7 @@ void ForceFieldMechanics::applyBattleEffects(const SpellCastEnvironment * env, c
 
 void ForceFieldMechanics::setupObstacle(SpellCreatedObstacle * obstacle) const
 {
-	obstacle->obstacleType = CObstacleInstance::FORCE_FIELD;
+	obstacle->obstacleType = ObstacleType::FORCE_FIELD;
 	obstacle->turnsRemaining = 2;
 	obstacle->visibleForAnotherSide = true;
 }
@@ -766,18 +766,18 @@ bool RemoveObstacleMechanics::canRemove(const CObstacleInstance * obstacle, cons
 {
 	switch (obstacle->obstacleType)
 	{
-	case CObstacleInstance::ABSOLUTE_OBSTACLE: //cliff-like obstacles can't be removed
-	case CObstacleInstance::MOAT:
+	case ObstacleType::ABSOLUTE_OBSTACLE: //cliff-like obstacles can't be removed
+	case ObstacleType::MOAT:
 		return false;
-	case CObstacleInstance::USUAL:
+	case ObstacleType::USUAL:
 		return true;
-	case CObstacleInstance::FIRE_WALL:
+	case ObstacleType::FIRE_WALL:
 		if(spellLevel >= 2)
 			return true;
 		break;
-	case CObstacleInstance::QUICKSAND:
-	case CObstacleInstance::LAND_MINE:
-	case CObstacleInstance::FORCE_FIELD:
+	case ObstacleType::QUICKSAND:
+	case ObstacleType::LAND_MINE:
+	case ObstacleType::FORCE_FIELD:
 		if(spellLevel >= 3)
 			return true;
 		break;
