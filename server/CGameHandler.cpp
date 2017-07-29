@@ -2109,7 +2109,7 @@ std::list<PlayerColor> CGameHandler::generatePlayerTurnOrder() const
 	return playerTurnOrder;
 }
 
-void CGameHandler::setupBattle(int3 tile, const CArmedInstance *armies[2], const CGHeroInstance *heroes[2], bool creatureBank, const CGTownInstance *town)
+void CGameHandler::setupBattle(int3 tile, const CArmedInstance *armies[2], const CGHeroInstance *heroes[2], std::string creatureBankName, const CGTownInstance *town)
 {
 	battleResult.set(nullptr);
 
@@ -2118,13 +2118,13 @@ void CGameHandler::setupBattle(int3 tile, const CArmedInstance *armies[2], const
 	if (gs->map->isCoastalTile(tile)) //coastal tile is always ground
 		terrain = ETerrainType::SAND;
 
-	BFieldType terType = gs->battleGetBattlefieldType(tile, getRandomGenerator());
+	BattlefieldType terType = gs->battleGetBattlefieldType(tile, getRandomGenerator());
 	if (heroes[0] && heroes[0]->boat && heroes[1] && heroes[1]->boat)
-		terType = BFieldType::SHIP_TO_SHIP;
+		terType = BattlefieldType::SHIP_TO_SHIP;
 
 	//send info about battles
 	BattleStart bs;
-	bs.info = BattleInfo::setupBattle(tile, terrain, terType, armies, heroes, creatureBank, town);
+	bs.info = BattleInfo::setupBattle(tile, terrain, terType, armies, heroes, creatureBankName, town);
 	sendAndApply(&bs);
 }
 
@@ -2575,7 +2575,7 @@ void CGameHandler::removeArtifact(const ArtifactLocation &al)
 	sendAndApply(&ea);
 }
 void CGameHandler::startBattlePrimary(const CArmedInstance *army1, const CArmedInstance *army2, int3 tile,
-								const CGHeroInstance *hero1, const CGHeroInstance *hero2, bool creatureBank,
+								const CGHeroInstance *hero1, const CGHeroInstance *hero2, std::string creatureBankName,
 								const CGTownInstance *town) //use hero=nullptr for no hero
 {
 	engageIntoBattle(army1->tempOwner);
@@ -2589,7 +2589,7 @@ void CGameHandler::startBattlePrimary(const CArmedInstance *army1, const CArmedI
 	heroes[1] = hero2;
 
 
-	setupBattle(tile, armies, heroes, creatureBank, town); //initializes stacks, places creatures on battlefield, blocks and informs player interfaces
+	setupBattle(tile, armies, heroes, creatureBankName, town); //initializes stacks, places creatures on battlefield, blocks and informs player interfaces
 
 	auto battleQuery = std::make_shared<CBattleQuery>(this, gs->curB);
 	queries.addQuery(battleQuery);
@@ -2597,17 +2597,17 @@ void CGameHandler::startBattlePrimary(const CArmedInstance *army1, const CArmedI
 	boost::thread(&CGameHandler::runBattle, this);
 }
 
-void CGameHandler::startBattleI(const CArmedInstance *army1, const CArmedInstance *army2, int3 tile, bool creatureBank)
+void CGameHandler::startBattleI(const CArmedInstance *army1, const CArmedInstance *army2, int3 tile, std::string creatureBankName)
 {
 	startBattlePrimary(army1, army2, tile,
 		army1->ID == Obj::HERO ? static_cast<const CGHeroInstance*>(army1) : nullptr,
 		army2->ID == Obj::HERO ? static_cast<const CGHeroInstance*>(army2) : nullptr,
-		creatureBank);
+		creatureBankName);
 }
 
-void CGameHandler::startBattleI(const CArmedInstance *army1, const CArmedInstance *army2, bool creatureBank)
+void CGameHandler::startBattleI(const CArmedInstance *army1, const CArmedInstance *army2,  std::string creatureBankName)
 {
-	startBattleI(army1, army2, army2->visitablePos(), creatureBank);
+	startBattleI(army1, army2, army2->visitablePos(), creatureBankName);
 }
 
 void CGameHandler::changeSpells(const CGHeroInstance * hero, bool give, const std::set<SpellID> &spells)
@@ -4868,7 +4868,18 @@ bool CGameHandler::handleDamageFromObstacle(const CStack * curStack, bool stackI
 	bool movementStoped = false;
 	for(auto & obstacle : getAllAffectedObstaclesByStack(curStack))
 	{
-		if(obstacle->obstacleType == CObstacleInstance::SPELL_CREATED)
+
+		if(obstacle->getType() == ObstacleType::MOAT)
+		{
+			const MoatObstacle* moat = dynamic_cast<const MoatObstacle *>(obstacle.get());;
+			damage = moat->getDamage();
+			if(!containDamageFromMoat)
+				containDamageFromMoat = true;
+			else
+				continue;
+		}
+
+		else if(obstacle->obstacleType == ObstacleType::SPELL_CREATED)
 		{
 			//helper info
 			const SpellCreatedObstacle * spellObstacle = dynamic_cast<const SpellCreatedObstacle *>(obstacle.get());
@@ -4900,7 +4911,7 @@ bool CGameHandler::handleDamageFromObstacle(const CStack * curStack, bool stackI
 				}
 			}
 		}
-		else if(obstacle->obstacleType == CObstacleInstance::MOAT)
+		else if(obstacle->getType() == ObstacleType::MOAT)
 		{
 			auto town = gs->curB->town;
 			int damage = (town == nullptr) ? 0 : town->town->moatDamage;
@@ -6588,7 +6599,7 @@ void CGameHandler::handleCheatCode(std::string & cheat, PlayerColor player, cons
 		cheated = false;
 }
 
-void CGameHandler::removeObstacle(const CObstacleInstance & obstacle)
+void CGameHandler::removeObstacle(const Obstacle &obstacle)
 {
 	BattleObstaclesChanged obsRem;
 	obsRem.changes.emplace_back(obstacle.uniqueID, BattleChanges::EOperation::REMOVE);
