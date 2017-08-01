@@ -9,12 +9,13 @@
  */
 #include "StdInc.h"
 #include "CObstacleInstance.h"
-#include "../CHeroHandler.h"
 #include "../CTownHandler.h"
 #include "../VCMI_Lib.h"
 #include "../spells/CSpellHandler.h"
+#include "filesystem/ResourceID.h"
+#include "battle/obstacle/ObstacleInfo.h"
 
-CObstacleInstance::CObstacleInstance()
+CObstacleInstance::CObstacleInstance() : config(JsonNode(ResourceID("config/obstacles.json"))["obstacles"])
 {
 	obstacleType = ObstacleType::USUAL;
 	uniqueID = -1;
@@ -26,17 +27,9 @@ CObstacleInstance::~CObstacleInstance()
 
 }
 
-const ObstacleInfo & CObstacleInstance::getInfo() const
+const ObstacleInfo CObstacleInstance::getInfo() const
 {
-	switch(obstacleType)
-	{
-	case ObstacleType::ABSOLUTE_OBSTACLE:
-		return VLC->heroh->absoluteObstacles[ID];
-	case ObstacleType::USUAL:
-		return VLC->heroh->obstacles[ID];
-	default:
-		throw std::runtime_error("Unknown obstacle type in CObstacleInstance::getInfo()");
-	}
+	return ObstacleInfo(config.Vector().at(ID));
 }
 
 std::vector<BattleHex> CObstacleInstance::getBlockedTiles() const
@@ -55,29 +48,23 @@ std::vector<BattleHex> CObstacleInstance::getStoppingTile() const
 
 std::vector<BattleHex> CObstacleInstance::getAffectedTiles() const
 {
+	ObstacleArea affectedArea;
+	affectedArea.setArea(getInfo().getArea().getFields());
 	switch(obstacleType)
 	{
 	case ObstacleType::ABSOLUTE_OBSTACLE:
-		return getInfo().getArea().getArea();
+		return affectedArea.getFields();
 	case ObstacleType::USUAL:
-		return getInfo().getArea().getMovedArea(pos);
+		affectedArea.moveAreaToField(pos);
+		return affectedArea.getFields();
 	default:
 		assert(0);
 		return std::vector<BattleHex>();
 	}
 }
 
-// bool CObstacleInstance::spellGenerated() const
-// {
-// 	if(obstacleType == USUAL || obstacleType == ABSOLUTE_OBSTACLE)
-// 		return false;
-//
-// 	return true;
-// }
-
 bool CObstacleInstance::visibleForSide(ui8 side, bool hasNativeStack) const
 {
-	//by default obstacle is visible for everyone
 	return true;
 }
 
@@ -106,7 +93,6 @@ bool SpellCreatedObstacle::visibleForSide(ui8 side, bool hasNativeStack) const
 	{
 	case ObstacleType::FIRE_WALL:
 	case ObstacleType::FORCE_FIELD:
-		//these are always visible
 		return true;
 	case ObstacleType::QUICKSAND:
 	case ObstacleType::LAND_MINE:

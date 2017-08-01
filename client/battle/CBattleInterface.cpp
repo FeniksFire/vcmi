@@ -44,6 +44,7 @@
 #include "../../lib/mapping/CMap.h"
 #include "../../lib/NetPacks.h"
 #include "../../lib/UnlockGuard.h"
+#include "battle/obstacle/ObstacleInfo.h"
 
 CondSh<bool> CBattleInterface::animsAreDisplayed(false);
 CondSh<BattleAction *> CBattleInterface::givenCommand(nullptr);
@@ -3648,7 +3649,7 @@ Point CBattleInterface::getObstaclePosition(SDL_Surface *image, const CObstacleI
 	int offset = image->h % 42;
 	if (obstacle.obstacleType == ObstacleType::USUAL)
 	{
-		if (obstacle.getInfo().getArea().getArea().front() < 0  || offset > 37) //second or part is for holy ground ID=62,65,63
+		if (obstacle.getInfo().getArea().getFields().front() < 0  || offset > 37) //second or part is for holy ground ID=62,65,63
 			offset -= 42;
 	}
 	else if (obstacle.obstacleType == ObstacleType::QUICKSAND)

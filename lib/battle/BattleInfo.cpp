@@ -10,7 +10,6 @@
 #include "StdInc.h"
 #include "BattleInfo.h"
 #include "../CStack.h"
-#include "../CHeroHandler.h"
 #include "../NetPacks.h"
 #include "../filesystem/Filesystem.h"
 #include "../mapObjects/CGTownInstance.h"
@@ -314,30 +313,31 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 
 		std::vector<BattleHex> blockedTiles;
 
+		const JsonNode obstacleConfig(ResourceID("config/obstacles.json"));
 		auto appropriateAbsoluteObstacle = [&](int id)
 		{
-			return VLC->heroh->absoluteObstacles[id].getSurface().isAppropriateForSurface(curB->terrainType, static_cast<BFieldType>(specialBattlefield));
+			return ObstacleInfo(obstacleConfig["absoluteObstacles"].Vector().at(id)).getSurface().isAppropriateForSurface(curB->terrainType, static_cast<BFieldType>(specialBattlefield));
 		};
 		auto appropriateUsualObstacle = [&](int id) -> bool
 		{
-			return VLC->heroh->obstacles[id].getSurface().isAppropriateForSurface(curB->terrainType, static_cast<BFieldType>(specialBattlefield));
+			return ObstacleInfo(obstacleConfig["obstacles"].Vector().at(id)).getSurface().isAppropriateForSurface(curB->terrainType, static_cast<BFieldType>(specialBattlefield));
 		};
 
 		if(r.rand(1,100) <= 40) //put cliff-like obstacle
 		{
 			RangeGenerator obidgen(0, ABSOLUTE_OBSTACLES_COUNT-1, ourRand);
-
 			try
 			{
 				auto obstPtr = std::make_shared<CObstacleInstance>();
 				obstPtr->obstacleType = ObstacleType::ABSOLUTE_OBSTACLE;
+				obstPtr->config = JsonNode(obstacleConfig)["absoluteObstacles"];
 				obstPtr->ID = obidgen.getSuchNumber(appropriateAbsoluteObstacle);
 				obstPtr->uniqueID = curB->obstacles.size();
 				curB->obstacles.push_back(obstPtr);
 
 				for(BattleHex blocked : obstPtr->getBlockedTiles())
 					blockedTiles.push_back(blocked);
-				tilesToBlock -= VLC->heroh->absoluteObstacles[obstPtr->ID].getArea().getArea().size() / 2;
+				tilesToBlock -= obstPtr->getInfo().getArea().getFields().size() / 2;
 			}
 			catch(RangeGenerator::ExhaustedPossibilities &)
 			{
@@ -353,7 +353,8 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 			{
 				auto tileAccessibility = curB->getAccesibility();
 				const int obid = obidgen.getSuchNumber(appropriateUsualObstacle);
-				const ObstacleInfo &obi = VLC->heroh->obstacles[obid];
+
+				const ObstacleInfo &obi = ObstacleInfo(obstacleConfig["obstacles"].Vector().at(obid));
 
 				auto validPosition = [&](BattleHex pos) -> bool
 				{
@@ -365,8 +366,9 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 						return false;
 					if(vstd::contains(blockedTiles, pos))
 						return false;
-
-					for(BattleHex blocked : obi.getArea().getMovedArea(pos))
+					auto area = obi.getArea();
+					area.moveAreaToField(pos);
+					for(BattleHex blocked :	area.getFields())
 					{
 						if(tileAccessibility[blocked] == EAccessibility::UNAVAILABLE) //for ship-to-ship battlefield - exclude hardcoded unavailable tiles
 							return false;
@@ -390,7 +392,7 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 
 				for(BattleHex blocked : obstPtr->getBlockedTiles())
 					blockedTiles.push_back(blocked);
-				tilesToBlock -= obi.getArea().getArea().size();
+				tilesToBlock -= obi.getArea().getFields().size();
 			}
 		}
 		catch(RangeGenerator::ExhaustedPossibilities &)

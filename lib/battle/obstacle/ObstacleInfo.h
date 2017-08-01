@@ -16,8 +16,9 @@ class JsonNode;
 
 class DLL_LINKAGE ObstacleInfo
 {
+private:
+	JsonNode config;
 public:
-	JsonNode node;
 
 	virtual ObstacleArea getArea() const;
 	virtual ObstacleSurface getSurface() const;

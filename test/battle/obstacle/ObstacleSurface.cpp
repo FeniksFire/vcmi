@@ -1,5 +1,5 @@
 /*
- * ObstacleTerrain.cpp, part of VCMI engine
+ * ObstacleSurface.cpp, part of VCMI engine
  *
  * Authors: listed in file AUTHORS in main folder
  *
@@ -11,7 +11,7 @@
 #include "StdInc.h"
 #include "lib/battle/obstacle/ObstacleSurface.h"
 
-TEST(ObstacleTerrainTest, isAppropriateForSurface)
+TEST(ObstacleSurfaceTest, isAppropriateForSurface)
 {
 	ObstacleSurface terrain;
 	terrain.areaSurface.push_back(ETerrainType::GRASS);

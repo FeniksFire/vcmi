@@ -13,9 +13,6 @@
 #include "GameConstants.h"
 #include "HeroBonus.h"
 #include "IHandlerBase.h"
-#include "battle/obstacle/ObstacleArea.h"
-#include "battle/obstacle/ObstacleSurface.h"
-#include "battle/obstacle/ObstacleInfo.h"
 
 class CHeroClass;
 class CGameInfo;
@@ -222,7 +219,6 @@ class DLL_LINKAGE CHeroHandler : public IHandlerBase
 	void loadExperience();
 	void loadBallistics();
 	void loadTerrains();
-	void loadObstacles();
 
 	/// Load single hero from json
 	CHero * loadFromJson(const JsonNode & node, const std::string & identifier);
@@ -255,9 +251,6 @@ public:
 		}
 	};
 	std::vector<SBallisticsLevelInfo> ballistics; //info about ballistics ability per level; [0] - none; [1] - basic; [2] - adv; [3] - expert
-
-	std::vector<ObstacleInfo> obstacles; //info about obstacles that may be placed on battlefield
-	std::vector<ObstacleInfo> absoluteObstacles; //info about obstacles that may be placed on battlefield
 
 	ui32 level(ui64 experience) const; //calculates level corresponding to given experience amount
 	ui64 reqExp(ui32 level) const; //calculates experience required for given level

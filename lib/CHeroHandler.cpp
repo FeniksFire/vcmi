@@ -249,7 +249,6 @@ CHeroHandler::CHeroHandler()
 		VLC->modh->identifiers.registerObject("core", "skill", NSecondarySkill::names[i], i);
 		VLC->modh->identifiers.registerObject("core", "secondarySkill", NSecondarySkill::names[i], i);
 	}
-	loadObstacles();
 	loadTerrains();
 	for (int i = 0; i < GameConstants::TERRAIN_TYPES; ++i)
 	{
@@ -397,20 +396,6 @@ void CHeroHandler::loadExperience()
 		expPerLevel.push_back (expPerLevel[i] + (expPerLevel[i] - expPerLevel[i-1]) * 1.2);
 	}
 	expPerLevel.pop_back();//last value is broken
-}
-
-void CHeroHandler::loadObstacles()
-{
-	auto loadObstacles = [](const JsonNode &node, std::vector<ObstacleInfo> &out)
-	{
-		for(const JsonNode &obs : node.Vector())
-		{
-			out.push_back(ObstacleInfo(obs));
-		}
-	};
-	const JsonNode config(ResourceID("config/obstacles.json"));
-	loadObstacles(config["obstacles"], obstacles);
-	loadObstacles(config["absoluteObstacles"], absoluteObstacles);
 }
 
 /// convert h3-style ID (e.g. Gobin Wolf Rider) to vcmi (e.g. goblinWolfRider)

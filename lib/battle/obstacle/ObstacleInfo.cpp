@@ -14,34 +14,34 @@
 ObstacleArea ObstacleInfo::getArea() const
 {
 	ObstacleArea area;
-	area.setArea(node["blockedTiles"].convertTo<std::vector<BattleHex>>());
+	area.setArea(config["blockedTiles"].convertTo<std::vector<BattleHex>>());
 	return area;
 }
 
 ObstacleSurface ObstacleInfo::getSurface() const
 {
 	ObstacleSurface surface;
-	surface.areaSurface = node["allowedTerrain"].convertTo<std::vector<ETerrainType>>();
-	surface.battlefieldSurface = node["specialBattlefields"].convertTo<std::vector<BFieldType>>();
+	surface.areaSurface = config["allowedTerrain"].convertTo<std::vector<ETerrainType>>();
+	surface.battlefieldSurface = config["specialBattlefields"].convertTo<std::vector<BFieldType>>();
 	return surface;
 }
 
 int32_t ObstacleInfo::getHeight() const
 {
-	return node["height"].Integer();
+	return config["height"].Integer();
 }
 
 int32_t ObstacleInfo::getWidth() const
 {
-	return node["width"].Integer();
+	return config["width"].Integer();
 }
 
 std::string ObstacleInfo::getDefName() const
 {
-	return node["defname"].String();
+	return config["defname"].String();
 }
 
-ObstacleInfo::ObstacleInfo(JsonNode jsonNode) : node(jsonNode)
+ObstacleInfo::ObstacleInfo(JsonNode jsonNode) : config(jsonNode)
 {
 
 }

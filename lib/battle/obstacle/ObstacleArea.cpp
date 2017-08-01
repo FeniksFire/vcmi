@@ -24,17 +24,9 @@ void ObstacleArea::setArea(std::vector<BattleHex> fields)
 		addField(i);
 }
 
-std::vector<BattleHex> ObstacleArea::getArea() const
+std::vector<BattleHex> ObstacleArea::getFields() const
 {
 	return area;
-}
-
-std::vector<BattleHex> ObstacleArea::getMovedArea(BattleHex offset) const
-{
-	ObstacleArea moved;
-	moved.setArea(area);
-	moved.moveAreaToField(offset);
-	return moved.getArea();
 }
 
 void ObstacleArea::moveAreaToField(BattleHex offset)

@@ -22,6 +22,8 @@ set(lib_SRCS
 		battle/obstacle/ObstacleArea.cpp
 		battle/obstacle/ObstacleSurface.cpp
 		battle/obstacle/ObstacleInfo.cpp
+		battle/obstacle/StaticObstacle.cpp
+		battle/obstacle/Obstacle.cpp
 
 		filesystem/AdapterLoaders.cpp
 		filesystem/CArchiveLoader.cpp
@@ -161,6 +163,7 @@ set(lib_HEADERS
 		battle/obstacle/ObstacleSurface.h
 		battle/obstacle/ObstacleType.h
 		battle/obstacle/ObstacleInfo.h
+		battle/obstacle/StaticObstacle.h
 
 
 		filesystem/AdapterLoaders.h

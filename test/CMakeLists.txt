@@ -19,6 +19,7 @@ set(test_SRCS
  
 		battle/obstacle/ObstacleArea.cpp
 		battle/obstacle/ObstacleSurface.cpp
+		battle/obstacle/StaticObstacle.cpp
 
  		battle/BattleHexTest.cpp
  		battle/CHealthTest.cpp
@@ -39,6 +40,7 @@ assign_source_group(${test_SRCS} ${test_HEADERS})
 
 set(mock_HEADERS
     mock/mock_UnitHealthInfo.h
+    mock/mock_ObstacleInfo.h
 )
 
 add_subdirectory_with_folder("3rdparty" googletest EXCLUDE_FROM_ALL)
