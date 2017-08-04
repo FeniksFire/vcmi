@@ -37,4 +37,3 @@ TEST_F(StaticObstacleTest, getArea)
 	EXPECT_EQ(obstacle.getArea().getFields().at(0), 103);
 	EXPECT_EQ(obstacle.getArea().getFields().at(1), 122);
 }
-

@@ -9,14 +9,3 @@
  */
 #include "StdInc.h"
 #include "Obstacle.h"
-
-ObstacleArea Obstacle::getArea() const
-{
-	return area;
-}
-
-void Obstacle::setArea(ObstacleArea obstacleArea)
-{
-	area = obstacleArea;
-}
-

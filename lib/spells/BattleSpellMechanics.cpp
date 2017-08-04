@@ -510,7 +510,7 @@ void ObstacleMechanics::placeObstacle(const SpellCastEnvironment * env, const Ba
 	auto obstacle = std::make_shared<SpellCreatedObstacle>();
 	setupObstacle(obstacle.get());
 
-	obstacle->pos = pos;
+	obstacle->area.position = pos;
 	obstacle->casterSide = parameters.casterSide;
 	obstacle->ID = owner->id;
 	obstacle->spellLevel = parameters.effectLevel;

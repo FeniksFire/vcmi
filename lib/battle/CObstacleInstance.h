@@ -11,15 +11,16 @@
 #include "BattleHex.h"
 #include "obstacle/ObstacleType.h"
 #include "JsonNode.h"
+#include "obstacle/ObstacleArea.h"
 
 struct ObstacleInfo;
 struct DLL_LINKAGE CObstacleInstance
 {
 	JsonNode config;
-	BattleHex pos; //position on battlefield, typically left bottom corner
+	ObstacleArea area;
 	ObstacleType obstacleType; //if ABSOLUTE_OBSTACLE, then position is meaningless
 	si32 uniqueID;
-	si32 ID; //ID of obstacle (defines type of it)
+	si32 ID;
 
 	//used only for spell-created obstacles
 
@@ -45,7 +46,7 @@ struct DLL_LINKAGE CObstacleInstance
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{
 		h & ID;
-		h & pos;
+		h & area;
 		h & obstacleType;
 		h & uniqueID;
 	}

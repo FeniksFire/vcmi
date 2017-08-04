@@ -22,4 +22,10 @@ public:
 
 	std::vector<BattleHex> getFields() const;
 	ObstacleArea();
+
+	template <typename Handler> void serialize(Handler &h, const int version)
+	{
+		h & area;
+		h & position;
+	}
 };

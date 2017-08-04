@@ -3537,7 +3537,7 @@ BattleObjectsByHex CBattleInterface::sortObjectsByHex()
 		for (auto &obstacle : curInt->cb->battleGetAllObstacles()) {
 			if (obstacle->obstacleType != ObstacleType::ABSOLUTE_OBSTACLE
 				&& obstacle->obstacleType != ObstacleType::MOAT) {
-				backgroundObstacles[obstacle->pos] = obstacle;
+				backgroundObstacles[obstacle->area.position] = obstacle;
 			}
 		}
 		for (auto &op : backgroundObstacles)
@@ -3657,7 +3657,7 @@ Point CBattleInterface::getObstaclePosition(SDL_Surface *image, const CObstacleI
 		offset -= 42;
 	}
 
-	Rect r = hexPosition(obstacle.pos);
+	Rect r = hexPosition(obstacle.area.position);
 	r.y += 42 - image->h + offset;
 	return r.topLeft();
 }

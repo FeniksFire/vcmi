@@ -36,11 +36,11 @@ int BattleInfo::getAvaliableHex(CreatureID creID, ui8 side, int initialPos) cons
 		pos = initialPos;
 	else //summon elementals depending on player side
 	{
- 		if(side == BattleSide::ATTACKER)
-	 		pos = 0; //top left
- 		else
- 			pos = GameConstants::BFIELD_WIDTH - 1; //top right
- 	}
+		if(side == BattleSide::ATTACKER)
+			pos = 0; //top left
+		else
+			pos = GameConstants::BFIELD_WIDTH - 1; //top right
+	}
 
 	auto accessibility = getAccesibility();
 
@@ -300,8 +300,8 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 	}
 
 	//randomize obstacles
- 	if (town == nullptr && !creatureBank) //do it only when it's not siege and not creature bank
- 	{
+	if (town == nullptr && !creatureBank) //do it only when it's not siege and not creature bank
+	{
 		const int ABSOLUTE_OBSTACLES_COUNT = 34, USUAL_OBSTACLES_COUNT = 91; //shouldn't be changes if we want H3-like obstacle placement
 
 		RandGen r;
@@ -332,6 +332,7 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 				obstPtr->obstacleType = ObstacleType::ABSOLUTE_OBSTACLE;
 				obstPtr->config = JsonNode(obstacleConfig)["absoluteObstacles"];
 				obstPtr->ID = obidgen.getSuchNumber(appropriateAbsoluteObstacle);
+				obstPtr->area = obstPtr->getInfo().getArea();
 				obstPtr->uniqueID = curB->obstacles.size();
 				curB->obstacles.push_back(obstPtr);
 
@@ -386,7 +387,8 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 
 				auto obstPtr = std::make_shared<CObstacleInstance>();
 				obstPtr->ID = obid;
-				obstPtr->pos = posgenerator.getSuchNumber(validPosition);
+				obstPtr->area = obstPtr->getInfo().getArea();
+				obstPtr->area.moveAreaToField(posgenerator.getSuchNumber(validPosition));
 				obstPtr->uniqueID = curB->obstacles.size();
 				curB->obstacles.push_back(obstPtr);
 
@@ -518,6 +520,7 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 		//moat
 		auto moat = std::make_shared<MoatObstacle>();
 		moat->ID = curB->town->subID;
+		moat->area.setArea(VLC->townh->factions[moat->ID]->town->moatHexes);
 		moat->obstacleType = ObstacleType::MOAT;
 		moat->uniqueID = curB->obstacles.size();
 		curB->obstacles.push_back(moat);

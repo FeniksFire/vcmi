@@ -29,3 +29,13 @@ bool StaticObstacle::isVisible() const
 {
 	return visible;
 }
+
+ObstacleArea StaticObstacle::getArea() const
+{
+	return area;
+}
+
+void StaticObstacle::setArea(ObstacleArea obstacleArea)
+{
+	area = obstacleArea;
+}

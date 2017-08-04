@@ -9,17 +9,22 @@
  */
 #pragma once
 #include "Obstacle.h"
+#include "ObstacleArea.h"
 
 class ObstacleInfo;
 
 class DLL_LINKAGE StaticObstacle : public Obstacle
 {
+	ObstacleArea area;
 	bool visible;
 public:
 	StaticObstacle();
 	virtual ~StaticObstacle() {}
+
 	virtual ObstacleType getType() const override;	
-	void setVisibility(bool visual);
+	virtual ObstacleArea getArea() const override;
+	virtual void setArea(ObstacleArea obstacleArea) override;
 	virtual bool isVisible() const override;
 
+	void setVisibility(bool visual);
 };

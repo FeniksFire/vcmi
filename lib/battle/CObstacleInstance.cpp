@@ -29,6 +29,8 @@ CObstacleInstance::~CObstacleInstance()
 
 const ObstacleInfo CObstacleInstance::getInfo() const
 {
+	if(obstacleType == ObstacleType::ABSOLUTE_OBSTACLE)
+		return  ObstacleInfo(JsonNode(ResourceID("config/obstacles.json"))["absoluteObstacles"].Vector().at(ID));;
 	return ObstacleInfo(config.Vector().at(ID));
 }
 
@@ -48,19 +50,7 @@ std::vector<BattleHex> CObstacleInstance::getStoppingTile() const
 
 std::vector<BattleHex> CObstacleInstance::getAffectedTiles() const
 {
-	ObstacleArea affectedArea;
-	affectedArea.setArea(getInfo().getArea().getFields());
-	switch(obstacleType)
-	{
-	case ObstacleType::ABSOLUTE_OBSTACLE:
-		return affectedArea.getFields();
-	case ObstacleType::USUAL:
-		affectedArea.moveAreaToField(pos);
-		return affectedArea.getFields();
-	default:
-		assert(0);
-		return std::vector<BattleHex>();
-	}
+		return area.getFields();
 }
 
 bool CObstacleInstance::visibleForSide(ui8 side, bool hasNativeStack) const
@@ -113,9 +103,9 @@ std::vector<BattleHex> SpellCreatedObstacle::getAffectedTiles() const
 	case ObstacleType::QUICKSAND:
 	case ObstacleType::LAND_MINE:
 	case ObstacleType::FIRE_WALL:
-		return std::vector<BattleHex>(1, pos);
+		return std::vector<BattleHex>(1, area.position);
 	case ObstacleType::FORCE_FIELD:
-		return SpellID(SpellID::FORCE_FIELD).toSpell()->rangeInHexes(pos, spellLevel, casterSide);
+		return SpellID(SpellID::FORCE_FIELD).toSpell()->rangeInHexes(area.position, spellLevel, casterSide);
 	default:
 		assert(0);
 		return std::vector<BattleHex>();
@@ -130,5 +120,5 @@ void SpellCreatedObstacle::battleTurnPassed()
 
 std::vector<BattleHex> MoatObstacle::getAffectedTiles() const
 {
-	return VLC->townh->factions[ID]->town->moatHexes;
+	return area.getFields();
 }
