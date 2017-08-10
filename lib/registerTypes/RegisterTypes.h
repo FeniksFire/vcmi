@@ -199,6 +199,7 @@ void registerTypesMapObjects2(Serializer &s)
 
 	//s.template registerType<CObstacleInstance>();
 		s.template registerType<CObstacleInstance, MoatObstacle>();
+		s.template registerType<CObstacleInstance, AbsoluteObstacle>();
 		s.template registerType<CObstacleInstance, SpellCreatedObstacle>();
 }
 template<typename Serializer>

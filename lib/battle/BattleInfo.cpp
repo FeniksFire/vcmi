@@ -328,15 +328,13 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 			RangeGenerator obidgen(0, ABSOLUTE_OBSTACLES_COUNT-1, ourRand);
 			try
 			{
-				auto obstPtr = std::make_shared<CObstacleInstance>();
-				obstPtr->obstacleType = ObstacleType::ABSOLUTE_OBSTACLE;
-				obstPtr->config = JsonNode(obstacleConfig)["absoluteObstacles"];
+				auto obstPtr = std::make_shared<AbsoluteObstacle>();
 				obstPtr->ID = obidgen.getSuchNumber(appropriateAbsoluteObstacle);
 				obstPtr->area = obstPtr->getInfo().getArea();
 				obstPtr->uniqueID = curB->obstacles.size();
 				curB->obstacles.push_back(obstPtr);
 
-				for(BattleHex blocked : obstPtr->getBlockedTiles())
+				for(BattleHex blocked : obstPtr->getArea().getFields())
 					blockedTiles.push_back(blocked);
 				tilesToBlock -= obstPtr->getInfo().getArea().getFields().size() / 2;
 			}
@@ -392,7 +390,7 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 				obstPtr->uniqueID = curB->obstacles.size();
 				curB->obstacles.push_back(obstPtr);
 
-				for(BattleHex blocked : obstPtr->getBlockedTiles())
+				for(BattleHex blocked : obstPtr->getArea().getFields())
 					blockedTiles.push_back(blocked);
 				tilesToBlock -= obi.getArea().getFields().size();
 			}
@@ -521,7 +519,6 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 		auto moat = std::make_shared<MoatObstacle>();
 		moat->ID = curB->town->subID;
 		moat->area.setArea(VLC->townh->factions[moat->ID]->town->moatHexes);
-		moat->obstacleType = ObstacleType::MOAT;
 		moat->uniqueID = curB->obstacles.size();
 		curB->obstacles.push_back(moat);
 	}
@@ -651,7 +648,6 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 			}
 		}
 	}
-
 	return curB;
 }
 
@@ -697,7 +693,7 @@ int BattleInfo::getIdForNewStack() const
 std::shared_ptr<CObstacleInstance> BattleInfo::getObstacleOnTile(BattleHex tile) const
 {
 	for(auto &obs : obstacles)
-		if(vstd::contains(obs->getAffectedTiles(), tile))
+		if(vstd::contains(obs->getArea().getFields(), tile))
 			return obs;
 
 	return std::shared_ptr<CObstacleInstance>();

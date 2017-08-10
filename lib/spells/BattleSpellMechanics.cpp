@@ -275,9 +275,9 @@ void DispellMechanics::applyBattleEffects(const SpellCastEnvironment * env, cons
 
 		for(const auto obstacle : parameters.cb->obstacles)
 		{
-			if(obstacle->obstacleType == ObstacleType::FIRE_WALL
-				|| obstacle->obstacleType == ObstacleType::FORCE_FIELD
-				|| obstacle->obstacleType == ObstacleType::LAND_MINE)
+			if(obstacle->getType() == ObstacleType::FIRE_WALL
+				|| obstacle->getType() == ObstacleType::FORCE_FIELD
+				|| obstacle->getType() == ObstacleType::LAND_MINE)
 				packet.obstacles.insert(obstacle->uniqueID);
 		}
 
@@ -483,7 +483,7 @@ bool ObstacleMechanics::isHexAviable(const CBattleInfoCallback * cb, const Battl
 	auto obst = cb->battleGetAllObstaclesOnPos(hex, false);
 
 	for(auto & i : obst)
-		if(i->obstacleType != ObstacleType::MOAT)
+		if(i->getType() != ObstacleType::MOAT)
 			return false;
 
 	if(cb->battleGetDefendedTown() != nullptr && cb->battleGetDefendedTown()->fortLevel() != CGTownInstance::NONE)
@@ -764,7 +764,7 @@ ESpellCastProblem::ESpellCastProblem RemoveObstacleMechanics::canBeCastAt(const 
 
 bool RemoveObstacleMechanics::canRemove(const CObstacleInstance * obstacle, const int spellLevel) const
 {
-	switch (obstacle->obstacleType)
+	switch (obstacle->getType())
 	{
 	case ObstacleType::ABSOLUTE_OBSTACLE: //cliff-like obstacles can't be removed
 	case ObstacleType::MOAT:

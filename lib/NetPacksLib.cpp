@@ -1382,8 +1382,8 @@ void BattleStackMoved::applyGs(CGameState *gs)
 	//if unit ended movement on quicksands that were created by enemy, that quicksand patch becomes visible for owner
 	for(auto &oi : gs->curB->obstacles)
 	{
-		if(oi->obstacleType == ObstacleType::QUICKSAND
-		&& vstd::contains(oi->getAffectedTiles(), tilesToMove.back()))
+		if(oi->getType() == ObstacleType::QUICKSAND
+		&& vstd::contains(oi->getArea().getFields(), tilesToMove.back()))
 		{
 			SpellCreatedObstacle *sands = dynamic_cast<SpellCreatedObstacle*>(oi.get());
 			assert(sands);

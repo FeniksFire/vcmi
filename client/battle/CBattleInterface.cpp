@@ -344,7 +344,7 @@ CBattleInterface::CBattleInterface(const CCreatureSet *army1, const CCreatureSet
 	for (auto & elem : obst)
 	{
 		const int ID = elem->ID;
-		if (elem->obstacleType == ObstacleType::USUAL)
+		if (elem->getType() == ObstacleType::USUAL)
 		{
 			idToObstacle[ID] = CDefHandler::giveDef(elem->getInfo().getDefName());
 			for (auto & _n : idToObstacle[ID]->ourImages)
@@ -352,7 +352,7 @@ CBattleInterface::CBattleInterface(const CCreatureSet *army1, const CCreatureSet
 				CSDL_Ext::setDefaultColorKey(_n.bitmap);
 			}
 		}
-		else if (elem->obstacleType == ObstacleType::ABSOLUTE_OBSTACLE)
+		else if (elem->getType() == ObstacleType::ABSOLUTE_OBSTACLE)
 		{
 			idToAbsoluteObstacle[ID] = BitmapHandler::loadBitmap(elem->getInfo().getDefName());
 		}
@@ -2719,7 +2719,7 @@ void CBattleInterface::obstaclePlaced(const CObstacleInstance & oi)
 
 	std::string defname;
 
-	switch(oi.obstacleType)
+	switch(oi.getType())
 	{
 	case ObstacleType::QUICKSAND:
 		effectID = 55;
@@ -2734,14 +2734,14 @@ void CBattleInterface::obstaclePlaced(const CObstacleInstance & oi)
 			auto &spellObstacle = dynamic_cast<const SpellCreatedObstacle&>(oi);
 			if (spellObstacle.casterSide)
 			{
-				if (oi.getAffectedTiles().size() < 3)
+				if (oi.getArea().getFields().size() < 3)
 					defname = "C15SPE0.DEF"; //TODO cannot find def for 2-hex force field \ appearing
 				else
 					defname = "C15SPE6.DEF";
 			}
 			else
 			{
-				if (oi.getAffectedTiles().size() < 3)
+				if (oi.getArea().getFields().size() < 3)
 					defname = "C15SPE0.DEF";
 				else
 					defname = "C15SPE9.DEF";
@@ -2750,14 +2750,14 @@ void CBattleInterface::obstaclePlaced(const CObstacleInstance & oi)
 		sound = soundBase::FORCEFLD;
 		break;
 	case ObstacleType::FIRE_WALL:
-		if (oi.getAffectedTiles().size() < 3)
+		if (oi.getArea().getFields().size() < 3)
 			effectID = 43; //small fire wall appearing
 		else
 			effectID = 44; //and the big one
 		sound = soundBase::fireWall;
 		break;
 	default:
-		logGlobal->error("I don't know how to animate appearing obstacle of type %d", (int)oi.obstacleType);
+		logGlobal->error("I don't know how to animate appearing obstacle of type %d", (int)oi.getType());
 		return;
 	}
 
@@ -3088,7 +3088,7 @@ void CBattleInterface::showAbsoluteObstacles(SDL_Surface *to)
 {
 	//Blit absolute obstacles
 	for (auto &oi : curInt->cb->battleGetAllObstacles())
-		if (oi->obstacleType == ObstacleType::ABSOLUTE_OBSTACLE)
+		if (oi->getType() == ObstacleType::ABSOLUTE_OBSTACLE)
 			blitAt(getObstacleImage(*oi), pos.x + oi->getInfo().getWidth(), pos.y + oi->getInfo().getHeight(), to);
 
 	if (siegeH && siegeH->town->hasBuilt(BuildingID::CITADEL))
@@ -3535,8 +3535,8 @@ BattleObjectsByHex CBattleInterface::sortObjectsByHex()
 	{
 		std::map<BattleHex, std::shared_ptr<const CObstacleInstance>> backgroundObstacles;
 		for (auto &obstacle : curInt->cb->battleGetAllObstacles()) {
-			if (obstacle->obstacleType != ObstacleType::ABSOLUTE_OBSTACLE
-				&& obstacle->obstacleType != ObstacleType::MOAT) {
+			if (obstacle->getType() != ObstacleType::ABSOLUTE_OBSTACLE
+				&& obstacle->getType() != ObstacleType::MOAT) {
 				backgroundObstacles[obstacle->area.position] = obstacle;
 			}
 		}
@@ -3616,7 +3616,7 @@ void CBattleInterface::updateBattleAnimations()
 SDL_Surface *CBattleInterface::getObstacleImage(const CObstacleInstance &oi)
 {
 	int frameIndex = (animCount+1) *25 / getAnimSpeed();
-	switch(oi.obstacleType)
+	switch(oi.getType())
 	{
 	case ObstacleType::USUAL:
 		return vstd::circularAt(idToObstacle.find(oi.ID)->second->ourImages, frameIndex).bitmap;
@@ -3631,7 +3631,7 @@ SDL_Surface *CBattleInterface::getObstacleImage(const CObstacleInstance &oi)
 	case ObstacleType::FORCE_FIELD:
 		{
 			auto &forceField = dynamic_cast<const SpellCreatedObstacle &>(oi);
-			if (forceField.getAffectedTiles().size() > 2)
+			if (forceField.getArea().getFields().size() > 2)
 				return vstd::circularAt(bigForceField[forceField.casterSide]->ourImages, frameIndex).bitmap;
 			else
 				return vstd::circularAt(smallForceField[forceField.casterSide]->ourImages, frameIndex).bitmap;
@@ -3647,12 +3647,12 @@ SDL_Surface *CBattleInterface::getObstacleImage(const CObstacleInstance &oi)
 Point CBattleInterface::getObstaclePosition(SDL_Surface *image, const CObstacleInstance &obstacle)
 {
 	int offset = image->h % 42;
-	if (obstacle.obstacleType == ObstacleType::USUAL)
+	if (obstacle.getType() == ObstacleType::USUAL)
 	{
 		if (obstacle.getInfo().getArea().getFields().front() < 0  || offset > 37) //second or part is for holy ground ID=62,65,63
 			offset -= 42;
 	}
-	else if (obstacle.obstacleType == ObstacleType::QUICKSAND)
+	else if (obstacle.getType() == ObstacleType::QUICKSAND)
 	{
 		offset -= 42;
 	}
@@ -3674,7 +3674,7 @@ void CBattleInterface::redrawBackgroundWithHexes(const CStack *activeStack)
 	//draw absolute obstacles (cliffs and so on)
 	for (auto &oi : curInt->cb->battleGetAllObstacles())
 	{
-		if (oi->obstacleType == ObstacleType::ABSOLUTE_OBSTACLE/*  ||  oi.obstacleType == CObstacleInstance::MOAT*/)
+		if (oi->getType() == ObstacleType::ABSOLUTE_OBSTACLE/*  ||  oi.getType() == CObstacleInstance::MOAT*/)
 			blitAt(getObstacleImage(*oi), oi->getInfo().getWidth(),
 				   oi->getInfo().getHeight(), backgroundWithHexes);
 	}

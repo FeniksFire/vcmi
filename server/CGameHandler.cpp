@@ -4635,7 +4635,7 @@ bool CGameHandler::handleDamageFromObstacle(const CStack * curStack, bool stackI
 		const ui8 side = curStack->side; //if enemy is defending (false = 0), side of enemy hero is 1 (true)
 		const CGHeroInstance * hero = gs->curB->battleGetFightingHero(side);//FIXME: there may be no hero - landmines in Tower
 
-		if(obstacle->obstacleType == ObstacleType::MOAT)
+		if(obstacle->getType() == ObstacleType::MOAT)
 		{
 			damage = battleGetMoatDmg();
 			if(!containDamageFromMoat)
@@ -4643,7 +4643,7 @@ bool CGameHandler::handleDamageFromObstacle(const CStack * curStack, bool stackI
 			else
 				continue;
 		}
-		else if(obstacle->obstacleType == ObstacleType::LAND_MINE)
+		else if(obstacle->getType() == ObstacleType::LAND_MINE)
 		{
 			if(!spellObstacle)
 				COMPLAIN_RET("Invalid obstacle instance");
@@ -4661,7 +4661,7 @@ bool CGameHandler::handleDamageFromObstacle(const CStack * curStack, bool stackI
 			//TODO even if obstacle wasn't created by hero (Tower "moat") it should deal dmg as if cast by hero,
 			//if it is bigger than default dmg. Or is it just irrelevant H3 implementation quirk
 		}
-		else if(obstacle->obstacleType == ObstacleType::FIRE_WALL)
+		else if(obstacle->getType() == ObstacleType::FIRE_WALL)
 		{
 			if(!spellObstacle)
 				COMPLAIN_RET("Invalid obstacle instance");

@@ -393,7 +393,7 @@
 	{
 		"allowedTerrain" : [5],
 		"specialBattlefields" : [1],
-		"width" : 3,
+		"width" : 2,
 		"height" : 2,
 		"blockedTiles" :  [1, 2, -15, -16],
 		"defname" : "ObRgS03.def",

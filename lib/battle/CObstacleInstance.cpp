@@ -15,9 +15,8 @@
 #include "filesystem/ResourceID.h"
 #include "battle/obstacle/ObstacleInfo.h"
 
-CObstacleInstance::CObstacleInstance() : config(JsonNode(ResourceID("config/obstacles.json"))["obstacles"])
+CObstacleInstance::CObstacleInstance()
 {
-	obstacleType = ObstacleType::USUAL;
 	uniqueID = -1;
 	ID = -1;
 }
@@ -27,31 +26,21 @@ CObstacleInstance::~CObstacleInstance()
 
 }
 
+ObstacleType CObstacleInstance::getType() const
+{
+	return ObstacleType::USUAL;
+}
+
 const ObstacleInfo CObstacleInstance::getInfo() const
 {
-	if(obstacleType == ObstacleType::ABSOLUTE_OBSTACLE)
-		return  ObstacleInfo(JsonNode(ResourceID("config/obstacles.json"))["absoluteObstacles"].Vector().at(ID));;
-	return ObstacleInfo(config.Vector().at(ID));
+	return ObstacleInfo(JsonNode(ResourceID("config/obstacles.json"))["obstacles"].Vector().at(ID));
 }
 
-std::vector<BattleHex> CObstacleInstance::getBlockedTiles() const
+ObstacleArea CObstacleInstance::getArea() const
 {
-	if(blocksTiles())
-		return getAffectedTiles();
-	return std::vector<BattleHex>();
+	return area;
 }
 
-std::vector<BattleHex> CObstacleInstance::getStoppingTile() const
-{
-	if(stopsMovement())
-		return getAffectedTiles();
-	return std::vector<BattleHex>();
-}
-
-std::vector<BattleHex> CObstacleInstance::getAffectedTiles() const
-{
-		return area.getFields();
-}
 
 bool CObstacleInstance::visibleForSide(ui8 side, bool hasNativeStack) const
 {
@@ -60,12 +49,12 @@ bool CObstacleInstance::visibleForSide(ui8 side, bool hasNativeStack) const
 
 bool CObstacleInstance::stopsMovement() const
 {
-	return obstacleType == ObstacleType::QUICKSAND || obstacleType == ObstacleType::MOAT;
+	return getType() == ObstacleType::QUICKSAND || getType() == ObstacleType::MOAT;
 }
 
 bool CObstacleInstance::blocksTiles() const
 {
-	return obstacleType == ObstacleType::USUAL || obstacleType == ObstacleType::ABSOLUTE_OBSTACLE || obstacleType == ObstacleType::FORCE_FIELD;
+	return getType() == ObstacleType::USUAL || getType() == ObstacleType::ABSOLUTE_OBSTACLE || getType() == ObstacleType::FORCE_FIELD;
 }
 
 SpellCreatedObstacle::SpellCreatedObstacle()
@@ -79,7 +68,7 @@ SpellCreatedObstacle::SpellCreatedObstacle()
 
 bool SpellCreatedObstacle::visibleForSide(ui8 side, bool hasNativeStack) const
 {
-	switch(obstacleType)
+	switch(getType())
 	{
 	case ObstacleType::FIRE_WALL:
 	case ObstacleType::FORCE_FIELD:
@@ -96,20 +85,30 @@ bool SpellCreatedObstacle::visibleForSide(ui8 side, bool hasNativeStack) const
 	}
 }
 
-std::vector<BattleHex> SpellCreatedObstacle::getAffectedTiles() const
+ObstacleType SpellCreatedObstacle::getType() const
 {
-	switch(obstacleType)
+	return obstacleType;
+}
+
+ObstacleArea SpellCreatedObstacle::getArea() const
+{
+	ObstacleArea ret;
+	ret = area;
+	switch(getType())
 	{
 	case ObstacleType::QUICKSAND:
 	case ObstacleType::LAND_MINE:
 	case ObstacleType::FIRE_WALL:
-		return std::vector<BattleHex>(1, area.position);
+		ret.setArea(std::vector<BattleHex>(1, area.position));
+		break;
 	case ObstacleType::FORCE_FIELD:
-		return SpellID(SpellID::FORCE_FIELD).toSpell()->rangeInHexes(area.position, spellLevel, casterSide);
+		ret.setArea(SpellID(SpellID::FORCE_FIELD).toSpell()->rangeInHexes(area.position, spellLevel, casterSide));
+		break;
 	default:
 		assert(0);
-		return std::vector<BattleHex>();
+		ret.setArea(std::vector<BattleHex>());
 	}
+	return ret;
 }
 
 void SpellCreatedObstacle::battleTurnPassed()
@@ -118,7 +117,17 @@ void SpellCreatedObstacle::battleTurnPassed()
 		turnsRemaining--;
 }
 
-std::vector<BattleHex> MoatObstacle::getAffectedTiles() const
+ObstacleType MoatObstacle::getType() const
 {
-	return area.getFields();
+	return ObstacleType::MOAT;
+}
+
+ObstacleType AbsoluteObstacle::getType() const
+{
+	return ObstacleType::ABSOLUTE_OBSTACLE;
+}
+
+const ObstacleInfo AbsoluteObstacle::getInfo() const
+{
+	return ObstacleInfo(JsonNode(ResourceID("config/obstacles.json"))["absoluteObstacles"].Vector().at(ID));
 }
