@@ -21,6 +21,8 @@ public:
 TEST_F(ObstacleAreaTest, getInitialArea)
 {
 	EXPECT_EQ(area.position, 0);
+	EXPECT_EQ(area.getWidth(), 0);
+	EXPECT_EQ(area.getHeight(), 0);
 	EXPECT_TRUE(area.getFields().empty());
 }
 
@@ -94,3 +96,64 @@ TEST_F(ObstacleAreaTest, moveAreaToField)
 }
 
 
+TEST_F(ObstacleAreaTest, getWidth)
+{
+	std::vector<BattleHex> fields = {1,2};
+	area.setArea(fields);
+	EXPECT_EQ(area.getWidth(), 2);
+	fields = {0,1,2,3};
+	area.setArea(fields);
+	EXPECT_EQ(area.getWidth(), 4);
+	fields = {0, 1, -13, -14, -15, -16};
+	area.setArea(fields);
+	EXPECT_EQ(area.getWidth(), 5);
+	fields = {-15, -16};
+	area.setArea(fields);
+	EXPECT_EQ(area.getWidth(), 2);
+	fields = {-16};
+	area.setArea(fields);
+	EXPECT_EQ(area.getWidth(), 1);
+	fields = {-15, -16, -32, -33, -48, -49};
+	area.setArea(fields);
+	EXPECT_EQ(area.getWidth(), 3);
+	fields = {1, -16, -33};
+	area.setArea(fields);
+	EXPECT_EQ(area.getWidth(), 1);
+	fields = {3, -13, -14, -15, -33, -49, -66};
+	area.setArea(fields);
+	EXPECT_EQ(area.getWidth(), 4);
+	fields = {-10, -11, -12, -13, -14, -15, -16};
+	area.setArea(fields);
+	EXPECT_EQ(area.getWidth(), 7);
+	fields = {1, 16};
+	area.setArea(fields);
+	EXPECT_EQ(area.getWidth(), 16);
+	fields = {0, 1, -13, -14};
+	area.setArea(fields);
+	EXPECT_EQ(area.getWidth(), 5);
+}
+
+TEST_F(ObstacleAreaTest, getHeight)
+{
+	std::vector<BattleHex> fields = {0, 1, 5, 6};
+	area.setArea(fields);
+	EXPECT_EQ(area.getHeight(), 1);
+	fields = {-15, -16, -32, -33, -48, -49};
+	area.setArea(fields);
+	EXPECT_EQ(area.getHeight(), 3);
+	fields = {1, 2, 3, -13, -14, -15, -16};
+	area.setArea(fields);
+	EXPECT_EQ(area.getHeight(), 2);
+	fields = {1, -1, -17};
+	area.setArea(fields);
+	EXPECT_EQ(area.getHeight(), 2);
+	fields = {1, 170};
+	area.setArea(fields);
+	EXPECT_EQ(area.getHeight(), 11);
+	fields = {-170, 1, 170};
+	area.setArea(fields);
+	EXPECT_EQ(area.getHeight(), 21);
+	fields = {-171, 1, 170};
+	area.setArea(fields);
+	EXPECT_EQ(area.getHeight(), 22);
+}

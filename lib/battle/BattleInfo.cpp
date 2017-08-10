@@ -357,15 +357,17 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 
 				auto validPosition = [&](BattleHex pos) -> bool
 				{
-					if(obi.getHeight() >= pos.getY())
+					auto area = obi.getArea();
+
+					if(area.getHeight() >= pos.getY())
 						return false;
 					if(pos.getX() == 0)
 						return false;
-					if(pos.getX() + obi.getWidth() > 15)
+					if(pos.getX() + area.getWidth() > 15)
 						return false;
 					if(vstd::contains(blockedTiles, pos))
 						return false;
-					auto area = obi.getArea();
+
 					area.moveAreaToField(pos);
 					for(BattleHex blocked :	area.getFields())
 					{

@@ -20,6 +20,10 @@ public:
 	void setArea(std::vector<BattleHex> fields);
 	void moveAreaToField(BattleHex offset);
 
+	int getWidth();
+	int getHeight();
+
+
 	std::vector<BattleHex> getFields() const;
 	ObstacleArea();
 

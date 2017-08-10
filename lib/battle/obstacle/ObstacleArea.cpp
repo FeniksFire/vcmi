@@ -10,6 +10,7 @@
 
 #include "StdInc.h"
 #include "ObstacleArea.h"
+#include "GameConstants.h"
 
 void ObstacleArea::addField(BattleHex field)
 {
@@ -22,6 +23,45 @@ void ObstacleArea::setArea(std::vector<BattleHex> fields)
 	area.clear();
 	for(auto &i : fields)
 		addField(i);
+}
+
+int ObstacleArea::getWidth()
+{
+	if(area.empty())
+		return 0;
+	int maxX = 0;
+	int minX = GameConstants::BFIELD_WIDTH;
+	for(auto i : area)
+	{
+		while(i<0)
+			i.hex += GameConstants::BFIELD_WIDTH;
+		if(i.getX() > maxX)
+			maxX = i.getX();
+		if(i.getX() < minX)
+			minX = i.getX();
+	}
+	return maxX - minX + 1;
+}
+
+int ObstacleArea::getHeight()
+{
+	if(area.empty())
+		return 0;
+	BattleHex maxY = area.at(0);
+	BattleHex minY = area.at(0);
+	for(auto i : area)
+	{
+		if(i > maxY)
+			maxY = i;
+		if(i < minY)
+			minY = i;
+	}
+	while(minY < 0)
+	{
+		maxY.hex += GameConstants::BFIELD_WIDTH;
+		minY.hex += GameConstants::BFIELD_WIDTH;
+	}
+	return maxY.getY() - minY.getY() + 1;
 }
 
 std::vector<BattleHex> ObstacleArea::getFields() const
