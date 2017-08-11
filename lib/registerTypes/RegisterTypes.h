@@ -20,7 +20,7 @@
 #include "../mapObjects/CRewardableConstructor.h"
 #include "../mapObjects/CommonConstructors.h"
 #include "../mapObjects/MapObjects.h"
-#include "../battle/CObstacleInstance.h"
+#include "../battle/obstacle/CObstacleInstance.h"
 
 class BinarySerializer;
 class BinaryDeserializer;

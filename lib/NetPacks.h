@@ -19,7 +19,7 @@
 #include "ResourceSet.h"
 #include "CGameStateFwd.h"
 #include "mapping/CMapDefines.h"
-#include "battle/CObstacleInstance.h"
+#include "battle/obstacle/CObstacleInstance.h"
 
 #include "spells/ViewSpellInt.h"
 

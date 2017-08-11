@@ -13,7 +13,6 @@ set(lib_SRCS
 		battle/CBattleInfoCallback.cpp
 		battle/CBattleInfoEssentials.cpp
 		battle/CCallbackBase.cpp
-		battle/CObstacleInstance.cpp
 		battle/CPlayerBattleCallback.cpp
 		battle/ReachabilityInfo.cpp
 		battle/SideInBattle.cpp
@@ -24,6 +23,8 @@ set(lib_SRCS
 		battle/obstacle/ObstacleInfo.cpp
 		battle/obstacle/StaticObstacle.cpp
 		battle/obstacle/Obstacle.cpp
+		battle/obstacle/CObstacleInstance.cpp
+
 
 		filesystem/AdapterLoaders.cpp
 		filesystem/CArchiveLoader.cpp
@@ -152,7 +153,6 @@ set(lib_HEADERS
 		battle/CBattleInfoCallback.h
 		battle/CBattleInfoEssentials.h
 		battle/CCallbackBase.h
-		battle/CObstacleInstance.h
 		battle/CPlayerBattleCallback.h
 		battle/ReachabilityInfo.h
 		battle/SideInBattle.h
@@ -164,6 +164,7 @@ set(lib_HEADERS
 		battle/obstacle/ObstacleType.h
 		battle/obstacle/ObstacleInfo.h
 		battle/obstacle/StaticObstacle.h
+		battle/obstacle/CObstacleInstance.h
 
 
 		filesystem/AdapterLoaders.h
