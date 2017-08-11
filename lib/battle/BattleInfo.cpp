@@ -331,6 +331,7 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 				auto obstPtr = std::make_shared<AbsoluteObstacle>();
 				obstPtr->ID = obidgen.getSuchNumber(appropriateAbsoluteObstacle);
 				obstPtr->area = obstPtr->getInfo().getArea();
+				obstPtr->area.position = obstPtr->getInfo().getPosition();
 				obstPtr->uniqueID = curB->obstacles.size();
 				curB->obstacles.push_back(obstPtr);
 

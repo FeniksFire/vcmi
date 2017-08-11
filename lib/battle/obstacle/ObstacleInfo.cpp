@@ -26,14 +26,19 @@ ObstacleSurface ObstacleInfo::getSurface() const
 	return surface;
 }
 
-int32_t ObstacleInfo::getHeight() const
+int32_t ObstacleInfo::offsetGraphicsInY() const
 {
-	return config["height"].Integer();
+	return config["offsetGraphicsInY"].Integer();
 }
 
-int32_t ObstacleInfo::getWidth() const
+int32_t ObstacleInfo::offsetGraphicsInX() const
 {
-	return config["width"].Integer();
+	return config["offsetGraphicsInX"].Integer();
+}
+
+int32_t ObstacleInfo::getPosition() const
+{
+	return config["position"].Integer();
 }
 
 std::string ObstacleInfo::getDefName() const

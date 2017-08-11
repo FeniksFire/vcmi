@@ -241,7 +241,6 @@ private:
 	void showBackground(SDL_Surface *to);
 
 	void showBackgroundImage(SDL_Surface *to);
-	void showAbsoluteObstacles(SDL_Surface *to);
 	void showHighlightedHexes(SDL_Surface *to);
 	void showHighlightedHex(SDL_Surface *to, BattleHex hex, bool darkBorder = false);
 	void showInterface(SDL_Surface *to);

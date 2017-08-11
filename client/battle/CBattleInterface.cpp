@@ -3070,7 +3070,8 @@ void CBattleInterface::showBackground(SDL_Surface *to)
 	else
 	{
 		showBackgroundImage(to);
-		showAbsoluteObstacles(to);
+		if (siegeH && siegeH->town->hasBuilt(BuildingID::CITADEL))
+			siegeH->printPartOfWall(to, SiegeHelper::BACKGROUND_MOAT);
 	}
 	showHighlightedHexes(to);
 }
@@ -3082,17 +3083,6 @@ void CBattleInterface::showBackgroundImage(SDL_Surface *to)
 	{
 		CSDL_Ext::blit8bppAlphaTo24bpp(cellBorders, nullptr, to, &pos);
 	}
-}
-
-void CBattleInterface::showAbsoluteObstacles(SDL_Surface *to)
-{
-	//Blit absolute obstacles
-	for (auto &oi : curInt->cb->battleGetAllObstacles())
-		if (oi->getType() == ObstacleType::ABSOLUTE_OBSTACLE)
-			blitAt(getObstacleImage(*oi), pos.x + oi->getInfo().getWidth(), pos.y + oi->getInfo().getHeight(), to);
-
-	if (siegeH && siegeH->town->hasBuilt(BuildingID::CITADEL))
-		siegeH->printPartOfWall(to, SiegeHelper::BACKGROUND_MOAT);
 }
 
 void CBattleInterface::showHighlightedHexes(SDL_Surface *to)
@@ -3395,8 +3385,10 @@ void CBattleInterface::showObstacles(SDL_Surface *to, std::vector<std::shared_pt
 	for (auto & obstacle : obstacles)
 	{
 		SDL_Surface *toBlit = getObstacleImage(*obstacle);
-		Point p = getObstaclePosition(toBlit, *obstacle);
-		blitAt(toBlit, p.x, p.y, to);
+		Point p(0,0);
+		if(obstacle->area.position != -1)
+			p = getObstaclePosition(toBlit, *obstacle);
+		blitAt(toBlit, p.x + obstacle->getInfo().offsetGraphicsInX(), p.y + obstacle->getInfo().offsetGraphicsInY(), to);
 	}
 }
 
@@ -3535,8 +3527,7 @@ BattleObjectsByHex CBattleInterface::sortObjectsByHex()
 	{
 		std::map<BattleHex, std::shared_ptr<const CObstacleInstance>> backgroundObstacles;
 		for (auto &obstacle : curInt->cb->battleGetAllObstacles()) {
-			if (obstacle->getType() != ObstacleType::ABSOLUTE_OBSTACLE
-				&& obstacle->getType() != ObstacleType::MOAT) {
+			if (obstacle->getType() != ObstacleType::MOAT) {
 				backgroundObstacles[obstacle->area.position] = obstacle;
 			}
 		}
@@ -3670,14 +3661,6 @@ void CBattleInterface::redrawBackgroundWithHexes(const CStack *activeStack)
 	curInt->cb->battleGetStackCountOutsideHexes(stackCountOutsideHexes);
 	//prepare background graphic with hexes and shaded hexes
 	blitAt(background, 0, 0, backgroundWithHexes);
-
-	//draw absolute obstacles (cliffs and so on)
-	for (auto &oi : curInt->cb->battleGetAllObstacles())
-	{
-		if (oi->getType() == ObstacleType::ABSOLUTE_OBSTACLE/*  ||  oi.getType() == CObstacleInstance::MOAT*/)
-			blitAt(getObstacleImage(*oi), oi->getInfo().getWidth(),
-				   oi->getInfo().getHeight(), backgroundWithHexes);
-	}
 
 	if (settings["battle"]["stackRange"].Bool())
 	{

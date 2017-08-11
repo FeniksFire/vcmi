@@ -22,8 +22,9 @@ public:
 
 	virtual ObstacleArea getArea() const;
 	virtual ObstacleSurface getSurface() const;
-	virtual int32_t getHeight() const;
-	virtual int32_t getWidth() const;
+	virtual int32_t offsetGraphicsInY() const;
+	virtual int32_t offsetGraphicsInX() const;
+	virtual int32_t getPosition() const;
 	virtual std::string getDefName() const;
 
 	ObstacleInfo(JsonNode jsonNode);
