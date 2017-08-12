@@ -19,8 +19,8 @@ private:
 public:
 	virtual ObstacleArea getArea() const;
 	virtual ObstacleSurface getSurface() const;
-	virtual int32_t offsetGraphicsInY() const;
-	virtual int32_t offsetGraphicsInX() const;
+	virtual int32_t getOffsetGraphicsInY() const;
+	virtual int32_t getOffsetGraphicsInX() const;
 	virtual int32_t getPosition() const;
 	virtual std::string getDefName() const;
 

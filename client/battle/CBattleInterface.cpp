@@ -346,7 +346,7 @@ CBattleInterface::CBattleInterface(const CCreatureSet *army1, const CCreatureSet
 		const int ID = elem->ID;
 		if (elem->getType() == ObstacleType::USUAL)
 		{
-			idToObstacle[ID] = CDefHandler::giveDef(elem->getInfo().getDefName());
+			idToObstacle[ID] = CDefHandler::giveDef(elem->defName);
 			for (auto & _n : idToObstacle[ID]->ourImages)
 			{
 				CSDL_Ext::setDefaultColorKey(_n.bitmap);
@@ -354,7 +354,7 @@ CBattleInterface::CBattleInterface(const CCreatureSet *army1, const CCreatureSet
 		}
 		else if (elem->getType() == ObstacleType::ABSOLUTE_OBSTACLE)
 		{
-			idToAbsoluteObstacle[ID] = BitmapHandler::loadBitmap(elem->getInfo().getDefName());
+			idToAbsoluteObstacle[ID] = BitmapHandler::loadBitmap(elem->defName);
 		}
 	}
 
@@ -3388,7 +3388,7 @@ void CBattleInterface::showObstacles(SDL_Surface *to, std::vector<std::shared_pt
 		Point p(0,0);
 		if(obstacle->area.position != -1)
 			p = getObstaclePosition(toBlit, *obstacle);
-		blitAt(toBlit, p.x + obstacle->getInfo().offsetGraphicsInX(), p.y + obstacle->getInfo().offsetGraphicsInY(), to);
+		blitAt(toBlit, p.x + obstacle->offsetGraphicsInX, p.y + obstacle->offsetGraphicsInY, to);
 	}
 }
 
@@ -3640,7 +3640,7 @@ Point CBattleInterface::getObstaclePosition(SDL_Surface *image, const CObstacleI
 	int offset = image->h % 42;
 	if (obstacle.getType() == ObstacleType::USUAL)
 	{
-		if (obstacle.getInfo().getArea().getFields().front() < 0  || offset > 37) //second or part is for holy ground ID=62,65,63
+		if (obstacle.getArea().getFields().front() < 0  || offset > 37) //second or part is for holy ground ID=62,65,63
 			offset -= 42;
 	}
 	else if (obstacle.getType() == ObstacleType::QUICKSAND)

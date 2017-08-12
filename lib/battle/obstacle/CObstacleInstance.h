@@ -20,14 +20,16 @@ public:
 	ObstacleArea area;
 	si32 uniqueID;
 	si32 ID;
+	int32_t offsetGraphicsInY;
+	int32_t offsetGraphicsInX;
+	std::string defName;
+
 
 	CObstacleInstance();
 	virtual ~CObstacleInstance();
 
 	virtual ObstacleType getType() const;
 	virtual ObstacleArea getArea() const;
-
-	virtual const ObstacleJson getInfo() const;
 
 	bool blocksTiles() const;
 	bool stopsMovement() const;
@@ -39,6 +41,9 @@ public:
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{
 		h & ID;
+		h & offsetGraphicsInX;
+		h & offsetGraphicsInY;
+		h & defName;
 		h & area;
 		h & uniqueID;
 	}
@@ -48,7 +53,6 @@ class DLL_LINKAGE AbsoluteObstacle : public CObstacleInstance
 {
 public:
 	virtual ObstacleType getType() const override;
-	virtual const ObstacleJson getInfo() const override;
 };
 
 class DLL_LINKAGE MoatObstacle : public CObstacleInstance

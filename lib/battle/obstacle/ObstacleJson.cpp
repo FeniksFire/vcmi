@@ -25,12 +25,12 @@ ObstacleSurface ObstacleJson::getSurface() const
 	return surface;
 }
 
-int32_t ObstacleJson::offsetGraphicsInY() const
+int32_t ObstacleJson::getOffsetGraphicsInY() const
 {
 	return config["offsetGraphicsInY"].Integer();
 }
 
-int32_t ObstacleJson::offsetGraphicsInX() const
+int32_t ObstacleJson::getOffsetGraphicsInX() const
 {
 	return config["offsetGraphicsInX"].Integer();
 }

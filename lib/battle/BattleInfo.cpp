@@ -331,14 +331,18 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 			{
 				auto obstPtr = std::make_shared<AbsoluteObstacle>();
 				obstPtr->ID = obidgen.getSuchNumber(appropriateAbsoluteObstacle);
-				obstPtr->area = obstPtr->getInfo().getArea();
-				obstPtr->area.position = obstPtr->getInfo().getPosition();
+				ObstacleJson info(obstacleConfig["absoluteObstacles"].Vector().at(obstPtr->ID));
+				obstPtr->area = info.getArea();
+				obstPtr->offsetGraphicsInY = info.getOffsetGraphicsInY();
+				obstPtr->offsetGraphicsInX = info.getOffsetGraphicsInX();
+				obstPtr->defName = info.getDefName();
+				obstPtr->area.position = info.getPosition();
 				obstPtr->uniqueID = curB->obstacles.size();
 				curB->obstacles.push_back(obstPtr);
 
 				for(BattleHex blocked : obstPtr->getArea().getFields())
 					blockedTiles.push_back(blocked);
-				tilesToBlock -= obstPtr->getInfo().getArea().getFields().size() / 2;
+				tilesToBlock -= obstPtr->getArea().getFields().size() / 2;
 			}
 			catch(RangeGenerator::ExhaustedPossibilities &)
 			{
@@ -389,7 +393,12 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 
 				auto obstPtr = std::make_shared<CObstacleInstance>();
 				obstPtr->ID = obid;
-				obstPtr->area = obstPtr->getInfo().getArea();
+				ObstacleJson info(obstacleConfig["obstacles"].Vector().at(obstPtr->ID));
+
+				obstPtr->area = info.getArea();
+				obstPtr->offsetGraphicsInY = info.getOffsetGraphicsInY();
+				obstPtr->offsetGraphicsInX = info.getOffsetGraphicsInX();
+				obstPtr->defName = info.getDefName();
 				obstPtr->area.moveAreaToField(posgenerator.getSuchNumber(validPosition));
 				obstPtr->uniqueID = curB->obstacles.size();
 				curB->obstacles.push_back(obstPtr);

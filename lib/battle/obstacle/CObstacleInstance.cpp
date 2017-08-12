@@ -17,6 +17,9 @@
 
 CObstacleInstance::CObstacleInstance()
 {
+	offsetGraphicsInX = 0;
+	offsetGraphicsInY = 0;
+
 	uniqueID = -1;
 	ID = -1;
 }
@@ -29,11 +32,6 @@ CObstacleInstance::~CObstacleInstance()
 ObstacleType CObstacleInstance::getType() const
 {
 	return ObstacleType::USUAL;
-}
-
-const ObstacleJson CObstacleInstance::getInfo() const
-{
-	return ObstacleJson(JsonNode(ResourceID("config/obstacles.json"))["obstacles"].Vector().at(ID));
 }
 
 ObstacleArea CObstacleInstance::getArea() const
@@ -59,6 +57,8 @@ bool CObstacleInstance::blocksTiles() const
 
 SpellCreatedObstacle::SpellCreatedObstacle()
 {
+	offsetGraphicsInX = 0;
+	offsetGraphicsInY = 0;
 	casterSide = -1;
 	spellLevel = -1;
 	casterSpellPower = -1;
@@ -125,9 +125,4 @@ ObstacleType MoatObstacle::getType() const
 ObstacleType AbsoluteObstacle::getType() const
 {
 	return ObstacleType::ABSOLUTE_OBSTACLE;
-}
-
-const ObstacleJson AbsoluteObstacle::getInfo() const
-{
-	return ObstacleJson(JsonNode(ResourceID("config/obstacles.json"))["absoluteObstacles"].Vector().at(ID));
 }
