@@ -20,7 +20,7 @@ set(lib_SRCS
 
 		battle/obstacle/ObstacleArea.cpp
 		battle/obstacle/ObstacleSurface.cpp
-		battle/obstacle/ObstacleInfo.cpp
+		battle/obstacle/ObstacleJson.cpp
 		battle/obstacle/StaticObstacle.cpp
 		battle/obstacle/Obstacle.cpp
 		battle/obstacle/CObstacleInstance.cpp
@@ -162,7 +162,7 @@ set(lib_HEADERS
 		battle/obstacle/ObstacleArea.h
 		battle/obstacle/ObstacleSurface.h
 		battle/obstacle/ObstacleType.h
-		battle/obstacle/ObstacleInfo.h
+		battle/obstacle/ObstacleJson.h
 		battle/obstacle/StaticObstacle.h
 		battle/obstacle/CObstacleInstance.h
 

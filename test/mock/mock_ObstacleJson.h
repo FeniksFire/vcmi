@@ -1,5 +1,5 @@
 /*
- * mock_ObstacleInfo.h, part of VCMI engine
+ * mock_ObstacleJson.h, part of VCMI engine
  *
  * Authors: listed in file AUTHORS in main folder
  *
@@ -9,9 +9,9 @@
  */
 #pragma once
 #include "StdInc.h"
-#include "lib/battle/obstacle/ObstacleInfo.h"
+#include "lib/battle/obstacle/ObstacleJson.h"
 
-class ObstacleInfoMock : public ObstacleInfo
+class ObstacleJsonMock : public ObstacleJson
 {
 public:
 	MOCK_CONST_METHOD0(getArea, ObstacleArea());

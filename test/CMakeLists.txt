@@ -40,7 +40,7 @@ assign_source_group(${test_SRCS} ${test_HEADERS})
 
 set(mock_HEADERS
     mock/mock_UnitHealthInfo.h
-    mock/mock_ObstacleInfo.h
+    mock/mock_ObstacleJson.h
 )
 
 add_subdirectory_with_folder("3rdparty" googletest EXCLUDE_FROM_ALL)

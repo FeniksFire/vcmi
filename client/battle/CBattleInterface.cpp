@@ -44,7 +44,7 @@
 #include "../../lib/mapping/CMap.h"
 #include "../../lib/NetPacks.h"
 #include "../../lib/UnlockGuard.h"
-#include "battle/obstacle/ObstacleInfo.h"
+#include "battle/obstacle/ObstacleJson.h"
 
 CondSh<bool> CBattleInterface::animsAreDisplayed(false);
 CondSh<BattleAction *> CBattleInterface::givenCommand(nullptr);

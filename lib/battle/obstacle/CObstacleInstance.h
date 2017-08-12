@@ -13,7 +13,7 @@
 #include "JsonNode.h"
 #include "ObstacleArea.h"
 
-class ObstacleInfo;
+class ObstacleJson;
 class DLL_LINKAGE CObstacleInstance
 {
 public:
@@ -27,7 +27,7 @@ public:
 	virtual ObstacleType getType() const;
 	virtual ObstacleArea getArea() const;
 
-	virtual const ObstacleInfo getInfo() const;
+	virtual const ObstacleJson getInfo() const;
 
 	bool blocksTiles() const;
 	bool stopsMovement() const;
@@ -48,7 +48,7 @@ class DLL_LINKAGE AbsoluteObstacle : public CObstacleInstance
 {
 public:
 	virtual ObstacleType getType() const override;
-	virtual const ObstacleInfo getInfo() const override;
+	virtual const ObstacleJson getInfo() const override;
 };
 
 class DLL_LINKAGE MoatObstacle : public CObstacleInstance

@@ -11,7 +11,7 @@
 #include "ObstacleType.h"
 #include "ObstacleArea.h"
 
-class ObstacleInfo;
+class ObstacleJson;
 
 class DLL_LINKAGE Obstacle
 {	

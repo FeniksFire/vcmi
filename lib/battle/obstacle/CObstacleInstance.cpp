@@ -13,7 +13,7 @@
 #include "VCMI_Lib.h"
 #include "spells/CSpellHandler.h"
 #include "filesystem/ResourceID.h"
-#include "battle/obstacle/ObstacleInfo.h"
+#include "battle/obstacle/ObstacleJson.h"
 
 CObstacleInstance::CObstacleInstance()
 {
@@ -31,9 +31,9 @@ ObstacleType CObstacleInstance::getType() const
 	return ObstacleType::USUAL;
 }
 
-const ObstacleInfo CObstacleInstance::getInfo() const
+const ObstacleJson CObstacleInstance::getInfo() const
 {
-	return ObstacleInfo(JsonNode(ResourceID("config/obstacles.json"))["obstacles"].Vector().at(ID));
+	return ObstacleJson(JsonNode(ResourceID("config/obstacles.json"))["obstacles"].Vector().at(ID));
 }
 
 ObstacleArea CObstacleInstance::getArea() const
@@ -127,7 +127,7 @@ ObstacleType AbsoluteObstacle::getType() const
 	return ObstacleType::ABSOLUTE_OBSTACLE;
 }
 
-const ObstacleInfo AbsoluteObstacle::getInfo() const
+const ObstacleJson AbsoluteObstacle::getInfo() const
 {
-	return ObstacleInfo(JsonNode(ResourceID("config/obstacles.json"))["absoluteObstacles"].Vector().at(ID));
+	return ObstacleJson(JsonNode(ResourceID("config/obstacles.json"))["absoluteObstacles"].Vector().at(ID));
 }

@@ -14,6 +14,7 @@
 #include "../filesystem/Filesystem.h"
 #include "../mapObjects/CGTownInstance.h"
 #include "../CGeneralTextHandler.h"
+#include "battle/obstacle/ObstacleJson.h"
 
 const CStack * BattleInfo::getNextStack() const
 {
@@ -316,11 +317,11 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 		const JsonNode obstacleConfig(ResourceID("config/obstacles.json"));
 		auto appropriateAbsoluteObstacle = [&](int id)
 		{
-			return ObstacleInfo(obstacleConfig["absoluteObstacles"].Vector().at(id)).getSurface().isAppropriateForSurface(curB->terrainType, static_cast<BFieldType>(specialBattlefield));
+			return ObstacleJson(obstacleConfig["absoluteObstacles"].Vector().at(id)).getSurface().isAppropriateForSurface(curB->terrainType, static_cast<BFieldType>(specialBattlefield));
 		};
 		auto appropriateUsualObstacle = [&](int id) -> bool
 		{
-			return ObstacleInfo(obstacleConfig["obstacles"].Vector().at(id)).getSurface().isAppropriateForSurface(curB->terrainType, static_cast<BFieldType>(specialBattlefield));
+			return ObstacleJson(obstacleConfig["obstacles"].Vector().at(id)).getSurface().isAppropriateForSurface(curB->terrainType, static_cast<BFieldType>(specialBattlefield));
 		};
 
 		if(r.rand(1,100) <= 40) //put cliff-like obstacle
@@ -354,7 +355,7 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 				auto tileAccessibility = curB->getAccesibility();
 				const int obid = obidgen.getSuchNumber(appropriateUsualObstacle);
 
-				const ObstacleInfo &obi = ObstacleInfo(obstacleConfig["obstacles"].Vector().at(obid));
+				const ObstacleJson &obi = ObstacleJson(obstacleConfig["obstacles"].Vector().at(obid));
 
 				auto validPosition = [&](BattleHex pos) -> bool
 				{
