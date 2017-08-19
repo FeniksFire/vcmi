@@ -76,7 +76,6 @@ public:
 	virtual bool visibleForSide(ui8 side, bool hasNativeStack) const override;
 
 	virtual ObstacleType getType() const override;
-	virtual ObstacleArea getArea() const override;
 
 	virtual void battleTurnPassed() override;
 

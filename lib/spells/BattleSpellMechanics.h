@@ -97,7 +97,7 @@ public:
 protected:
 	static bool isHexAviable(const CBattleInfoCallback * cb, const BattleHex & hex, const bool mustBeClear);
 	void placeObstacle(const SpellCastEnvironment * env, const BattleSpellCastParameters & parameters, const BattleHex & pos) const;
-	virtual void setupObstacle(SpellCreatedObstacle * obstacle) const = 0;
+	virtual void setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const = 0;
 };
 
 class PatchObstacleMechanics : public ObstacleMechanics
@@ -115,7 +115,7 @@ public:
 	ESpellCastProblem::ESpellCastProblem canBeCast(const CBattleInfoCallback * cb, const ECastingMode::ECastingMode mode, const ISpellCaster * caster) const override;
 	bool requiresCreatureTarget() const	override;
 protected:
-	void setupObstacle(SpellCreatedObstacle * obstacle) const override;
+	void setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const override;
 };
 
 class DLL_LINKAGE QuicksandMechanics : public PatchObstacleMechanics
@@ -124,7 +124,7 @@ public:
 	QuicksandMechanics(const CSpell * s);
 	bool requiresCreatureTarget() const	override;
 protected:
-	void setupObstacle(SpellCreatedObstacle * obstacle) const override;
+	void setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const override;
 };
 
 class DLL_LINKAGE WallMechanics : public ObstacleMechanics
@@ -141,7 +141,7 @@ public:
 	bool requiresCreatureTarget() const	override;
 protected:
 	void applyBattleEffects(const SpellCastEnvironment * env, const BattleSpellCastParameters & parameters, SpellCastContext & ctx) const override;
-	void setupObstacle(SpellCreatedObstacle * obstacle) const override;
+	void setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const override;
 };
 
 class DLL_LINKAGE ForceFieldMechanics : public WallMechanics
@@ -151,7 +151,7 @@ public:
 	bool requiresCreatureTarget() const	override;
 protected:
 	void applyBattleEffects(const SpellCastEnvironment * env, const BattleSpellCastParameters & parameters, SpellCastContext & ctx) const override;
-	void setupObstacle(SpellCreatedObstacle * obstacle) const override;
+	void setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const override;
 };
 
 class DLL_LINKAGE RemoveObstacleMechanics : public SpecialSpellMechanics

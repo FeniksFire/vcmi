@@ -90,27 +90,6 @@ ObstacleType SpellCreatedObstacle::getType() const
 	return obstacleType;
 }
 
-ObstacleArea SpellCreatedObstacle::getArea() const
-{
-	ObstacleArea ret;
-	ret = area;
-	switch(getType())
-	{
-	case ObstacleType::QUICKSAND:
-	case ObstacleType::LAND_MINE:
-	case ObstacleType::FIRE_WALL:
-		ret.setArea(std::vector<BattleHex>(1, area.position));
-		break;
-	case ObstacleType::FORCE_FIELD:
-		ret.setArea(SpellID(SpellID::FORCE_FIELD).toSpell()->rangeInHexes(area.position, spellLevel, casterSide));
-		break;
-	default:
-		assert(0);
-		ret.setArea(std::vector<BattleHex>());
-	}
-	return ret;
-}
-
 void SpellCreatedObstacle::battleTurnPassed()
 {
 	if(turnsRemaining > 0)

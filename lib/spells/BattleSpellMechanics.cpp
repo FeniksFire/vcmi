@@ -508,14 +508,13 @@ void ObstacleMechanics::placeObstacle(const SpellCastEnvironment * env, const Ba
 	const int obstacleIdToGive = parameters.cb->obstacles.size()+1;
 
 	auto obstacle = std::make_shared<SpellCreatedObstacle>();
-	setupObstacle(obstacle.get());
 
-	obstacle->area.position = pos;
 	obstacle->casterSide = parameters.casterSide;
 	obstacle->ID = owner->id;
 	obstacle->spellLevel = parameters.effectLevel;
 	obstacle->casterSpellPower = parameters.effectPower;
 	obstacle->uniqueID = obstacleIdToGive;
+	setupObstacle(obstacle.get(), pos);
 
 	BattleObstaclePlaced bop;
 	bop.obstacle = obstacle;
@@ -572,9 +571,11 @@ bool LandMineMechanics::requiresCreatureTarget() const
 	return true;
 }
 
-void LandMineMechanics::setupObstacle(SpellCreatedObstacle * obstacle) const
+void LandMineMechanics::setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const
 {
 	obstacle->obstacleType = ObstacleType::LAND_MINE;
+	obstacle->area.position =  position;
+	obstacle->area.setArea(std::vector<BattleHex>(1, obstacle->area.position));
 	obstacle->turnsRemaining = -1;
 	obstacle->visibleForAnotherSide = false;
 }
@@ -590,9 +591,11 @@ bool QuicksandMechanics::requiresCreatureTarget() const
 	return false;
 }
 
-void QuicksandMechanics::setupObstacle(SpellCreatedObstacle * obstacle) const
+void QuicksandMechanics::setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const
 {
 	obstacle->obstacleType = ObstacleType::QUICKSAND;
+	obstacle->area.position =  position;
+	obstacle->area.setArea(std::vector<BattleHex>(1, obstacle->area.position));
 	obstacle->turnsRemaining = -1;
 	obstacle->visibleForAnotherSide = false;
 }
@@ -665,9 +668,11 @@ void FireWallMechanics::applyBattleEffects(const SpellCastEnvironment * env, con
 		placeObstacle(env, parameters, hex);
 }
 
-void FireWallMechanics::setupObstacle(SpellCreatedObstacle * obstacle) const
+void FireWallMechanics::setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const
 {
 	obstacle->obstacleType = ObstacleType::FIRE_WALL;
+	obstacle->area.position =  position;
+	obstacle->area.setArea(std::vector<BattleHex>(1, obstacle->area.position));
 	obstacle->turnsRemaining = 2;
 	obstacle->visibleForAnotherSide = true;
 }
@@ -695,9 +700,11 @@ void ForceFieldMechanics::applyBattleEffects(const SpellCastEnvironment * env, c
 	placeObstacle(env, parameters, destination);
 }
 
-void ForceFieldMechanics::setupObstacle(SpellCreatedObstacle * obstacle) const
+void ForceFieldMechanics::setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const
 {
 	obstacle->obstacleType = ObstacleType::FORCE_FIELD;
+	obstacle->area.position =  position;
+	obstacle->area.setArea(rangeInHexes(obstacle->area.position, obstacle->spellLevel, obstacle->casterSide));
 	obstacle->turnsRemaining = 2;
 	obstacle->visibleForAnotherSide = true;
 }
