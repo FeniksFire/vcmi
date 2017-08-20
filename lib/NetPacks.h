@@ -1733,7 +1733,7 @@ struct ObstaclesRemoved : public CPackForClient
 	DLL_LINKAGE void applyGs(CGameState *gs);
 	void applyCl(CClient *cl);
 
-	std::set<si32> obstacles; //uniqueIDs of removed obstacles
+	std::set<si32> obstacles; //IDs of removed obstacles
 
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{

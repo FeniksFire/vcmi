@@ -18,12 +18,10 @@ class DLL_LINKAGE CObstacleInstance
 {
 public:
 	ObstacleArea area;
-	si32 uniqueID;
 	si32 ID;
 	int32_t offsetGraphicsInY;
 	int32_t offsetGraphicsInX;
 	std::string defName;
-
 
 	CObstacleInstance();
 	virtual ~CObstacleInstance();
@@ -36,23 +34,23 @@ public:
 
 	virtual bool visibleForSide(ui8 side, bool hasNativeStack) const;
 
-	virtual void battleTurnPassed(){};
+	virtual void battleTurnPassed();
+	virtual bool canRemove() const;;
 
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{
-		h & ID;
 		h & offsetGraphicsInX;
 		h & offsetGraphicsInY;
 		h & defName;
 		h & area;
-		h & uniqueID;
+		h & ID;
 	}
 };
 
 class DLL_LINKAGE AbsoluteObstacle : public CObstacleInstance
 {
 public:
-	virtual ObstacleType getType() const override;
+	virtual bool canRemove() const override;;
 };
 
 class DLL_LINKAGE MoatObstacle : public CObstacleInstance

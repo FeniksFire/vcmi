@@ -330,14 +330,14 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 			try
 			{
 				auto obstPtr = std::make_shared<AbsoluteObstacle>();
-				obstPtr->ID = obidgen.getSuchNumber(appropriateAbsoluteObstacle);
-				ObstacleJson info(obstacleConfig["absoluteObstacles"].Vector().at(obstPtr->ID));
+				auto id = obidgen.getSuchNumber(appropriateAbsoluteObstacle);
+				ObstacleJson info(obstacleConfig["absoluteObstacles"].Vector().at(id));
 				obstPtr->area = info.getArea();
 				obstPtr->offsetGraphicsInY = info.getOffsetGraphicsInY();
 				obstPtr->offsetGraphicsInX = info.getOffsetGraphicsInX();
 				obstPtr->defName = info.getDefName();
-				obstPtr->area.position = info.getPosition();
-				obstPtr->uniqueID = curB->obstacles.size();
+				obstPtr->area.moveAreaToField(info.getPosition());
+				obstPtr->ID = curB->obstacles.size();
 				curB->obstacles.push_back(obstPtr);
 
 				for(BattleHex blocked : obstPtr->getArea().getFields())
@@ -391,16 +391,15 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 
 				RangeGenerator posgenerator(18, 168, ourRand);
 
-				auto obstPtr = std::make_shared<CObstacleInstance>();
-				obstPtr->ID = obid;
-				ObstacleJson info(obstacleConfig["obstacles"].Vector().at(obstPtr->ID));
+				auto obstPtr = std::make_shared<CObstacleInstance>();				
+				ObstacleJson info(obstacleConfig["obstacles"].Vector().at(obid));
 
 				obstPtr->area = info.getArea();
 				obstPtr->offsetGraphicsInY = info.getOffsetGraphicsInY();
 				obstPtr->offsetGraphicsInX = info.getOffsetGraphicsInX();
 				obstPtr->defName = info.getDefName();
 				obstPtr->area.moveAreaToField(posgenerator.getSuchNumber(validPosition));
-				obstPtr->uniqueID = curB->obstacles.size();
+				obstPtr->ID = curB->obstacles.size();
 				curB->obstacles.push_back(obstPtr);
 
 				for(BattleHex blocked : obstPtr->getArea().getFields())
@@ -530,9 +529,8 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 
 		//moat
 		auto moat = std::make_shared<MoatObstacle>();
-		moat->ID = curB->town->subID;
-		moat->area.setArea(VLC->townh->factions[moat->ID]->town->moatHexes);
-		moat->uniqueID = curB->obstacles.size();
+		moat->area.setArea(VLC->townh->factions[curB->town->subID]->town->moatHexes);
+		moat->ID = curB->obstacles.size();
 		curB->obstacles.push_back(moat);
 	}
 
@@ -701,15 +699,6 @@ int BattleInfo::getIdForNewStack() const
 	}
 
 	return 0;
-}
-
-std::shared_ptr<CObstacleInstance> BattleInfo::getObstacleOnTile(BattleHex tile) const
-{
-	for(auto &obs : obstacles)
-		if(vstd::contains(obs->getArea().getFields(), tile))
-			return obs;
-
-	return std::shared_ptr<CObstacleInstance>();
 }
 
 BattlefieldBI::BattlefieldBI BattleInfo::battlefieldTypeToBI(BFieldType bfieldType)

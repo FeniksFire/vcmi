@@ -6319,7 +6319,7 @@ void CGameHandler::handleCheatCode(std::string & cheat, PlayerColor player, cons
 void CGameHandler::removeObstacle(const CObstacleInstance &obstacle)
 {
 	ObstaclesRemoved obsRem;
-	obsRem.obstacles.insert(obstacle.uniqueID);
+	obsRem.obstacles.insert(obstacle.ID);
 	sendAndApply(&obsRem);
 }
 

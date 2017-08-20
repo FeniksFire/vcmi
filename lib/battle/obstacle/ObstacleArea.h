@@ -13,16 +13,19 @@
 class DLL_LINKAGE ObstacleArea
 {
 	std::vector<BattleHex> area;
-public:
 	BattleHex position;
+
+public:
 
 	void addField(BattleHex field);
 	void setArea(std::vector<BattleHex> fields);
 	void moveAreaToField(BattleHex offset);
 
-	int getWidth();
-	int getHeight();
+	int getWidth() const;
+	int getHeight() const;
 
+	void setPosition(BattleHex hex);
+	BattleHex getPosition() const;
 
 	std::vector<BattleHex> getFields() const;
 	ObstacleArea();

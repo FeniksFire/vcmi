@@ -8,13 +8,14 @@
 // * "blockedTiles": for absolute obstacles contains absolute coordinates. For usual obstacles contains offsets relative to the obstacle position (that is bottom left corner). If obstacle is placed in an odd row (counting from 0) and the blocked tile is in an even row, position will be shifted one tile to the left. Thanks to that ie. -16 is always top-right hex, no matter where the obstale will get placed.
 
 // * "offsetGraphicsInX" moves additionally obstacle graphics to the given number of pixels to the left(when offsetX<0) or right(when offsetX>0). By default it's equal to 0;
-// * "offsetGraphicsInY" moves additionally obstacle graphics to the given number of pixels to the bot when offsetY<0 or top, when offsetY>0. By default it's equal to 0;
+// * "offsetGraphicsInY" moves additionally obstacle graphics to the given number of pixels to the top when offsetY<0 or bot, when offsetY>0. By default it's equal to 0;
 // * "defname" is name of the graphics.
+
 
 {
 "obstacles" : [
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0, 1],
@@ -22,7 +23,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0, 1, 5, 6],
 		"specialBattlefields" : [0],
 		"blockedTiles" :  [0, 1, 2],
@@ -30,7 +31,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0, 1, -14, -15, -16],
@@ -38,7 +39,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0, 5],
 		"specialBattlefields" : [1],
 		"blockedTiles" :  [0, 1],
@@ -46,7 +47,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0, 5, 6],
 		"specialBattlefields" : [0, 1],
 		"blockedTiles" :  [0, 1],
@@ -54,7 +55,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [1, 2, 3],
@@ -62,7 +63,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [-15, -16],
@@ -70,7 +71,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0, 1],
@@ -78,7 +79,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [-16],
@@ -86,7 +87,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0, 1],
@@ -94,7 +95,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0, 1],
@@ -102,7 +103,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0, 1],
@@ -110,7 +111,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0, 5],
 		"specialBattlefields" : [1],
 		"blockedTiles" :  [0, 1, 2, 3],
@@ -118,7 +119,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0, 5],
 		"specialBattlefields" : [1],
 		"blockedTiles" :  [1, 2, -15],
@@ -126,7 +127,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0, 5],
 		"specialBattlefields" : [1],
 		"blockedTiles" :  [2, -15, -16],
@@ -134,7 +135,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0, 5],
 		"specialBattlefields" : [1],
 		"blockedTiles" :  [1, -16, -33],
@@ -142,7 +143,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [1],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [-15, -16, -32, -33, -48, -49],
@@ -150,7 +151,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [1],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [1, -15, -16],
@@ -158,7 +159,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [1],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [1, 2, 3, -15, -16],
@@ -166,7 +167,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [2, 4],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0, 1],
@@ -174,7 +175,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [2, 4],
 		"specialBattlefields" : [2],
 		"blockedTiles" :  [0, 1],
@@ -182,7 +183,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [2, 4],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0],
@@ -190,7 +191,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [2],
 		"specialBattlefields" : [2],
 		"blockedTiles" :  [1, 2, 3, 4, -13, -14, -15, -16],
@@ -198,7 +199,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [2],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [1, 2],
@@ -206,7 +207,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [3],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0, 1, 2],
@@ -214,7 +215,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [3],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [1, 2, 3, 4],
@@ -222,7 +223,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [3],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0, -16, -33],
@@ -230,7 +231,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [3],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0, 1, 2],
@@ -238,7 +239,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [3],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [1],
@@ -246,7 +247,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [3],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [1, 2],
@@ -254,7 +255,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [3],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0, 1],
@@ -262,7 +263,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [3],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0, 1, 2],
@@ -270,7 +271,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [3],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [2, 3, 4, 5, -13, -14, -15, -16],
@@ -278,7 +279,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [3],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [3, -13, -14, -15, -33, -49, -66],
@@ -286,7 +287,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [4],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0],
@@ -294,7 +295,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [4],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [-10, -11, -12, -13, -14, -15, -16],
@@ -302,7 +303,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [4],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0, 1],
@@ -310,7 +311,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [4],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0, 1, 2],
@@ -318,7 +319,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [4],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [-13, -14, -15, -16, -30, -31, -32, -33],
@@ -326,7 +327,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [4],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [-16, -17, -31, -32, -33, -34],
@@ -334,7 +335,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [5],
 		"specialBattlefields" : [1],
 		"blockedTiles" :  [0, 1, -16],
@@ -342,7 +343,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [5],
 		"specialBattlefields" : [1],
 		"blockedTiles" :  [-14, -15, -16, -32, -33],
@@ -350,7 +351,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [5],
 		"specialBattlefields" : [1],
 		"offsetGraphicsInY" : -40,
@@ -359,7 +360,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [5],
 		"specialBattlefields" : [1],
 		"blockedTiles" :  [-16, -32, -33],
@@ -367,7 +368,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [5],
 		"specialBattlefields" : [1],
 		"blockedTiles" :  [-15, -16, -32],
@@ -375,7 +376,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [6],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0, 1, 2, -15, -16],
@@ -383,7 +384,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [6],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0, 1, 2],
@@ -391,7 +392,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [6],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0, 1, 2, 3, -14, -15, -16],
@@ -399,7 +400,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [7],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [-14, -32, -33],
@@ -407,7 +408,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [7],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0, 1, 2, -14, -15, -16],
@@ -415,7 +416,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [7],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [-13, -14, -15, -30, -31, -32, -33],
@@ -423,7 +424,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [7],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [0, 1, 2],
@@ -431,7 +432,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [7],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [-14, -15, -32, -33, -49, -50],
@@ -439,7 +440,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [7],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [-13, -14, -15, -16, -30, -31],
@@ -447,7 +448,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [7],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [-13, -14, -15, -16, -31, -32, -33],
@@ -455,7 +456,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [8],
 		"specialBattlefields" : [],
 		"blockedTiles" :  [-15, -16, -33],
@@ -463,7 +464,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [0],
 		"blockedTiles" :  [1, -15, -16],
@@ -471,7 +472,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [0],
 		"blockedTiles" :  [0, 1, 2],
@@ -479,7 +480,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [0],
 		"blockedTiles" :  [1, 2, 3, -14, -15, -16],
@@ -487,7 +488,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [0],
 		"blockedTiles" :  [1, 2, -14, -15],
@@ -495,7 +496,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [0],
 		"blockedTiles" :  [0, 1, -16],
@@ -503,7 +504,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [3],
 		"blockedTiles" :  [0],
@@ -511,7 +512,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [3],
 		"blockedTiles" :  [0, 1],
@@ -519,7 +520,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [3],
 		"blockedTiles" :  [1],
@@ -527,7 +528,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [3],
 		"blockedTiles" :  [0, 1, 2],
@@ -535,7 +536,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [3],
 		"blockedTiles" :  [0, 1, 2, 3],
@@ -543,7 +544,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [4],
 		"blockedTiles" :  [0],
@@ -551,7 +552,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [4],
 		"blockedTiles" :  [0, 1],
@@ -559,7 +560,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [4],
 		"blockedTiles" :  [0, 1, 2],
@@ -567,7 +568,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [4],
 		"blockedTiles" :  [1, 2],
@@ -575,7 +576,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [4],
 		"blockedTiles" :  [1, 2, 3, -12, -13],
@@ -583,7 +584,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [5],
 		"blockedTiles" :  [0],
@@ -591,7 +592,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [5],
 		"blockedTiles" :  [0, 1, 2],
@@ -599,7 +600,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [5],
 		"blockedTiles" :  [1, 2, -15, -16],
@@ -607,7 +608,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [5],
 		"blockedTiles" :  [0, 1, 2, -14, -15, -16],
@@ -615,7 +616,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [6],
 		"blockedTiles" :  [0],
@@ -623,7 +624,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [6],
 		"blockedTiles" :  [0, 1],
@@ -631,7 +632,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [6],
 		"blockedTiles" :  [0, -15, -16],
@@ -639,7 +640,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [6],
 		"blockedTiles" :  [1, 2, 3, -13, -14, -15, -16],
@@ -647,7 +648,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [7],
 		"blockedTiles" :  [0],
@@ -655,7 +656,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [7],
 		"blockedTiles" :  [0, 1],
@@ -663,7 +664,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [7],
 		"blockedTiles" :  [0, 1, 2, -15],
@@ -671,7 +672,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [7],
 		"blockedTiles" :  [1, 2, 3, -15, -16],
@@ -679,7 +680,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [7],
 		"blockedTiles" :  [0, 1, 2, 3, -14, -15, -16],
@@ -687,7 +688,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [8],
 		"blockedTiles" :  [0],
@@ -695,7 +696,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [8],
 		"blockedTiles" :  [0, 1],
@@ -703,7 +704,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [8],
 		"blockedTiles" :  [0, 1, 2],
@@ -711,7 +712,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [8],
 		"blockedTiles" :  [1, 2, 3, -15, -16],
@@ -719,7 +720,7 @@
 		"unknown" : 0
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [9],
 		"blockedTiles" :  [0],
@@ -727,7 +728,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [9],
 		"blockedTiles" :  [1, -16],
@@ -735,7 +736,7 @@
 		"unknown" : 1
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [9],
 		"blockedTiles" :  [0, 1, -14, -15],
@@ -745,7 +746,7 @@
 ],
 "absoluteObstacles" : [
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0],
 		"specialBattlefields" : [],
 		"offsetGraphicsInX" : 124,
@@ -754,7 +755,7 @@
 		"defname" : "ObDtL04.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0],
 		"specialBattlefields" : [],
 		"offsetGraphicsInX" : 256,
@@ -763,7 +764,7 @@
 		"defname" : "ObDtL06.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0],
 		"specialBattlefields" : [],
 		"offsetGraphicsInX" : 168,
@@ -772,7 +773,7 @@
 		"defname" : "ObDtL10.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0],
 		"specialBattlefields" : [],
 		"offsetGraphicsInX" : 124,
@@ -781,7 +782,7 @@
 		"defname" : "ObDtL02.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [0],
 		"specialBattlefields" : [],
 		"offsetGraphicsInX" : 146,
@@ -790,7 +791,7 @@
 		"defname" : "ObDtL03.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [2],
 		"specialBattlefields" : [],
 		"offsetGraphicsInX" : 173,
@@ -799,7 +800,7 @@
 		"defname" : "ObGrL01.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [2],
 		"specialBattlefields" : [],
 		"offsetGraphicsInX" : 180,
@@ -808,7 +809,7 @@
 		"defname" : "ObGrL02.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [3],
 		"specialBattlefields" : [],
 		"offsetGraphicsInX" : 166,
@@ -817,7 +818,7 @@
 		"defname" : "ObSnL01.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [3],
 		"specialBattlefields" : [],
 		"offsetGraphicsInX" : 302,
@@ -826,7 +827,7 @@
 		"defname" : "ObSnL14.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [4],
 		"specialBattlefields" : [],
 		"offsetGraphicsInX" : 300,
@@ -835,7 +836,7 @@
 		"defname" : "ObSwL15.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [4],
 		"specialBattlefields" : [],
 		"offsetGraphicsInX" : 278,
@@ -844,7 +845,7 @@
 		"defname" : "ObSwL14.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [4],
 		"specialBattlefields" : [],
 		"offsetGraphicsInX" : 256,
@@ -853,7 +854,7 @@
 		"defname" : "ObSwL22.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [7],
 		"specialBattlefields" : [],
 		"offsetGraphicsInX" : 124,
@@ -862,7 +863,7 @@
 		"defname" : "ObLvL01.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [7],
 		"specialBattlefields" : [],
 		"offsetGraphicsInX" : 256,
@@ -871,7 +872,7 @@
 		"defname" : "OBLvL02.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [5],
 		"specialBattlefields" : [1],
 		"offsetGraphicsInX" : 186,
@@ -880,7 +881,7 @@
 		"defname" : "ObRgL01.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [5],
 		"specialBattlefields" : [1],
 		"offsetGraphicsInX" : 347,
@@ -889,7 +890,7 @@
 		"defname" : "ObRgL02.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [5],
 		"specialBattlefields" : [1],
 		"offsetGraphicsInX" : 294,
@@ -898,7 +899,7 @@
 		"defname" : "ObRgL03.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [5],
 		"specialBattlefields" : [1],
 		"offsetGraphicsInX" : 165,
@@ -907,7 +908,7 @@
 		"defname" : "ObRgL04.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [5],
 		"specialBattlefields" : [1],
 		"offsetGraphicsInX" : 208,
@@ -916,7 +917,7 @@
 		"defname" : "ObRgL05.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [5],
 		"specialBattlefields" : [1],
 		"offsetGraphicsInX" : 252,
@@ -925,7 +926,7 @@
 		"defname" : "ObRgL06.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [5],
 		"specialBattlefields" : [1],
 		"offsetGraphicsInX" : 278,
@@ -934,7 +935,7 @@
 		"defname" : "ObRgL15.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [5],
 		"specialBattlefields" : [1],
 		"offsetGraphicsInX" : 208,
@@ -943,7 +944,7 @@
 		"defname" : "ObRgL05.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [5],
 		"specialBattlefields" : [1],
 		"offsetGraphicsInX" : 168,
@@ -952,7 +953,7 @@
 		"defname" : "ObRgL22.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [0],
 		"offsetGraphicsInX" : 147,
@@ -961,7 +962,7 @@
 		"defname" : "ObBhL02.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [0],
 		"offsetGraphicsInX" : 178,
@@ -970,7 +971,7 @@
 		"defname" : "ObBhL03.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [0],
 		"offsetGraphicsInX" : 173,
@@ -979,7 +980,7 @@
 		"defname" : "ObBhL05.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [0],
 		"offsetGraphicsInX" : 241,
@@ -988,7 +989,7 @@
 		"defname" : "ObBhL06.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [0],
 		"offsetGraphicsInX" : 261,
@@ -997,7 +998,7 @@
 		"defname" : "ObBhL14.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [0],
 		"offsetGraphicsInX" : 180,
@@ -1006,7 +1007,7 @@
 		"defname" : "ObBhL16.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [5],
 		"offsetGraphicsInX" : 304,
@@ -1015,7 +1016,7 @@
 		"defname" : "ObCFL00.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [6],
 		"offsetGraphicsInX" : 256,
@@ -1024,7 +1025,7 @@
 		"defname" : "ObLPL00.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [7],
 		"offsetGraphicsInX" : 257,
@@ -1033,7 +1034,7 @@
 		"defname" : "ObFFL00.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [8],
 		"offsetGraphicsInX" : 277,
@@ -1042,7 +1043,7 @@
 		"defname" : "ObRLL00.pcx"
 	},
 	{
-		"position" : -1,
+		"position" : 0,
 		"allowedTerrain" : [],
 		"specialBattlefields" : [9],
 		"offsetGraphicsInX" : 300,

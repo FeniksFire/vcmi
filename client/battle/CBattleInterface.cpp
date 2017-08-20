@@ -14,6 +14,7 @@
 #include "CBattleInterfaceClasses.h"
 #include "CCreatureAnimation.h"
 
+#include "filesystem/ResourceID.h"
 #include "../CBitmapHandler.h"
 #include "../CDefHandler.h"
 #include "../CGameInfo.h"
@@ -339,33 +340,6 @@ CBattleInterface::CBattleInterface(const CCreatureSet *army1, const CCreatureSet
 
 	backgroundWithHexes = CSDL_Ext::newSurface(background->w, background->h, screen);
 
-	//preparing obstacle defs
-	auto obst = curInt->cb->battleGetAllObstacles();
-	for (auto & elem : obst)
-	{
-		const int ID = elem->ID;
-		if (elem->getType() == ObstacleType::USUAL)
-		{
-			idToObstacle[ID] = CDefHandler::giveDef(elem->defName);
-			for (auto & _n : idToObstacle[ID]->ourImages)
-			{
-				CSDL_Ext::setDefaultColorKey(_n.bitmap);
-			}
-		}
-		else if (elem->getType() == ObstacleType::ABSOLUTE_OBSTACLE)
-		{
-			idToAbsoluteObstacle[ID] = BitmapHandler::loadBitmap(elem->defName);
-		}
-	}
-
-	quicksand = CDefHandler::giveDef("C17SPE1.DEF");
-	landMine = CDefHandler::giveDef("C09SPF1.DEF");
-	fireWall = CDefHandler::giveDef("C07SPF61");
-	bigForceField[0] = CDefHandler::giveDef("C15SPE10.DEF");
-	bigForceField[1] = CDefHandler::giveDef("C15SPE7.DEF");
-	smallForceField[0] = CDefHandler::giveDef("C15SPE1.DEF");
-	smallForceField[1] = CDefHandler::giveDef("C15SPE4.DEF");
-
 	for (auto hex : bfield)
 		addChild(hex);
 
@@ -433,19 +407,7 @@ CBattleInterface::~CBattleInterface()
 	for (auto & elem : creAnims)
 		delete elem.second;
 
-	for (auto & elem : idToObstacle)
-		delete elem.second;
-
-	delete quicksand;
-	delete landMine;
-	delete fireWall;
-	delete smallForceField[0];
-	delete smallForceField[1];
-	delete bigForceField[0];
-	delete bigForceField[1];
-
 	delete siegeH;
-
 	//TODO: play AI tracks if battle was during AI turn
 	//if (!curInt->makingTurn)
 	//CCS->musich->playMusicFromSet(CCS->musich->aiMusics, -1);
@@ -3386,7 +3348,7 @@ void CBattleInterface::showObstacles(SDL_Surface *to, std::vector<std::shared_pt
 	{
 		SDL_Surface *toBlit = getObstacleImage(*obstacle);
 		Point p(0,0);
-		if(obstacle->area.position != -1)
+		if(obstacle->area.getPosition() != 0)
 			p = getObstaclePosition(toBlit, *obstacle);
 		blitAt(toBlit, p.x + obstacle->offsetGraphicsInX, p.y + obstacle->offsetGraphicsInY, to);
 	}
@@ -3528,7 +3490,7 @@ BattleObjectsByHex CBattleInterface::sortObjectsByHex()
 		std::map<BattleHex, std::shared_ptr<const CObstacleInstance>> backgroundObstacles;
 		for (auto &obstacle : curInt->cb->battleGetAllObstacles()) {
 			if (obstacle->getType() != ObstacleType::MOAT) {
-				backgroundObstacles[obstacle->area.position] = obstacle;
+				backgroundObstacles[obstacle->area.getPosition()] = obstacle;
 			}
 		}
 		for (auto &op : backgroundObstacles)
@@ -3607,32 +3569,11 @@ void CBattleInterface::updateBattleAnimations()
 SDL_Surface *CBattleInterface::getObstacleImage(const CObstacleInstance &oi)
 {
 	int frameIndex = (animCount+1) *25 / getAnimSpeed();
-	switch(oi.getType())
-	{
-	case ObstacleType::USUAL:
-		return vstd::circularAt(idToObstacle.find(oi.ID)->second->ourImages, frameIndex).bitmap;
-	case ObstacleType::ABSOLUTE_OBSTACLE:
-		return idToAbsoluteObstacle.find(oi.ID)->second;
-	case ObstacleType::QUICKSAND:
-		return vstd::circularAt(quicksand->ourImages, frameIndex).bitmap;
-	case ObstacleType::LAND_MINE:
-		return vstd::circularAt(landMine->ourImages, frameIndex).bitmap;
-	case ObstacleType::FIRE_WALL:
-		return vstd::circularAt(fireWall->ourImages, frameIndex).bitmap;
-	case ObstacleType::FORCE_FIELD:
-		{
-			auto &forceField = dynamic_cast<const SpellCreatedObstacle &>(oi);
-			if (forceField.getArea().getFields().size() > 2)
-				return vstd::circularAt(bigForceField[forceField.casterSide]->ourImages, frameIndex).bitmap;
-			else
-				return vstd::circularAt(smallForceField[forceField.casterSide]->ourImages, frameIndex).bitmap;
-		}
-
-	case ObstacleType::MOAT://moat is blitted by SiegeHelper, this shouldn't be called
-	default:
-		assert(0);
-		return nullptr;
-	}
+	ResourceID resI(oi.defName);
+	if(resI.getType() == EResType::ANIMATION)
+		return vstd::circularAt(CDefHandler::giveDef(oi.defName)->ourImages, frameIndex).bitmap;
+	else if(resI.getType() == EResType::IMAGE)
+		return BitmapHandler::loadBitmap(oi.defName);
 }
 
 Point CBattleInterface::getObstaclePosition(SDL_Surface *image, const CObstacleInstance &obstacle)
@@ -3648,7 +3589,7 @@ Point CBattleInterface::getObstaclePosition(SDL_Surface *image, const CObstacleI
 		offset -= 42;
 	}
 
-	Rect r = hexPosition(obstacle.area.position);
+	Rect r = hexPosition(obstacle.area.getPosition());
 	r.y += 42 - image->h + offset;
 	return r.topLeft();
 }

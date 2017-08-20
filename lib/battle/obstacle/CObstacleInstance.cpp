@@ -20,7 +20,6 @@ CObstacleInstance::CObstacleInstance()
 	offsetGraphicsInX = 0;
 	offsetGraphicsInY = 0;
 
-	uniqueID = -1;
 	ID = -1;
 }
 
@@ -45,6 +44,16 @@ bool CObstacleInstance::visibleForSide(ui8 side, bool hasNativeStack) const
 	return true;
 }
 
+void CObstacleInstance::battleTurnPassed()
+{
+
+}
+
+bool CObstacleInstance::canRemove() const
+{
+	return true;
+}
+
 bool CObstacleInstance::stopsMovement() const
 {
 	return getType() == ObstacleType::QUICKSAND || getType() == ObstacleType::MOAT;
@@ -52,7 +61,7 @@ bool CObstacleInstance::stopsMovement() const
 
 bool CObstacleInstance::blocksTiles() const
 {
-	return getType() == ObstacleType::USUAL || getType() == ObstacleType::ABSOLUTE_OBSTACLE || getType() == ObstacleType::FORCE_FIELD;
+	return getType() == ObstacleType::USUAL || getType() == ObstacleType::FORCE_FIELD;
 }
 
 SpellCreatedObstacle::SpellCreatedObstacle()
@@ -101,7 +110,7 @@ ObstacleType MoatObstacle::getType() const
 	return ObstacleType::MOAT;
 }
 
-ObstacleType AbsoluteObstacle::getType() const
+bool AbsoluteObstacle::canRemove() const
 {
-	return ObstacleType::ABSOLUTE_OBSTACLE;
+	return false;
 }

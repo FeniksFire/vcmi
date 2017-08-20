@@ -25,7 +25,7 @@ void ObstacleArea::setArea(std::vector<BattleHex> fields)
 		addField(i);
 }
 
-int ObstacleArea::getWidth()
+int ObstacleArea::getWidth() const
 {
 	if(area.empty())
 		return 0;
@@ -43,7 +43,7 @@ int ObstacleArea::getWidth()
 	return maxX - minX + 1;
 }
 
-int ObstacleArea::getHeight()
+int ObstacleArea::getHeight() const
 {
 	if(area.empty())
 		return 0;
@@ -62,6 +62,16 @@ int ObstacleArea::getHeight()
 		minY.hex += GameConstants::BFIELD_WIDTH;
 	}
 	return maxY.getY() - minY.getY() + 1;
+}
+
+void ObstacleArea::setPosition(BattleHex hex)
+{
+	position = hex;
+}
+
+BattleHex ObstacleArea::getPosition() const
+{
+	return position;
 }
 
 std::vector<BattleHex> ObstacleArea::getFields() const

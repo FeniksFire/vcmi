@@ -278,7 +278,7 @@ void DispellMechanics::applyBattleEffects(const SpellCastEnvironment * env, cons
 			if(obstacle->getType() == ObstacleType::FIRE_WALL
 				|| obstacle->getType() == ObstacleType::FORCE_FIELD
 				|| obstacle->getType() == ObstacleType::LAND_MINE)
-				packet.obstacles.insert(obstacle->uniqueID);
+				packet.obstacles.insert(obstacle->ID);
 		}
 
 		if(!packet.obstacles.empty())
@@ -510,10 +510,9 @@ void ObstacleMechanics::placeObstacle(const SpellCastEnvironment * env, const Ba
 	auto obstacle = std::make_shared<SpellCreatedObstacle>();
 
 	obstacle->casterSide = parameters.casterSide;
-	obstacle->ID = owner->id;
 	obstacle->spellLevel = parameters.effectLevel;
 	obstacle->casterSpellPower = parameters.effectPower;
-	obstacle->uniqueID = obstacleIdToGive;
+	obstacle->ID = obstacleIdToGive;
 	setupObstacle(obstacle.get(), pos);
 
 	BattleObstaclePlaced bop;
@@ -574,8 +573,9 @@ bool LandMineMechanics::requiresCreatureTarget() const
 void LandMineMechanics::setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const
 {
 	obstacle->obstacleType = ObstacleType::LAND_MINE;
-	obstacle->area.position =  position;
-	obstacle->area.setArea(std::vector<BattleHex>(1, obstacle->area.position));
+	obstacle->defName = "C09SPF1.def";
+	obstacle->area.setPosition(position);
+	obstacle->area.setArea(std::vector<BattleHex>(1, obstacle->area.getPosition()));
 	obstacle->turnsRemaining = -1;
 	obstacle->visibleForAnotherSide = false;
 }
@@ -594,8 +594,9 @@ bool QuicksandMechanics::requiresCreatureTarget() const
 void QuicksandMechanics::setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const
 {
 	obstacle->obstacleType = ObstacleType::QUICKSAND;
-	obstacle->area.position =  position;
-	obstacle->area.setArea(std::vector<BattleHex>(1, obstacle->area.position));
+	obstacle->defName = "C17SPE1.def";
+	obstacle->area.setPosition(position);
+	obstacle->area.setArea(std::vector<BattleHex>(1, obstacle->area.getPosition()));
 	obstacle->turnsRemaining = -1;
 	obstacle->visibleForAnotherSide = false;
 }
@@ -671,8 +672,9 @@ void FireWallMechanics::applyBattleEffects(const SpellCastEnvironment * env, con
 void FireWallMechanics::setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const
 {
 	obstacle->obstacleType = ObstacleType::FIRE_WALL;
-	obstacle->area.position =  position;
-	obstacle->area.setArea(std::vector<BattleHex>(1, obstacle->area.position));
+	obstacle->defName = "C07SPF61.def";
+	obstacle->area.setPosition(position);
+	obstacle->area.setArea(std::vector<BattleHex>(1, obstacle->area.getPosition()));
 	obstacle->turnsRemaining = 2;
 	obstacle->visibleForAnotherSide = true;
 }
@@ -703,10 +705,30 @@ void ForceFieldMechanics::applyBattleEffects(const SpellCastEnvironment * env, c
 void ForceFieldMechanics::setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const
 {
 	obstacle->obstacleType = ObstacleType::FORCE_FIELD;
-	obstacle->area.position =  position;
-	obstacle->area.setArea(rangeInHexes(obstacle->area.position, obstacle->spellLevel, obstacle->casterSide));
+	obstacle->area.setPosition(position);
+	obstacle->area.setArea(rangeInHexes(obstacle->area.getPosition(), obstacle->spellLevel, obstacle->casterSide));
 	obstacle->turnsRemaining = 2;
+	if(obstacle->casterSide)
+	{
+		obstacle->offsetGraphicsInX = -18;
+		obstacle->offsetGraphicsInY = -21;
+	}
 	obstacle->visibleForAnotherSide = true;
+
+	if (obstacle->getArea().getFields().size() > 2)
+	{
+		if(!obstacle->casterSide)
+			obstacle->defName = "C15SPE10.def";
+		else
+			obstacle->defName = "C15SPE7.def";
+	}
+	else
+	{
+		if(!obstacle->casterSide)
+			obstacle->defName = "C15SPE1.def";
+		else
+			obstacle->defName = "C15SPE4.def";
+	}
 }
 
 ///RemoveObstacleMechanics
@@ -726,7 +748,7 @@ void RemoveObstacleMechanics::applyBattleEffects(const SpellCastEnvironment * en
 		{
 			if(canRemove(i.get(), parameters.spellLvl))
 			{
-				obr.obstacles.insert(i->uniqueID);
+				obr.obstacles.insert(i->ID);
 				complain = false;
 			}
 		}
@@ -773,11 +795,8 @@ bool RemoveObstacleMechanics::canRemove(const CObstacleInstance * obstacle, cons
 {
 	switch (obstacle->getType())
 	{
-	case ObstacleType::ABSOLUTE_OBSTACLE: //cliff-like obstacles can't be removed
-	case ObstacleType::MOAT:
-		return false;
 	case ObstacleType::USUAL:
-		return true;
+		return obstacle->canRemove();
 	case ObstacleType::FIRE_WALL:
 		if(spellLevel >= 2)
 			return true;

@@ -129,19 +129,7 @@ private:
 	const CCreatureSet *army1, *army2; //copy of initial armies (for result window)
 	const CGHeroInstance *attackingHeroInstance, *defendingHeroInstance;
 	std::map<int, CCreatureAnimation *> creAnims; //animations of creatures from fighting armies (order by BattleInfo's stacks' ID)
-
 	std::map<int, std::shared_ptr<CAnimation>> idToProjectile;
-
-	std::map<int, CDefHandler *> idToObstacle; //obstacles located on the battlefield
-	std::map<int, SDL_Surface *> idToAbsoluteObstacle; //obstacles located on the battlefield
-
-	//TODO these should be loaded only when needed (and freed then) but I believe it's rather work for resource manager,
-	//so I didn't implement that (having ongoing RM development)
-	CDefHandler *landMine;
-	CDefHandler *quicksand;
-	CDefHandler *fireWall;
-	CDefHandler *smallForceField[2], *bigForceField[2]; // [side]
-
 	std::map<int, bool> creDir; // <creatureID, if false reverse creature's animation> //TODO: move it to battle callback
 	ui8 animCount;
 	const CStack *activeStack; //number of active stack; nullptr - no one

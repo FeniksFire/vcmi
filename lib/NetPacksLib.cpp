@@ -1692,7 +1692,7 @@ DLL_LINKAGE void ObstaclesRemoved::applyGs(CGameState *gs)
 		{
 			for(int i=0; i<gs->curB->obstacles.size(); ++i)
 			{
-				if(gs->curB->obstacles[i]->uniqueID == rem_obst) //remove this obstacle
+				if(gs->curB->obstacles[i]->ID == rem_obst) //remove this obstacle
 				{
 					gs->curB->obstacles.erase(gs->curB->obstacles.begin() + i);
 					break;
