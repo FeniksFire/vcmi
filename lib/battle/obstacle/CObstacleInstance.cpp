@@ -30,7 +30,7 @@ CObstacleInstance::~CObstacleInstance()
 
 ObstacleType CObstacleInstance::getType() const
 {
-	return ObstacleType::USUAL;
+	return ObstacleType::STATIC;
 }
 
 ObstacleArea CObstacleInstance::getArea() const
@@ -49,11 +49,6 @@ void CObstacleInstance::battleTurnPassed()
 
 }
 
-bool CObstacleInstance::canRemove() const
-{
-	return true;
-}
-
 bool CObstacleInstance::stopsMovement() const
 {
 	return getType() == ObstacleType::QUICKSAND || getType() == ObstacleType::MOAT;
@@ -61,7 +56,7 @@ bool CObstacleInstance::stopsMovement() const
 
 bool CObstacleInstance::blocksTiles() const
 {
-	return getType() == ObstacleType::USUAL || getType() == ObstacleType::FORCE_FIELD;
+	return getType() == ObstacleType::STATIC || getType() == ObstacleType::FORCE_FIELD;
 }
 
 SpellCreatedObstacle::SpellCreatedObstacle()
@@ -108,9 +103,4 @@ void SpellCreatedObstacle::battleTurnPassed()
 ObstacleType MoatObstacle::getType() const
 {
 	return ObstacleType::MOAT;
-}
-
-bool AbsoluteObstacle::canRemove() const
-{
-	return false;
 }

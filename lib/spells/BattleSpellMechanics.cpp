@@ -573,7 +573,7 @@ bool LandMineMechanics::requiresCreatureTarget() const
 void LandMineMechanics::setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const
 {
 	obstacle->obstacleType = ObstacleType::LAND_MINE;
-	obstacle->defName = "C09SPF1.def";
+	obstacle->graphicsName = "C09SPF1.def";
 	obstacle->area.setPosition(position);
 	obstacle->area.setArea(std::vector<BattleHex>(1, obstacle->area.getPosition()));
 	obstacle->turnsRemaining = -1;
@@ -594,7 +594,7 @@ bool QuicksandMechanics::requiresCreatureTarget() const
 void QuicksandMechanics::setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const
 {
 	obstacle->obstacleType = ObstacleType::QUICKSAND;
-	obstacle->defName = "C17SPE1.def";
+	obstacle->graphicsName = "C17SPE1.def";
 	obstacle->area.setPosition(position);
 	obstacle->area.setArea(std::vector<BattleHex>(1, obstacle->area.getPosition()));
 	obstacle->turnsRemaining = -1;
@@ -672,7 +672,7 @@ void FireWallMechanics::applyBattleEffects(const SpellCastEnvironment * env, con
 void FireWallMechanics::setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const
 {
 	obstacle->obstacleType = ObstacleType::FIRE_WALL;
-	obstacle->defName = "C07SPF61.def";
+	obstacle->graphicsName = "C07SPF61.def";
 	obstacle->area.setPosition(position);
 	obstacle->area.setArea(std::vector<BattleHex>(1, obstacle->area.getPosition()));
 	obstacle->turnsRemaining = 2;
@@ -718,16 +718,16 @@ void ForceFieldMechanics::setupObstacle(SpellCreatedObstacle * obstacle, BattleH
 	if (obstacle->getArea().getFields().size() > 2)
 	{
 		if(!obstacle->casterSide)
-			obstacle->defName = "C15SPE10.def";
+			obstacle->graphicsName = "C15SPE10.def";
 		else
-			obstacle->defName = "C15SPE7.def";
+			obstacle->graphicsName = "C15SPE7.def";
 	}
 	else
 	{
 		if(!obstacle->casterSide)
-			obstacle->defName = "C15SPE1.def";
+			obstacle->graphicsName = "C15SPE1.def";
 		else
-			obstacle->defName = "C15SPE4.def";
+			obstacle->graphicsName = "C15SPE4.def";
 	}
 }
 
@@ -795,8 +795,8 @@ bool RemoveObstacleMechanics::canRemove(const CObstacleInstance * obstacle, cons
 {
 	switch (obstacle->getType())
 	{
-	case ObstacleType::USUAL:
-		return obstacle->canRemove();
+	case ObstacleType::STATIC:
+		return obstacle->canBeRemovedBySpell;
 	case ObstacleType::FIRE_WALL:
 		if(spellLevel >= 2)
 			return true;

@@ -2673,73 +2673,12 @@ Rect CBattleInterface::hexPosition(BattleHex hex) const
 
 void CBattleInterface::obstaclePlaced(const CObstacleInstance & oi)
 {
-	//so when multiple obstacles are added, they show up one after another
 	waitForAnims();
-
-	int effectID = -1;
-	soundBase::soundID sound; // FIXME(v.markovtsev): soundh->playSound() is commented in the end => warning
-
-	std::string defname;
-
-	switch(oi.getType())
-	{
-	case ObstacleType::QUICKSAND:
-		effectID = 55;
-		sound = soundBase::QUIKSAND;
-		break;
-	case ObstacleType::LAND_MINE:
-		effectID = 47;
-		sound = soundBase::LANDMINE;
-		break;
-	case ObstacleType::FORCE_FIELD:
-		{
-			auto &spellObstacle = dynamic_cast<const SpellCreatedObstacle&>(oi);
-			if (spellObstacle.casterSide)
-			{
-				if (oi.getArea().getFields().size() < 3)
-					defname = "C15SPE0.DEF"; //TODO cannot find def for 2-hex force field \ appearing
-				else
-					defname = "C15SPE6.DEF";
-			}
-			else
-			{
-				if (oi.getArea().getFields().size() < 3)
-					defname = "C15SPE0.DEF";
-				else
-					defname = "C15SPE9.DEF";
-			}
-		}
-		sound = soundBase::FORCEFLD;
-		break;
-	case ObstacleType::FIRE_WALL:
-		if (oi.getArea().getFields().size() < 3)
-			effectID = 43; //small fire wall appearing
-		else
-			effectID = 44; //and the big one
-		sound = soundBase::fireWall;
-		break;
-	default:
-		logGlobal->error("I don't know how to animate appearing obstacle of type %d", (int)oi.getType());
-		return;
-	}
-
-	if (effectID >= 0 && graphics->battleACToDef[effectID].empty())
-	{
-		logGlobal->error("Cannot find def for effect type %d", effectID);
-		return;
-	}
-
-	if (defname.empty() && effectID >= 0)
-		defname = graphics->battleACToDef[effectID].front();
-
-	assert(!defname.empty());
-	//we assume here that effect graphics have the same size as the usual obstacle image
-	// -> if we know how to blit obstacle, let's blit the effect in the same place
+	soundBase::soundID sound;
+	assert(!oi.graphicsName.empty());
 	Point whereTo = getObstaclePosition(getObstacleImage(oi), oi);
-	addNewAnim(new CEffectAnimation(this, defname, whereTo.x, whereTo.y));
-
-	//TODO we need to wait after playing sound till it's finished, otherwise it overlaps and sounds really bad
-	//CCS->soundh->playSound(sound);
+	addNewAnim(new CEffectAnimation(this, oi.graphicsName, whereTo.x, whereTo.y));
+	CCS->soundh->playSound(sound);
 }
 
 void CBattleInterface::gateStateChanged(const EGateState state)
@@ -3569,17 +3508,17 @@ void CBattleInterface::updateBattleAnimations()
 SDL_Surface *CBattleInterface::getObstacleImage(const CObstacleInstance &oi)
 {
 	int frameIndex = (animCount+1) *25 / getAnimSpeed();
-	ResourceID resI(oi.defName);
+	ResourceID resI(oi.graphicsName);
 	if(resI.getType() == EResType::ANIMATION)
-		return vstd::circularAt(CDefHandler::giveDef(oi.defName)->ourImages, frameIndex).bitmap;
+		return vstd::circularAt(CDefHandler::giveDef(oi.graphicsName)->ourImages, frameIndex).bitmap;
 	else if(resI.getType() == EResType::IMAGE)
-		return BitmapHandler::loadBitmap(oi.defName);
+		return BitmapHandler::loadBitmap(oi.graphicsName);
 }
 
 Point CBattleInterface::getObstaclePosition(SDL_Surface *image, const CObstacleInstance &obstacle)
 {
 	int offset = image->h % 42;
-	if (obstacle.getType() == ObstacleType::USUAL)
+	if (obstacle.getType() == ObstacleType::STATIC)
 	{
 		if (obstacle.getArea().getFields().front() < 0  || offset > 37) //second or part is for holy ground ID=62,65,63
 			offset -= 42;

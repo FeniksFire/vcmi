@@ -21,7 +21,9 @@ public:
 	si32 ID;
 	int32_t offsetGraphicsInY;
 	int32_t offsetGraphicsInX;
-	std::string defName;
+	std::string graphicsName;
+
+	bool canBeRemovedBySpell = 0;
 
 	CObstacleInstance();
 	virtual ~CObstacleInstance();
@@ -35,22 +37,16 @@ public:
 	virtual bool visibleForSide(ui8 side, bool hasNativeStack) const;
 
 	virtual void battleTurnPassed();
-	virtual bool canRemove() const;;
 
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{
 		h & offsetGraphicsInX;
 		h & offsetGraphicsInY;
-		h & defName;
+		h & canBeRemovedBySpell;
+		h & graphicsName;
 		h & area;
 		h & ID;
 	}
-};
-
-class DLL_LINKAGE AbsoluteObstacle : public CObstacleInstance
-{
-public:
-	virtual bool canRemove() const override;;
 };
 
 class DLL_LINKAGE MoatObstacle : public CObstacleInstance

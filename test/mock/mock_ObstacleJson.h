@@ -18,5 +18,5 @@ public:
 	MOCK_CONST_METHOD0(getSurface, ObstacleSurface());
 	MOCK_CONST_METHOD0(getHeight, int32_t());
 	MOCK_CONST_METHOD0(getWidth, int32_t());
-	MOCK_CONST_METHOD0(getDefName, std::string());
+	MOCK_CONST_METHOD0(getGraphicsName, std::string());
 };

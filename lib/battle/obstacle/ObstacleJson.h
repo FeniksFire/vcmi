@@ -21,8 +21,9 @@ public:
 	virtual ObstacleSurface getSurface() const;
 	virtual int32_t getOffsetGraphicsInY() const;
 	virtual int32_t getOffsetGraphicsInX() const;
+	virtual bool getCanBeRemovedBySpell() const;
 	virtual int32_t getPosition() const;
-	virtual std::string getDefName() const;
+	virtual std::string getGraphicsName() const;
 
 	ObstacleJson(JsonNode jsonNode);
 	ObstacleJson();

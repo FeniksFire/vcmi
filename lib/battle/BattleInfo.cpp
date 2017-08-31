@@ -315,27 +315,25 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 		std::vector<BattleHex> blockedTiles;
 
 		const JsonNode obstacleConfig(ResourceID("config/obstacles.json"));
-		auto appropriateAbsoluteObstacle = [&](int id)
-		{
-			return ObstacleJson(obstacleConfig["absoluteObstacles"].Vector().at(id)).getSurface().isAppropriateForSurface(curB->terrainType, static_cast<BFieldType>(specialBattlefield));
-		};
-		auto appropriateUsualObstacle = [&](int id) -> bool
+
+		auto appropriateStaticObstacle = [&](int id) -> bool
 		{
 			return ObstacleJson(obstacleConfig["obstacles"].Vector().at(id)).getSurface().isAppropriateForSurface(curB->terrainType, static_cast<BFieldType>(specialBattlefield));
 		};
 
 		if(r.rand(1,100) <= 40) //put cliff-like obstacle
 		{
-			RangeGenerator obidgen(0, ABSOLUTE_OBSTACLES_COUNT-1, ourRand);
+			RangeGenerator obidgen(USUAL_OBSTACLES_COUNT, USUAL_OBSTACLES_COUNT+ABSOLUTE_OBSTACLES_COUNT-1, ourRand);
 			try
 			{
-				auto obstPtr = std::make_shared<AbsoluteObstacle>();
-				auto id = obidgen.getSuchNumber(appropriateAbsoluteObstacle);
-				ObstacleJson info(obstacleConfig["absoluteObstacles"].Vector().at(id));
+				auto obstPtr = std::make_shared<CObstacleInstance>();
+				auto id = obidgen.getSuchNumber(appropriateStaticObstacle);
+				ObstacleJson info(obstacleConfig["obstacles"].Vector().at(id));
 				obstPtr->area = info.getArea();
+				obstPtr->canBeRemovedBySpell = info.getCanBeRemovedBySpell();
 				obstPtr->offsetGraphicsInY = info.getOffsetGraphicsInY();
 				obstPtr->offsetGraphicsInX = info.getOffsetGraphicsInX();
-				obstPtr->defName = info.getDefName();
+				obstPtr->graphicsName = info.getGraphicsName();
 				obstPtr->area.moveAreaToField(info.getPosition());
 				obstPtr->ID = curB->obstacles.size();
 				curB->obstacles.push_back(obstPtr);
@@ -357,7 +355,7 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 			while(tilesToBlock > 0)
 			{
 				auto tileAccessibility = curB->getAccesibility();
-				const int obid = obidgen.getSuchNumber(appropriateUsualObstacle);
+				const int obid = obidgen.getSuchNumber(appropriateStaticObstacle);
 
 				const ObstacleJson &obi = ObstacleJson(obstacleConfig["obstacles"].Vector().at(obid));
 
@@ -395,9 +393,10 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 				ObstacleJson info(obstacleConfig["obstacles"].Vector().at(obid));
 
 				obstPtr->area = info.getArea();
+				obstPtr->canBeRemovedBySpell = info.getCanBeRemovedBySpell();
 				obstPtr->offsetGraphicsInY = info.getOffsetGraphicsInY();
 				obstPtr->offsetGraphicsInX = info.getOffsetGraphicsInX();
-				obstPtr->defName = info.getDefName();
+				obstPtr->graphicsName = info.getGraphicsName();
 				obstPtr->area.moveAreaToField(posgenerator.getSuchNumber(validPosition));
 				obstPtr->ID = curB->obstacles.size();
 				curB->obstacles.push_back(obstPtr);

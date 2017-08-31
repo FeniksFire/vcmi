@@ -35,14 +35,19 @@ int32_t ObstacleJson::getOffsetGraphicsInX() const
 	return config["offsetGraphicsInX"].Integer();
 }
 
+bool ObstacleJson::getCanBeRemovedBySpell() const
+{
+	return config["canBeRemoved"].Bool();
+}
+
 int32_t ObstacleJson::getPosition() const
 {
 	return config["position"].Integer();
 }
 
-std::string ObstacleJson::getDefName() const
+std::string ObstacleJson::getGraphicsName() const
 {
-	return config["defname"].String();
+	return config["graphics"].String();
 }
 
 ObstacleJson::ObstacleJson(JsonNode jsonNode) : config(jsonNode)
