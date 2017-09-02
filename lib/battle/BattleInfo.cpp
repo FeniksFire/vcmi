@@ -303,14 +303,13 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 	//randomize obstacles
 	if (town == nullptr && !creatureBank) //do it only when it's not siege and not creature bank
 	{
-		const int ABSOLUTE_OBSTACLES_COUNT = 34, USUAL_OBSTACLES_COUNT = 91; //shouldn't be changes if we want H3-like obstacle placement
+		const int ABSOLUTE_OBSTACLES_COUNT = 34, USUAL_OBSTACLES_COUNT = 91;
 
 		RandGen r;
 		auto ourRand = [&](){ return r.rand(); };
 		r.srand(tile);
 		r.rand(1,8); //battle sound ID to play... can't do anything with it here
 		int tilesToBlock = r.rand(5,12);
-		const int specialBattlefield = battlefieldTypeToBI(battlefieldType);
 
 		std::vector<BattleHex> blockedTiles;
 
@@ -318,7 +317,20 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 
 		auto appropriateStaticObstacle = [&](int id) -> bool
 		{
-			return ObstacleJson(obstacleConfig["obstacles"].Vector().at(id)).getSurface().isAppropriateForSurface(curB->terrainType, static_cast<BFieldType>(specialBattlefield));
+			if(battlefieldType == BFieldType::CLOVER_FIELD ||
+					battlefieldType == BFieldType::CURSED_GROUND ||
+					battlefieldType == BFieldType::EVIL_FOG ||
+					battlefieldType == BFieldType::FAVORABLE_WINDS ||
+					battlefieldType == BFieldType::FIERY_FIELDS ||
+					battlefieldType == BFieldType::HOLY_GROUND ||
+					battlefieldType == BFieldType::LUCID_POOLS ||
+					battlefieldType == BFieldType::MAGIC_CLOUDS ||
+					battlefieldType == BFieldType::MAGIC_PLAINS ||
+					battlefieldType == BFieldType::ROCKLANDS ||
+					battlefieldType == BFieldType::SAND_SHORE)
+				return ObstacleJson(obstacleConfig["obstacles"].Vector().at(id)).getSurface().isAppropriateForSurface(terrain, battlefieldType);
+			else
+				return ObstacleJson(obstacleConfig["obstacles"].Vector().at(id)).getSurface().isAppropriateForSurface(terrain, BFieldType::NONE);
 		};
 
 		if(r.rand(1,100) <= 40) //put cliff-like obstacle
@@ -698,30 +710,6 @@ int BattleInfo::getIdForNewStack() const
 	}
 
 	return 0;
-}
-
-BattlefieldBI::BattlefieldBI BattleInfo::battlefieldTypeToBI(BFieldType bfieldType)
-{
-	static const std::map<BFieldType, BattlefieldBI::BattlefieldBI> theMap =
-	{
-		{BFieldType::CLOVER_FIELD, BattlefieldBI::CLOVER_FIELD},
-		{BFieldType::CURSED_GROUND, BattlefieldBI::CURSED_GROUND},
-		{BFieldType::EVIL_FOG, BattlefieldBI::EVIL_FOG},
-		{BFieldType::FAVORABLE_WINDS, BattlefieldBI::NONE},
-		{BFieldType::FIERY_FIELDS, BattlefieldBI::FIERY_FIELDS},
-		{BFieldType::HOLY_GROUND, BattlefieldBI::HOLY_GROUND},
-		{BFieldType::LUCID_POOLS, BattlefieldBI::LUCID_POOLS},
-		{BFieldType::MAGIC_CLOUDS, BattlefieldBI::MAGIC_CLOUDS},
-		{BFieldType::MAGIC_PLAINS, BattlefieldBI::MAGIC_PLAINS},
-		{BFieldType::ROCKLANDS, BattlefieldBI::ROCKLANDS},
-		{BFieldType::SAND_SHORE, BattlefieldBI::COASTAL}
-	};
-
-	auto itr = theMap.find(bfieldType);
-	if(itr != theMap.end())
-		return itr->second;
-
-	return BattlefieldBI::NONE;
 }
 
 CStack * BattleInfo::getStack(int stackID, bool onlyAlive)

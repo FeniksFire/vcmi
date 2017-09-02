@@ -85,9 +85,6 @@ struct DLL_LINKAGE BattleInfo : public CBonusSystemNode, public CBattleInfoCallb
 
 	PlayerColor theOtherPlayer(PlayerColor player) const;
 	ui8 whatSide(PlayerColor player) const;
-
-	static BattlefieldBI::BattlefieldBI battlefieldTypeToBI(BFieldType bfieldType); //converts above to ERM BI format
-	static int battlefieldTypeToTerrain(int bfieldType); //converts above to ERM BI format
 };
 
 

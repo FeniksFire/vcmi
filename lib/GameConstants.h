@@ -746,26 +746,6 @@ namespace SecSkillLevel
 	};
 }
 
-
-//follows ERM BI (battle image) format
-namespace BattlefieldBI
-{
-	enum BattlefieldBI
-	{
-		NONE = -1,
-		COASTAL,
-		CURSED_GROUND,
-		MAGIC_PLAINS,
-		HOLY_GROUND,
-		EVIL_FOG,
-		CLOVER_FIELD,
-		LUCID_POOLS,
-		FIERY_FIELDS,
-		ROCKLANDS,
-		MAGIC_CLOUDS
-	};
-}
-
 namespace Date
 {
 	enum EDateType
