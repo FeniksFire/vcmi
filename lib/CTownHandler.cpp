@@ -97,7 +97,7 @@ CFaction::~CFaction()
 }
 
 CTown::CTown()
-	: faction(nullptr), mageLevel(0), primaryRes(0), moatDamage(0), defaultTavernChance(0)
+	: faction(nullptr), mageLevel(0), primaryRes(0), defaultTavernChance(0)
 {
 }
 
@@ -108,12 +108,6 @@ CTown::~CTown()
 
 	for(auto & str : clientInfo.structures)
 		str.dellNull();
-}
-
-std::vector<BattleHex> CTown::defaultMoatHexes()
-{
-	static const std::vector<BattleHex> moatHexes = {11, 28, 44, 61, 77, 111, 129, 146, 164, 181};
-	return moatHexes;
 }
 
 std::string CTown::getFactionName() const
@@ -614,16 +608,6 @@ void CTownHandler::loadTown(CTown &town, const JsonNode & source)
 	{
 		town.warMachine = CreatureID(creature).toCreature()->warMachine;
 	});
-
-	town.moatDamage = source["moatDamage"].Float();
-
-	// Compatability for <= 0.98f mods
-	if(source["moatHexes"].isNull())
-	{
-		town.moatHexes = CTown::defaultMoatHexes();
-	}
-	else
-		town.moatHexes = source["moatHexes"].convertTo<std::vector<BattleHex> >();
 
 	town.mageLevel = source["mageGuild"].Float();
 	town.names = source["names"].convertTo<std::vector<std::string> >();

@@ -19,7 +19,8 @@
 #include "ResourceSet.h"
 #include "CGameStateFwd.h"
 #include "mapping/CMapDefines.h"
-#include "battle/obstacle/CObstacleInstance.h"
+#include "battle/obstacle/StaticObstacle.h"
+#include "battle/obstacle/SpellCreatedObstacle.h".h"
 
 #include "spells/ViewSpellInt.h"
 
@@ -1733,11 +1734,11 @@ struct ObstaclesRemoved : public CPackForClient
 	DLL_LINKAGE void applyGs(CGameState *gs);
 	void applyCl(CClient *cl);
 
-	std::set<si32> obstacles; //IDs of removed obstacles
+	std::set<boost::uuids::uuid> id;
 
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{
-		h & obstacles;
+		h & id;
 	}
 };
 
@@ -1874,7 +1875,7 @@ struct BattleObstaclePlaced : public CPackForClient
 	DLL_LINKAGE void applyGs(CGameState *gs); //effect
 	void applyCl(CClient *cl); //play animations & stuff
 
-	std::shared_ptr<CObstacleInstance> obstacle;
+	std::shared_ptr<StaticObstacle> obstacle;
 
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{

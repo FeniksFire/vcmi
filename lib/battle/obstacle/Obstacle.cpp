@@ -9,3 +9,24 @@
  */
 #include "StdInc.h"
 #include "Obstacle.h"
+
+boost::uuids::uuid Obstacle::generateID()
+{
+	static boost::uuids::random_generator gen(new boost::mt19937);
+	return gen();
+}
+
+boost::uuids::uuid Obstacle::getID() const
+{
+	return ID;
+}
+
+bool Obstacle::stopsMovement() const
+{
+	return getType() == ObstacleType::QUICKSAND || getType() == ObstacleType::MOAT;
+}
+
+bool Obstacle::blocksTiles() const
+{
+	return getType() == ObstacleType::STATIC || getType() == ObstacleType::FORCE_FIELD;
+}

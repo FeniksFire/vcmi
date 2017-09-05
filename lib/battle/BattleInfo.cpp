@@ -15,6 +15,7 @@
 #include "../mapObjects/CGTownInstance.h"
 #include "../CGeneralTextHandler.h"
 #include "battle/obstacle/ObstacleJson.h"
+#include "battle/obstacle/ObstacleRandomGenerator.h"
 
 const CStack * BattleInfo::getNextStack() const
 {
@@ -170,88 +171,7 @@ namespace CGH
 	}
 }
 
-//RNG that works like H3 one
-struct RandGen
-{
-	int seed;
-
-	void srand(int s)
-	{
-		seed = s;
-	}
-	void srand(int3 pos)
-	{
-		srand(110291 * pos.x + 167801 * pos.y + 81569);
-	}
-	int rand()
-	{
-		seed = 214013 * seed + 2531011;
-		return (seed >> 16) & 0x7FFF;
-	}
-	int rand(int min, int max)
-	{
-		if(min == max)
-			return min;
-		if(min > max)
-			return min;
-		return min + rand() % (max - min + 1);
-	}
-};
-
-struct RangeGenerator
-{
-	class ExhaustedPossibilities : public std::exception
-	{
-	};
-
-	RangeGenerator(int _min, int _max, std::function<int()> _myRand):
-		min(_min),
-		remainingCount(_max - _min + 1),
-		remaining(remainingCount, true),
-		myRand(_myRand)
-	{
-	}
-
-	int generateNumber()
-	{
-		if(!remainingCount)
-			throw ExhaustedPossibilities();
-		if(remainingCount == 1)
-			return 0;
-		return myRand() % remainingCount;
-	}
-
-	//get number fulfilling predicate. Never gives the same number twice.
-	int getSuchNumber(std::function<bool(int)> goodNumberPred = nullptr)
-	{
-		int ret = -1;
-		do
-		{
-			int n = generateNumber();
-			int i = 0;
-			for(;;i++)
-			{
-				assert(i < (int)remaining.size());
-				if(!remaining[i])
-					continue;
-				if(!n)
-					break;
-				n--;
-			}
-
-			remainingCount--;
-			remaining[i] = false;
-			ret = i + min;
-		} while(goodNumberPred && !goodNumberPred(ret));
-		return ret;
-	}
-
-	int min, remainingCount;
-	std::vector<bool> remaining;
-	std::function<int()> myRand;
-};
-
-BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType battlefieldType, const CArmedInstance * armies[2], const CGHeroInstance * heroes[2], bool creatureBank, const CGTownInstance * town)
+BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType battlefieldType, const CArmedInstance * armies[2], const CGHeroInstance * heroes[2], std::string creatureBankName, const CGTownInstance * town)
 {
 	CMP_stack cmpst;
 	auto curB = new BattleInfo();
@@ -300,130 +220,6 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 		}
 	}
 
-	//randomize obstacles
-	if (town == nullptr && !creatureBank) //do it only when it's not siege and not creature bank
-	{
-		const int ABSOLUTE_OBSTACLES_COUNT = 34, USUAL_OBSTACLES_COUNT = 91;
-
-		RandGen r;
-		auto ourRand = [&](){ return r.rand(); };
-		r.srand(tile);
-		r.rand(1,8); //battle sound ID to play... can't do anything with it here
-		int tilesToBlock = r.rand(5,12);
-
-		std::vector<BattleHex> blockedTiles;
-
-		const JsonNode obstacleConfig(ResourceID("config/obstacles.json"));
-
-		auto appropriateStaticObstacle = [&](int id) -> bool
-		{
-			if(battlefieldType == BFieldType::CLOVER_FIELD ||
-					battlefieldType == BFieldType::CURSED_GROUND ||
-					battlefieldType == BFieldType::EVIL_FOG ||
-					battlefieldType == BFieldType::FAVORABLE_WINDS ||
-					battlefieldType == BFieldType::FIERY_FIELDS ||
-					battlefieldType == BFieldType::HOLY_GROUND ||
-					battlefieldType == BFieldType::LUCID_POOLS ||
-					battlefieldType == BFieldType::MAGIC_CLOUDS ||
-					battlefieldType == BFieldType::MAGIC_PLAINS ||
-					battlefieldType == BFieldType::ROCKLANDS ||
-					battlefieldType == BFieldType::SAND_SHORE)
-				return ObstacleJson(obstacleConfig["obstacles"].Vector().at(id)).getSurface().isAppropriateForSurface(terrain, battlefieldType);
-			else
-				return ObstacleJson(obstacleConfig["obstacles"].Vector().at(id)).getSurface().isAppropriateForSurface(terrain, BFieldType::NONE);
-		};
-
-		if(r.rand(1,100) <= 40) //put cliff-like obstacle
-		{
-			RangeGenerator obidgen(USUAL_OBSTACLES_COUNT, USUAL_OBSTACLES_COUNT+ABSOLUTE_OBSTACLES_COUNT-1, ourRand);
-			try
-			{
-				auto obstPtr = std::make_shared<CObstacleInstance>();
-				auto id = obidgen.getSuchNumber(appropriateStaticObstacle);
-				ObstacleJson info(obstacleConfig["obstacles"].Vector().at(id));
-				obstPtr->area = info.getArea();
-				obstPtr->canBeRemovedBySpell = info.getCanBeRemovedBySpell();
-				obstPtr->offsetGraphicsInY = info.getOffsetGraphicsInY();
-				obstPtr->offsetGraphicsInX = info.getOffsetGraphicsInX();
-				obstPtr->graphicsName = info.getGraphicsName();
-				obstPtr->area.moveAreaToField(info.getPosition());
-				obstPtr->ID = curB->obstacles.size();
-				curB->obstacles.push_back(obstPtr);
-
-				for(BattleHex blocked : obstPtr->getArea().getFields())
-					blockedTiles.push_back(blocked);
-				tilesToBlock -= obstPtr->getArea().getFields().size() / 2;
-			}
-			catch(RangeGenerator::ExhaustedPossibilities &)
-			{
-				//silently ignore, if we can't place absolute obstacle, we'll go with the usual ones
-				logGlobal->debug("RangeGenerator::ExhaustedPossibilities exception occured - cannot place absolute obstacle");
-			}
-		}
-
-		RangeGenerator obidgen(0, USUAL_OBSTACLES_COUNT-1, ourRand);
-		try
-		{
-			while(tilesToBlock > 0)
-			{
-				auto tileAccessibility = curB->getAccesibility();
-				const int obid = obidgen.getSuchNumber(appropriateStaticObstacle);
-
-				const ObstacleJson &obi = ObstacleJson(obstacleConfig["obstacles"].Vector().at(obid));
-
-				auto validPosition = [&](BattleHex pos) -> bool
-				{
-					auto area = obi.getArea();
-
-					if(area.getHeight() >= pos.getY())
-						return false;
-					if(pos.getX() == 0)
-						return false;
-					if(pos.getX() + area.getWidth() > 15)
-						return false;
-					if(vstd::contains(blockedTiles, pos))
-						return false;
-
-					area.moveAreaToField(pos);
-					for(BattleHex blocked :	area.getFields())
-					{
-						if(tileAccessibility[blocked] == EAccessibility::UNAVAILABLE) //for ship-to-ship battlefield - exclude hardcoded unavailable tiles
-							return false;
-						if(vstd::contains(blockedTiles, blocked))
-							return false;
-						int x = blocked.getX();
-						if(x <= 2 || x >= 14)
-							return false;
-					}
-
-					return true;
-				};
-
-				RangeGenerator posgenerator(18, 168, ourRand);
-
-				auto obstPtr = std::make_shared<CObstacleInstance>();				
-				ObstacleJson info(obstacleConfig["obstacles"].Vector().at(obid));
-
-				obstPtr->area = info.getArea();
-				obstPtr->canBeRemovedBySpell = info.getCanBeRemovedBySpell();
-				obstPtr->offsetGraphicsInY = info.getOffsetGraphicsInY();
-				obstPtr->offsetGraphicsInX = info.getOffsetGraphicsInX();
-				obstPtr->graphicsName = info.getGraphicsName();
-				obstPtr->area.moveAreaToField(posgenerator.getSuchNumber(validPosition));
-				obstPtr->ID = curB->obstacles.size();
-				curB->obstacles.push_back(obstPtr);
-
-				for(BattleHex blocked : obstPtr->getArea().getFields())
-					blockedTiles.push_back(blocked);
-				tilesToBlock -= obi.getArea().getFields().size();
-			}
-		}
-		catch(RangeGenerator::ExhaustedPossibilities &)
-		{
-			logGlobal->debug("RangeGenerator::ExhaustedPossibilities exception occured - cannot place usual obstacle");
-		}
-	}
-
 	//reading battleStartpos - add creatures AFTER random obstacles are generated
 	//TODO: parse once to some structure
 	std::vector< std::vector<int> > looseFormations[2], tightFormations[2], creBankFormations[2];
@@ -449,7 +245,7 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 
 
 	//adding war machines
-	if(!creatureBank)
+	if(creatureBankName.empty())
 	{
 		//Checks if hero has artifact and create appropriate stack
 		auto handleWarMachine= [&](int side, ArtifactPosition artslot, BattleHex hex)
@@ -495,7 +291,7 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 		for(auto i = armies[side]->Slots().begin(); i != armies[side]->Slots().end(); i++, k++)
 		{
 			std::vector<int> *formationVector = nullptr;
-			if(creatureBank)
+			if(!creatureBankName.empty())
 				formationVector = &creBankFormations[side][formationNo];
 			else if(armies[side]->formation)
 				formationVector = &tightFormations[side][formationNo];
@@ -503,7 +299,7 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 				formationVector = &looseFormations[side][formationNo];
 
 			BattleHex pos = (k < formationVector->size() ? formationVector->at(k) : 0);
-			if(creatureBank && i->second->type->isDoubleWide())
+			if(!creatureBankName.empty() && i->second->type->isDoubleWide())
 				pos += side ? BattleHex::LEFT : BattleHex::RIGHT;
 
 			CStack * stack = curB->generateNewStack(*i->second, side, i->first, pos);
@@ -517,7 +313,7 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 		if (heroes[i] && heroes[i]->commander && heroes[i]->commander->alive)
 		{
 			CStack * stack = curB->generateNewStack (*heroes[i]->commander, i, SlotID::COMMANDER_SLOT_PLACEHOLDER,
-				creatureBank ? commanderBank[i] : commanderField[i]);
+				!creatureBankName.empty() ? commanderBank[i] : commanderField[i]);
 			stacks.push_back(stack);
 		}
 
@@ -528,7 +324,6 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 		// keep tower
 		CStack * stack = curB->generateNewStack(CStackBasicDescriptor(CreatureID::ARROW_TOWERS, 1), 1, SlotID::ARROW_TOWERS_SLOT, -2);
 		stacks.push_back(stack);
-
 		if (curB->town->fortLevel() >= CGTownInstance::CASTLE)
 		{
 			// lower tower + upper tower
@@ -537,12 +332,6 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 			stack = curB->generateNewStack(CStackBasicDescriptor(CreatureID::ARROW_TOWERS, 1), 1, SlotID::ARROW_TOWERS_SLOT, -3);
 			stacks.push_back(stack);
 		}
-
-		//moat
-		auto moat = std::make_shared<MoatObstacle>();
-		moat->area.setArea(VLC->townh->factions[curB->town->subID]->town->moatHexes);
-		moat->ID = curB->obstacles.size();
-		curB->obstacles.push_back(moat);
 	}
 
 	std::stable_sort(stacks.begin(),stacks.end(),cmpst);
@@ -630,7 +419,7 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 	//////////////////////////////////////////////////////////////////////////
 
 	//tactics
-	bool isTacticsAllowed = !creatureBank; //no tactics in creature banks
+	bool isTacticsAllowed = creatureBankName.empty(); //no tactics in creature banks
 
 	int tacticLvls[2] = {0};
 	for(int i = 0; i < ARRAY_COUNT(tacticLvls); i++)
@@ -670,7 +459,172 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 			}
 		}
 	}
+	curB->setupObstacles(creatureBankName);
 	return curB;
+}
+
+void BattleInfo::setupObstacles(std::string creatureBankName)
+{
+	const JsonNode obstacleConfig(JsonNode(ResourceID("config/obstacles.json")));
+	setupInherentObstacles(creatureBankName);
+
+	if (town == nullptr && creatureBankName.empty())
+	{
+		ObstacleRandomGenerator randGen(tile);
+
+		auto ourRand = [&](){ return randGen.r.rand(); };
+		int tilesToBlock = randGen.randomTilesAmountToBlock(5,12);
+
+		for(auto ob : obstacles)
+			tilesToBlock -= ob->getArea().getFields().size();
+		if(tilesToBlock<=0)
+			return;
+		std::vector<BattleHex> blockedTiles;
+
+		auto appropriateStaticObstacle = [&](int id) -> bool
+		{
+				return ObstacleJson(obstacleConfig["obstacles"].Vector().at(id)).getSurface().isAppropriateForSurface(battlefieldType);
+		};
+
+		if(randGen.r.rand(1,100) <= 40)
+		{
+			RangeGenerator obidgen(ourRand, randGen.getIndexesFromTerrainBattles(0));
+			auto id = obidgen.getSuchNumber(appropriateStaticObstacle);
+			if(id!=-1)
+			{
+				ObstacleJson info(obstacleConfig["obstacles"].Vector().at(id));
+
+				auto obstPtr = std::make_shared<StaticObstacle>(info);
+				obstacles.push_back(obstPtr);
+
+				for(BattleHex blocked : obstPtr->getArea().getFields())
+					blockedTiles.push_back(blocked);
+				tilesToBlock -= obstPtr->getArea().getFields().size() / 2;
+			}
+		}
+
+		RangeGenerator obidgen(ourRand, randGen.getIndexesFromTerrainBattles(1));
+		while(tilesToBlock > 0)
+		{
+			auto tileAccessibility = getAccesibility();
+			const int id = obidgen.getSuchNumber(appropriateStaticObstacle);
+			if(id==-1)
+				break;
+			const ObstacleJson info(obstacleConfig["obstacles"].Vector().at(id));
+
+			auto validPosition = [&](BattleHex pos) -> bool
+			{
+				auto area = info.getArea();
+				if(area.getHeight() >= pos.getY())
+					return false;
+				if(pos.getX() == 0)
+					return false;
+				if(pos.getX() + area.getWidth() > 15)
+					return false;
+				if(vstd::contains(blockedTiles, pos))
+					return false;
+
+				area.moveAreaToField(pos);
+				for(BattleHex blocked :	area.getFields())
+				{
+					if(tileAccessibility[blocked] == EAccessibility::UNAVAILABLE) //for ship-to-ship battlefield - exclude hardcoded unavailable tiles
+						return false;
+					for(BattleHex hex : blocked.neighbouringTiles())
+						if(tileAccessibility[hex] == EAccessibility::UNAVAILABLE)
+							return false;
+					if(vstd::contains(blockedTiles, blocked))
+						return false;
+					int x = blocked.getX();
+					if(x <= 2 || x >= 14)
+						return false;
+				}
+				return true;
+			};
+			if(info.randomPosition())
+			{
+				std::vector<int> fields;
+				for(int i = 18; i<=168; i++)
+					fields.push_back(i);
+				RangeGenerator posgenerator(ourRand, fields);
+				int pos = posgenerator.getSuchNumber(validPosition);
+				if(pos==-1)
+					break;
+				auto obstPtr = std::make_shared<StaticObstacle>(info, pos);
+				obstacles.push_back(obstPtr);
+				for(BattleHex blocked : obstPtr->getArea().getFields())
+					blockedTiles.push_back(blocked);
+				tilesToBlock -= info.getArea().getFields().size();
+			}
+			else
+			{
+				auto obstPtr = std::make_shared<StaticObstacle>(info);
+				obstacles.push_back(obstPtr);
+				for(BattleHex blocked : obstPtr->getArea().getFields())
+					blockedTiles.push_back(blocked);
+				tilesToBlock -= info.getArea().getFields().size();
+			}
+
+		}
+	}
+
+}
+
+void BattleInfo::setupInherentObstacles(std::string creatureBankName)
+{
+	const JsonNode obstacleConfig(JsonNode(ResourceID("config/obstacles.json")));
+
+	for(auto i : obstacleConfig["InherentObstacles"].Vector())
+	{
+		 ObstacleJson info(i);
+		 if(town && town->fortLevel() >= CGTownInstance::CITADEL && vstd::contains(info.getPlace(), town->town->faction->name)
+				 || vstd::contains(info.getPlace(), creatureBankName)
+				 || info.getSurface().isAppropriateForSurface(battlefieldType))
+		 {
+			 switch(info.getType())
+			 {
+			 case ObstacleType::STATIC:
+			 {
+				 auto staticObstacle = std::make_shared<StaticObstacle>(info);
+				 obstacles.push_back(staticObstacle);
+			 }
+				 break;
+			 case ObstacleType::MOAT:
+			 {
+				 auto moatObstacle = std::make_shared<MoatObstacle>(info);
+				 obstacles.push_back(moatObstacle);
+			 }
+				 break;
+			 case ObstacleType::FIRE_WALL:
+			 {
+					auto firewallObstacle = std::make_shared<SpellCreatedObstacle>(info);
+					firewallObstacle->obstacleType = ObstacleType::FIRE_WALL;
+					obstacles.push_back(firewallObstacle);
+			 }
+				 break;
+			 case ObstacleType::FORCE_FIELD:
+			 {
+					auto forcefieldObstacle = std::make_shared<SpellCreatedObstacle>(info);
+					forcefieldObstacle->obstacleType = ObstacleType::FORCE_FIELD;
+					obstacles.push_back(forcefieldObstacle);
+			 }
+				 break;
+			 case ObstacleType::LAND_MINE:
+			 {
+					auto landmineObstacle = std::make_shared<SpellCreatedObstacle>(info);
+					landmineObstacle->obstacleType = ObstacleType::LAND_MINE;
+					obstacles.push_back(landmineObstacle);
+			 }
+				 break;
+			 case ObstacleType::QUICKSAND:
+			 {
+					auto quicksandObstacle = std::make_shared<SpellCreatedObstacle>(info);
+					quicksandObstacle->obstacleType = ObstacleType::QUICKSAND;
+					obstacles.push_back(quicksandObstacle);
+			 }
+				 break;
+			 }
+		}
+	}
 }
 
 const CGHeroInstance * BattleInfo::getHero(PlayerColor player) const

@@ -194,7 +194,7 @@ void CAdventureAI::battleStacksRemoved(const BattleStacksRemoved & bsr)
 	battleAI->battleStacksRemoved(bsr);
 }
 
-void CAdventureAI::battleObstaclesRemoved(const std::set<si32> & removedObstacles)
+void CAdventureAI::battleObstaclesRemoved(const std::set<boost::uuids::uuid> & removedObstacles)
 {
 	battleAI->battleObstaclesRemoved(removedObstacles);
 }

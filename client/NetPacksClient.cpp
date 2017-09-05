@@ -746,7 +746,7 @@ void StacksHealedOrResurrected::applyCl(CClient * cl)
 void ObstaclesRemoved::applyCl(CClient *cl)
 {
 	//inform interfaces about removed obstacles
-	BATTLE_INTERFACE_CALL_IF_PRESENT_FOR_BOTH_SIDES(battleObstaclesRemoved, obstacles);
+	BATTLE_INTERFACE_CALL_IF_PRESENT_FOR_BOTH_SIDES(battleObstaclesRemoved, id);
 }
 
 void CatapultAttack::applyCl(CClient *cl)

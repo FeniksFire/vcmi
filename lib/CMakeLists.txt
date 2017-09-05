@@ -17,14 +17,16 @@ set(lib_SRCS
 		battle/ReachabilityInfo.cpp
 		battle/SideInBattle.cpp
 		battle/SiegeInfo.cpp
+		battle/RandGen.cpp
+		battle/RangeGenerator.cpp
 
+		battle/obstacle/ObstacleRandomGenerator.cpp
 		battle/obstacle/ObstacleArea.cpp
 		battle/obstacle/ObstacleSurface.cpp
 		battle/obstacle/ObstacleJson.cpp
-		battle/obstacle/StaticObstacle.cpp
 		battle/obstacle/Obstacle.cpp
-		battle/obstacle/CObstacleInstance.cpp
-
+		battle/obstacle/StaticObstacle.cpp
+		battle/obstacle/SpellCreatedObstacle.cpp
 
 		filesystem/AdapterLoaders.cpp
 		filesystem/CArchiveLoader.cpp
@@ -157,15 +159,17 @@ set(lib_HEADERS
 		battle/ReachabilityInfo.h
 		battle/SideInBattle.h
 		battle/SiegeInfo.h
+		battle/RandGen.h
+		battle/RangeGenerator.h
 
 		battle/obstacle/Obstacle.h
 		battle/obstacle/ObstacleArea.h
 		battle/obstacle/ObstacleSurface.h
+		battle/obstacle/ObstacleRandomGenerator.h
 		battle/obstacle/ObstacleType.h
 		battle/obstacle/ObstacleJson.h
 		battle/obstacle/StaticObstacle.h
-		battle/obstacle/CObstacleInstance.h
-
+		battle/obstacle/SpellCreatedObstacle.h
 
 		filesystem/AdapterLoaders.h
 		filesystem/CArchiveLoader.h

@@ -1686,13 +1686,13 @@ DLL_LINKAGE void StacksHealedOrResurrected::applyGs(CGameState *gs)
 
 DLL_LINKAGE void ObstaclesRemoved::applyGs(CGameState *gs)
 {
-	if(gs->curB) //if there is a battle
+	if(gs->curB)
 	{
-		for(const si32 rem_obst :obstacles)
+		for(auto rem_obst : id)
 		{
 			for(int i=0; i<gs->curB->obstacles.size(); ++i)
 			{
-				if(gs->curB->obstacles[i]->ID == rem_obst) //remove this obstacle
+				if(gs->curB->obstacles[i]->getID() == rem_obst)
 				{
 					gs->curB->obstacles.erase(gs->curB->obstacles.begin() + i);
 					break;

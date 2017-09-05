@@ -1928,7 +1928,7 @@ std::list<PlayerColor> CGameHandler::generatePlayerTurnOrder() const
 	return playerTurnOrder;
 }
 
-void CGameHandler::setupBattle(int3 tile, const CArmedInstance *armies[2], const CGHeroInstance *heroes[2], bool creatureBank, const CGTownInstance *town)
+void CGameHandler::setupBattle(int3 tile, const CArmedInstance *armies[2], const CGHeroInstance *heroes[2], std::string creatureBankName, const CGTownInstance *town)
 {
 	battleResult.set(nullptr);
 
@@ -1943,7 +1943,7 @@ void CGameHandler::setupBattle(int3 tile, const CArmedInstance *armies[2], const
 
 	//send info about battles
 	BattleStart bs;
-	bs.info = BattleInfo::setupBattle(tile, terrain, terType, armies, heroes, creatureBank, town);
+	bs.info = BattleInfo::setupBattle(tile, terrain, terType, armies, heroes, creatureBankName, town);
 	sendAndApply(&bs);
 }
 
@@ -2394,7 +2394,7 @@ void CGameHandler::removeArtifact(const ArtifactLocation &al)
 	sendAndApply(&ea);
 }
 void CGameHandler::startBattlePrimary(const CArmedInstance *army1, const CArmedInstance *army2, int3 tile,
-								const CGHeroInstance *hero1, const CGHeroInstance *hero2, bool creatureBank,
+								const CGHeroInstance *hero1, const CGHeroInstance *hero2, std::string creatureBankName,
 								const CGTownInstance *town) //use hero=nullptr for no hero
 {
 	engageIntoBattle(army1->tempOwner);
@@ -2408,7 +2408,7 @@ void CGameHandler::startBattlePrimary(const CArmedInstance *army1, const CArmedI
 	heroes[1] = hero2;
 
 
-	setupBattle(tile, armies, heroes, creatureBank, town); //initializes stacks, places creatures on battlefield, blocks and informs player interfaces
+	setupBattle(tile, armies, heroes, creatureBankName, town); //initializes stacks, places creatures on battlefield, blocks and informs player interfaces
 
 	auto battleQuery = std::make_shared<CBattleQuery>(this, gs->curB);
 	queries.addQuery(battleQuery);
@@ -2416,17 +2416,17 @@ void CGameHandler::startBattlePrimary(const CArmedInstance *army1, const CArmedI
 	boost::thread(&CGameHandler::runBattle, this);
 }
 
-void CGameHandler::startBattleI(const CArmedInstance *army1, const CArmedInstance *army2, int3 tile, bool creatureBank)
+void CGameHandler::startBattleI(const CArmedInstance *army1, const CArmedInstance *army2, int3 tile, std::string creatureBankName)
 {
 	startBattlePrimary(army1, army2, tile,
 		army1->ID == Obj::HERO ? static_cast<const CGHeroInstance*>(army1) : nullptr,
 		army2->ID == Obj::HERO ? static_cast<const CGHeroInstance*>(army2) : nullptr,
-		creatureBank);
+		creatureBankName);
 }
 
-void CGameHandler::startBattleI(const CArmedInstance *army1, const CArmedInstance *army2, bool creatureBank)
+void CGameHandler::startBattleI(const CArmedInstance *army1, const CArmedInstance *army2,  std::string creatureBankName)
 {
-	startBattleI(army1, army2, army2->visitablePos(), creatureBank);
+	startBattleI(army1, army2, army2->visitablePos(), creatureBankName);
 }
 
 void CGameHandler::changeSpells(const CGHeroInstance * hero, bool give, const std::set<SpellID> &spells)
@@ -4637,7 +4637,8 @@ bool CGameHandler::handleDamageFromObstacle(const CStack * curStack, bool stackI
 
 		if(obstacle->getType() == ObstacleType::MOAT)
 		{
-			damage = battleGetMoatDmg();
+			const MoatObstacle* moat = dynamic_cast<const MoatObstacle *>(obstacle.get());;
+			damage = moat->damage;
 			if(!containDamageFromMoat)
 				containDamageFromMoat = true;
 			else
@@ -6316,10 +6317,10 @@ void CGameHandler::handleCheatCode(std::string & cheat, PlayerColor player, cons
 		cheated = false;
 }
 
-void CGameHandler::removeObstacle(const CObstacleInstance &obstacle)
+void CGameHandler::removeObstacle(const StaticObstacle &obstacle)
 {
 	ObstaclesRemoved obsRem;
-	obsRem.obstacles.insert(obstacle.ID);
+	obsRem.id.insert(obstacle.getID());
 	sendAndApply(&obsRem);
 }
 

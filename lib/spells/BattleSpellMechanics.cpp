@@ -278,10 +278,10 @@ void DispellMechanics::applyBattleEffects(const SpellCastEnvironment * env, cons
 			if(obstacle->getType() == ObstacleType::FIRE_WALL
 				|| obstacle->getType() == ObstacleType::FORCE_FIELD
 				|| obstacle->getType() == ObstacleType::LAND_MINE)
-				packet.obstacles.insert(obstacle->ID);
+				packet.id.insert(obstacle->getID());
 		}
 
-		if(!packet.obstacles.empty())
+		if(!packet.id.empty())
 			env->sendAndApply(&packet);
 	}
 }
@@ -505,14 +505,11 @@ bool ObstacleMechanics::isHexAviable(const CBattleInfoCallback * cb, const Battl
 
 void ObstacleMechanics::placeObstacle(const SpellCastEnvironment * env, const BattleSpellCastParameters & parameters, const BattleHex & pos) const
 {
-	const int obstacleIdToGive = parameters.cb->obstacles.size()+1;
-
 	auto obstacle = std::make_shared<SpellCreatedObstacle>();
 
 	obstacle->casterSide = parameters.casterSide;
 	obstacle->spellLevel = parameters.effectLevel;
 	obstacle->casterSpellPower = parameters.effectPower;
-	obstacle->ID = obstacleIdToGive;
 	setupObstacle(obstacle.get(), pos);
 
 	BattleObstaclePlaced bop;
@@ -748,13 +745,13 @@ void RemoveObstacleMechanics::applyBattleEffects(const SpellCastEnvironment * en
 		{
 			if(canRemove(i.get(), parameters.spellLvl))
 			{
-				obr.obstacles.insert(i->ID);
+				obr.id.insert(i->getID());
 				complain = false;
 			}
 		}
 		if(!complain)
 			env->sendAndApply(&obr);
-		else if(complain || obr.obstacles.empty())
+		else if(complain || obr.id.empty())
 			env->complain("Cant remove this obstacle!");
 	}
 	else
@@ -791,12 +788,14 @@ ESpellCastProblem::ESpellCastProblem RemoveObstacleMechanics::canBeCastAt(const 
 	return ESpellCastProblem::NO_APPROPRIATE_TARGET;
 }
 
-bool RemoveObstacleMechanics::canRemove(const CObstacleInstance * obstacle, const int spellLevel) const
+bool RemoveObstacleMechanics::canRemove(const StaticObstacle * obstacle, const int spellLevel) const
 {
 	switch (obstacle->getType())
 	{
 	case ObstacleType::STATIC:
-		return obstacle->canBeRemovedBySpell;
+		return obstacle->canRemovedBySpell();
+	case ObstacleType::MOAT:
+		return obstacle->canRemovedBySpell();
 	case ObstacleType::FIRE_WALL:
 		if(spellLevel >= 2)
 			return true;

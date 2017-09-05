@@ -20,7 +20,7 @@
 #include "../mapObjects/CRewardableConstructor.h"
 #include "../mapObjects/CommonConstructors.h"
 #include "../mapObjects/MapObjects.h"
-#include "../battle/obstacle/CObstacleInstance.h"
+#include "../battle/obstacle/StaticObstacle.h"
 
 class BinarySerializer;
 class BinaryDeserializer;
@@ -197,9 +197,10 @@ void registerTypesMapObjects2(Serializer &s)
 	s.template registerType<CBonusSystemNode, CArtifactInstance>();
 	s.template registerType<CArtifactInstance, CCombinedArtifactInstance>();
 
-	//s.template registerType<CObstacleInstance>();
-		s.template registerType<CObstacleInstance, MoatObstacle>();
-		s.template registerType<CObstacleInstance, SpellCreatedObstacle>();
+	//s.template registerType<StaticObstacle>();
+		s.template registerType<Obstacle, StaticObstacle>();
+		s.template registerType<StaticObstacle, MoatObstacle>();
+		s.template registerType<StaticObstacle, SpellCreatedObstacle>();
 }
 template<typename Serializer>
 void registerTypesClientPacks1(Serializer &s)

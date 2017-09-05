@@ -25,7 +25,7 @@ struct DLL_LINKAGE BattleInfo : public CBonusSystemNode, public CBattleInfoCallb
 	const CGTownInstance * town; //used during town siege, nullptr if this is not a siege (note that fortless town IS also a siege)
 	int3 tile; //for background and bonuses
 	std::vector<CStack*> stacks;
-	std::vector<std::shared_ptr<CObstacleInstance> > obstacles;
+	std::vector<std::shared_ptr<StaticObstacle> > obstacles;
 	SiegeInfo si;
 
 	BFieldType battlefieldType; //like !!BA:B
@@ -75,12 +75,14 @@ struct DLL_LINKAGE BattleInfo : public CBonusSystemNode, public CBattleInfoCallb
 	CStack * generateNewStack(const CStackInstance &base, ui8 side, SlotID slot, BattleHex position) const; //helper for CGameHandler::setupBattle and spells addign new stacks to the battlefield
 	CStack * generateNewStack(const CStackBasicDescriptor &base, ui8 side, SlotID slot, BattleHex position) const; //helper for CGameHandler::setupBattle and spells addign new stacks to the battlefield
 	int getIdForNewStack() const; //suggest a currently unused ID that'd suitable for generating a new stack
-
 	const CGHeroInstance * getHero(PlayerColor player) const; //returns fighting hero that belongs to given player
 
 	void localInit();
 
-	static BattleInfo * setupBattle(int3 tile, ETerrainType terrain, BFieldType battlefieldType, const CArmedInstance * armies[2], const CGHeroInstance * heroes[2], bool creatureBank, const CGTownInstance * town);
+	static BattleInfo * setupBattle(int3 tile, ETerrainType terrain, BFieldType battlefieldType, const CArmedInstance * armies[2], const CGHeroInstance * heroes[2], std::string creatureBankName, const CGTownInstance * town);
+	void setupObstacles(std::string creatureBankName);
+	void setupInherentObstacles(std::string creatureBankName);
+
 	//bool hasNativeStack(ui8 side) const;
 
 	PlayerColor theOtherPlayer(PlayerColor player) const;

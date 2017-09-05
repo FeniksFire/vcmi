@@ -141,7 +141,7 @@ public:
 	virtual void battleStacksEffectsSet(const SetStackEffect & sse) override;
 	//virtual void battleTriggerEffect(const BattleTriggerEffect & bte);
 	virtual void battleStacksRemoved(const BattleStacksRemoved & bsr) override;
-	virtual void battleObstaclesRemoved(const std::set<si32> & removedObstacles) override;
+	virtual void battleObstaclesRemoved(const std::set<boost::uuids::uuid> & removedObstacles) override;
 	virtual void battleNewStackAppeared(const CStack * stack) override;
 	virtual void battleStackMoved(const CStack * stack, std::vector<BattleHex> dest, int distance) override;
 	virtual void battleAttack(const BattleAttack *ba) override;

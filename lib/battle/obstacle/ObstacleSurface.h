@@ -13,7 +13,6 @@
 class DLL_LINKAGE ObstacleSurface
 {
 public:
-	std::vector<ETerrainType> areaSurface;
 	std::vector<BFieldType> battlefieldSurface;
-	virtual bool isAppropriateForSurface(ETerrainType terrainType, BFieldType battlefieldType = BFieldType::NONE) const;
+	virtual bool isAppropriateForSurface(BFieldType battlefieldType = BFieldType::NONE) const;
 };

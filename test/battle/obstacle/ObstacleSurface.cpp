@@ -14,16 +14,10 @@
 TEST(ObstacleSurfaceTest, isAppropriateForSurface)
 {
 	ObstacleSurface terrain;
-	terrain.areaSurface.push_back(ETerrainType::GRASS);
-	terrain.areaSurface.push_back(ETerrainType::LAVA);
-	terrain.areaSurface.push_back(ETerrainType::ROCK);
-	terrain.areaSurface.push_back(ETerrainType::SAND);
-	EXPECT_TRUE(terrain.isAppropriateForSurface(ETerrainType::ROCK));
-	EXPECT_FALSE(terrain.isAppropriateForSurface(ETerrainType::WATER));
-	terrain.battlefieldSurface.push_back(BFieldType::GRASS_HILLS);
-	terrain.battlefieldSurface.push_back(BFieldType::MAGIC_PLAINS);
-	terrain.battlefieldSurface.push_back(BFieldType::ROCKLANDS);
+	EXPECT_FALSE(terrain.isAppropriateForSurface(BFieldType::ROCKLANDS));
 	terrain.battlefieldSurface.push_back(BFieldType::SAND_SHORE);
-	EXPECT_TRUE(terrain.isAppropriateForSurface(ETerrainType::WATER, BFieldType::SAND_SHORE));
-	EXPECT_FALSE(terrain.isAppropriateForSurface(ETerrainType::WATER, BFieldType::SHIP));
+	terrain.battlefieldSurface.push_back(BFieldType::SHIP);
+	EXPECT_TRUE(terrain.isAppropriateForSurface(BFieldType::SAND_SHORE));
+	EXPECT_TRUE(terrain.isAppropriateForSurface(BFieldType::SHIP));
+	EXPECT_FALSE(terrain.isAppropriateForSurface(BFieldType::SHIP_TO_SHIP));
 }

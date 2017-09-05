@@ -16,7 +16,6 @@
 
 #include "filesystem/ResourceID.h"
 #include "../CBitmapHandler.h"
-#include "../CDefHandler.h"
 #include "../CGameInfo.h"
 #include "../CMessage.h"
 #include "../CMT.h"
@@ -171,20 +170,14 @@ CBattleInterface::CBattleInterface(const CCreatureSet *army1, const CCreatureSet
 		ui8 siegeLevel = curInt->cb->battleGetSiegeLevel();
 		if (siegeLevel >= 2) //citadel or castle
 		{
-			//print moat/mlip
-			SDL_Surface *moat = BitmapHandler::loadBitmap( siegeH->getSiegeName(13) ),
-				* mlip = BitmapHandler::loadBitmap( siegeH->getSiegeName(14) );
+			//print mlip
+			SDL_Surface	* mlip = BitmapHandler::loadBitmap( siegeH->getSiegeName(14) );
 
 			auto & info = siegeH->town->town->clientInfo;
-			Point moatPos(info.siegePositions[13].x, info.siegePositions[13].y);
 			Point mlipPos(info.siegePositions[14].x, info.siegePositions[14].y);
 
-			if (moat) //eg. tower has no moat
-				blitAt(moat, moatPos.x,moatPos.y, background);
 			if (mlip) //eg. tower has no mlip
 				blitAt(mlip, mlipPos.x, mlipPos.y, background);
-
-			SDL_FreeSurface(moat);
 			SDL_FreeSurface(mlip);
 		}
 	}
@@ -2671,14 +2664,27 @@ Rect CBattleInterface::hexPosition(BattleHex hex) const
 	return Rect(x, y, w, h);
 }
 
-void CBattleInterface::obstaclePlaced(const CObstacleInstance & oi)
+void CBattleInterface::obstaclePlaced(const StaticObstacle & oi)
 {
 	waitForAnims();
-	soundBase::soundID sound;
 	assert(!oi.graphicsName.empty());
-	Point whereTo = getObstaclePosition(getObstacleImage(oi), oi);
+
+	int imageHeight = 0;
+	ResourceID resID(oi.graphicsName);
+	if(resID.getType() == EResType::ANIMATION)
+	{
+		CAnimation anim(oi.graphicsName);
+		anim.preload();
+		int frameIndex = ((animCount+1) *25 / getAnimSpeed()) % anim.size();
+		imageHeight = anim.getImage(frameIndex)->height();
+	}
+	else if(resID.getType() == EResType::IMAGE)
+	{
+		imageHeight = BitmapHandler::loadBitmap(oi.graphicsName)->h;
+	}
+
+	Point whereTo = getObstaclePosition(imageHeight, oi);
 	addNewAnim(new CEffectAnimation(this, oi.graphicsName, whereTo.x, whereTo.y));
-	CCS->soundh->playSound(sound);
 }
 
 void CBattleInterface::gateStateChanged(const EGateState state)
@@ -2852,8 +2858,6 @@ std::string CBattleInterface::SiegeHelper::getSiegeName(ui16 what, int state) co
 		return prefix + "WA2.BMP";
 	case SiegeHelper::UPPER_STATIC_WALL:
 		return prefix + "WA5.BMP";
-	case SiegeHelper::MOAT:
-		return prefix + "MOAT.BMP";
 	case SiegeHelper::BACKGROUND_MOAT:
 		return prefix + "MLIP.BMP";
 	case SiegeHelper::KEEP_BATTLEMENT:
@@ -3281,15 +3285,29 @@ void CBattleInterface::showStacks(SDL_Surface *to, std::vector<const CStack *> s
 	}
 }
 
-void CBattleInterface::showObstacles(SDL_Surface *to, std::vector<std::shared_ptr<const CObstacleInstance> > &obstacles)
+void CBattleInterface::showObstacles(SDL_Surface *to, std::vector<std::shared_ptr<const StaticObstacle> > &obstacles)
 {
 	for (auto & obstacle : obstacles)
 	{
-		SDL_Surface *toBlit = getObstacleImage(*obstacle);
+		ResourceID resID(obstacle->graphicsName);
 		Point p(0,0);
-		if(obstacle->area.getPosition() != 0)
-			p = getObstaclePosition(toBlit, *obstacle);
-		blitAt(toBlit, p.x + obstacle->offsetGraphicsInX, p.y + obstacle->offsetGraphicsInY, to);
+		if(resID.getType() == EResType::ANIMATION)
+		{
+			CAnimation anim(obstacle->graphicsName);
+			anim.preload();
+			int frameIndex = ((animCount+1) *25 / getAnimSpeed()) % anim.size();
+			auto img = anim.getImage(frameIndex);
+			if(obstacle->area.getPosition() != 0)
+				p = getObstaclePosition(img->height(), *obstacle);
+			img->draw(to,p.x + obstacle->offsetGraphicsInX, p.y + obstacle->offsetGraphicsInY);
+		}
+		else if(resID.getType() == EResType::IMAGE)
+		{
+			auto bitmap = BitmapHandler::loadBitmap(obstacle->graphicsName);
+			if(obstacle->area.getPosition() != 0)
+				p = getObstaclePosition(bitmap->h, *obstacle);
+			blitAt(bitmap, p.x + obstacle->offsetGraphicsInX, p.y + obstacle->offsetGraphicsInY, to);
+		}
 	}
 }
 
@@ -3423,19 +3441,10 @@ BattleObjectsByHex CBattleInterface::sortObjectsByHex()
 		else
 			sorted.afterAll.effects.push_back(&battleEffect);
 	}
-
 	// Sort obstacles
+	for (auto obstacle : curInt->cb->battleGetAllObstacles())
 	{
-		std::map<BattleHex, std::shared_ptr<const CObstacleInstance>> backgroundObstacles;
-		for (auto &obstacle : curInt->cb->battleGetAllObstacles()) {
-			if (obstacle->getType() != ObstacleType::MOAT) {
-				backgroundObstacles[obstacle->area.getPosition()] = obstacle;
-			}
-		}
-		for (auto &op : backgroundObstacles)
-		{
-			sorted.beforeAll.obstacles.push_back(op.second);
-		}
+		sorted.beforeAll.obstacles.push_back(obstacle);
 	}
 	// Sort wall parts
 	if (siegeH)
@@ -3455,8 +3464,6 @@ BattleObjectsByHex CBattleInterface::sortObjectsByHex()
 
 		if (siegeH && siegeH->town->hasBuilt(BuildingID::CITADEL))
 		{
-			sorted.beforeAll.walls.push_back(SiegeHelper::MOAT);
-			//sorted.beforeAll.walls.push_back(SiegeHelper::BACKGROUND_MOAT); // blit as absolute obstacle
 			sorted.hex[135].walls.push_back(SiegeHelper::KEEP_BATTLEMENT);
 		}
 		if (siegeH && siegeH->town->hasBuilt(BuildingID::CASTLE))
@@ -3505,19 +3512,9 @@ void CBattleInterface::updateBattleAnimations()
 	}
 }
 
-SDL_Surface *CBattleInterface::getObstacleImage(const CObstacleInstance &oi)
+Point CBattleInterface::getObstaclePosition(int imageHeight, const StaticObstacle &obstacle)
 {
-	int frameIndex = (animCount+1) *25 / getAnimSpeed();
-	ResourceID resI(oi.graphicsName);
-	if(resI.getType() == EResType::ANIMATION)
-		return vstd::circularAt(CDefHandler::giveDef(oi.graphicsName)->ourImages, frameIndex).bitmap;
-	else if(resI.getType() == EResType::IMAGE)
-		return BitmapHandler::loadBitmap(oi.graphicsName);
-}
-
-Point CBattleInterface::getObstaclePosition(SDL_Surface *image, const CObstacleInstance &obstacle)
-{
-	int offset = image->h % 42;
+	int offset = imageHeight % 42;
 	if (obstacle.getType() == ObstacleType::STATIC)
 	{
 		if (obstacle.getArea().getFields().front() < 0  || offset > 37) //second or part is for holy ground ID=62,65,63
@@ -3529,7 +3526,7 @@ Point CBattleInterface::getObstaclePosition(SDL_Surface *image, const CObstacleI
 	}
 
 	Rect r = hexPosition(obstacle.area.getPosition());
-	r.y += 42 - image->h + offset;
+	r.y += 42 - imageHeight + offset;
 	return r.topLeft();
 }
 

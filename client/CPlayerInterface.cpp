@@ -762,7 +762,7 @@ void CPlayerInterface::battleNewStackAppeared(const CStack * stack)
 	battleInt->newStack(stack);
 }
 
-void CPlayerInterface::battleObstaclesRemoved(const std::set<si32> & removedObstacles)
+void CPlayerInterface::battleObstaclesRemoved(const std::set<boost::uuids::uuid> & removedObstacles)
 {
 	EVENT_HANDLER_CALLED_BY_CLIENT;
 	BATTLE_EVENT_POSSIBLE_RETURN;
@@ -1040,7 +1040,7 @@ void CPlayerInterface::battleAttack(const BattleAttack * ba)
 		battleInt->displaySpellHit(spellID, curAction->destinationTile);
 	}
 }
-void CPlayerInterface::battleObstaclePlaced(const CObstacleInstance &obstacle)
+void CPlayerInterface::battleObstaclePlaced(const StaticObstacle &obstacle)
 {
 	EVENT_HANDLER_CALLED_BY_CLIENT;
 	BATTLE_EVENT_POSSIBLE_RETURN;

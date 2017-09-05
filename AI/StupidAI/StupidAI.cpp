@@ -253,11 +253,6 @@ void CStupidAI::battleNewStackAppeared(const CStack * stack)
 	print("battleNewStackAppeared called");
 }
 
-void CStupidAI::battleObstaclesRemoved(const std::set<si32> & removedObstacles)
-{
-	print("battleObstaclesRemoved called");
-}
-
 void CStupidAI::battleCatapultAttacked(const CatapultAttack & ca)
 {
 	print("battleCatapultAttacked called");

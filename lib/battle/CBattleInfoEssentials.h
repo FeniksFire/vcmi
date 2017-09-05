@@ -14,7 +14,7 @@
 class CGTownInstance;
 class CGHeroInstance;
 class CStack;
-struct CObstacleInstance;
+struct StaticObstacle;
 class IBonusBearer;
 struct InfoAboutHero;
 class CArmedInstance;
@@ -48,7 +48,7 @@ public:
 
 	ETerrainType battleTerrainType() const;
 	BFieldType battleGetBattlefieldType() const;
-	std::vector<std::shared_ptr<const CObstacleInstance> > battleGetAllObstacles(boost::optional<BattlePerspective::BattlePerspective> perspective = boost::none) const; //returns all obstacles on the battlefield
+	std::vector<std::shared_ptr<const StaticObstacle> > battleGetAllObstacles(boost::optional<BattlePerspective::BattlePerspective> perspective = boost::none) const; //returns all obstacles on the battlefield
 
 	/** @brief Main method for getting battle stacks
 	 *
@@ -59,7 +59,6 @@ public:
 	TStacks battleGetStacksIf(TStackFilter predicate) const;
 
 	bool battleHasNativeStack(ui8 side) const;
-	int battleGetMoatDmg() const; //what dmg unit will suffer if ending turn in the moat
 	const CGTownInstance * battleGetDefendedTown() const; //returns defended town if current battle is a siege, nullptr instead
 	const CStack *battleActiveStack() const;
 	si8 battleTacticDist() const; //returns tactic distance in current tactics phase; 0 if not in tactics phase
@@ -90,7 +89,7 @@ public:
 	///returns all alive stacks from particular side excluding turrets
 	TStacks battleAliveStacks(ui8 side) const;
 	const CStack * battleGetStackByID(int ID, bool onlyAlive = true) const; //returns stack info by given ID
-	bool battleIsObstacleVisibleForSide(const CObstacleInstance & coi, BattlePerspective::BattlePerspective side) const;
+	bool battleIsObstacleVisibleForSide(const StaticObstacle & coi, BattlePerspective::BattlePerspective side) const;
 
 	///returns player that controls given stack; mind control included
 	PlayerColor battleGetOwner(const CStack * stack) const;

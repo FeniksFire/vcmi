@@ -1,5 +1,5 @@
 /*
- * CObstacleInstance.cpp, part of VCMI engine
+ * StaticObstacle.cpp, part of VCMI engine
  *
  * Authors: listed in file AUTHORS in main folder
  *
@@ -8,56 +8,12 @@
  *
  */
 #include "StdInc.h"
-#include "CObstacleInstance.h"
+#include "SpellCreatedObstacle.h"
 #include "CTownHandler.h"
 #include "VCMI_Lib.h"
 #include "spells/CSpellHandler.h"
 #include "filesystem/ResourceID.h"
 #include "battle/obstacle/ObstacleJson.h"
-
-CObstacleInstance::CObstacleInstance()
-{
-	offsetGraphicsInX = 0;
-	offsetGraphicsInY = 0;
-
-	ID = -1;
-}
-
-CObstacleInstance::~CObstacleInstance()
-{
-
-}
-
-ObstacleType CObstacleInstance::getType() const
-{
-	return ObstacleType::STATIC;
-}
-
-ObstacleArea CObstacleInstance::getArea() const
-{
-	return area;
-}
-
-
-bool CObstacleInstance::visibleForSide(ui8 side, bool hasNativeStack) const
-{
-	return true;
-}
-
-void CObstacleInstance::battleTurnPassed()
-{
-
-}
-
-bool CObstacleInstance::stopsMovement() const
-{
-	return getType() == ObstacleType::QUICKSAND || getType() == ObstacleType::MOAT;
-}
-
-bool CObstacleInstance::blocksTiles() const
-{
-	return getType() == ObstacleType::STATIC || getType() == ObstacleType::FORCE_FIELD;
-}
 
 SpellCreatedObstacle::SpellCreatedObstacle()
 {
@@ -70,13 +26,27 @@ SpellCreatedObstacle::SpellCreatedObstacle()
 	visibleForAnotherSide = -1;
 }
 
+SpellCreatedObstacle::SpellCreatedObstacle(ObstacleJson info)
+{
+	offsetGraphicsInX = info.getOffsetGraphicsInX();
+	offsetGraphicsInY = info.getOffsetGraphicsInY();
+	area = info.getArea();
+	area.moveAreaToField(info.getPosition());
+	spellLevel = info.getSpellLevel();
+	graphicsName = info.getGraphicsName();;
+	turnsRemaining = info.getTurnsRemaining();
+	casterSpellPower = info.getSpellPower();
+	visibleForAnotherSide = info.isVisibleForAnotherSide();
+	casterSide = info.getBattleSide();
+}
+
 bool SpellCreatedObstacle::visibleForSide(ui8 side, bool hasNativeStack) const
 {
 	switch(getType())
 	{
 	case ObstacleType::FIRE_WALL:
 	case ObstacleType::FORCE_FIELD:
-		return true;
+		return visibleForAnotherSide;
 	case ObstacleType::QUICKSAND:
 	case ObstacleType::LAND_MINE:
 		//we hide mines and not discovered quicksands
@@ -98,9 +68,4 @@ void SpellCreatedObstacle::battleTurnPassed()
 {
 	if(turnsRemaining > 0)
 		turnsRemaining--;
-}
-
-ObstacleType MoatObstacle::getType() const
-{
-	return ObstacleType::MOAT;
 }

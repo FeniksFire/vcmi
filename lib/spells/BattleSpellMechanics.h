@@ -12,7 +12,7 @@
 
 #include "CDefaultSpellMechanics.h"
 
-class CObstacleInstance;
+class StaticObstacle;
 class SpellCreatedObstacle;
 
 class DLL_LINKAGE HealingSpellMechanics : public DefaultSpellMechanics
@@ -164,7 +164,7 @@ public:
 protected:
 	void applyBattleEffects(const SpellCastEnvironment * env, const BattleSpellCastParameters & parameters, SpellCastContext & ctx) const override;
 private:
-    bool canRemove(const CObstacleInstance * obstacle, const int spellLevel) const;
+    bool canRemove(const StaticObstacle * obstacle, const int spellLevel) const;
 };
 
 ///all rising spells

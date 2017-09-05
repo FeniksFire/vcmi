@@ -26,9 +26,9 @@ BFieldType CBattleInfoEssentials::battleGetBattlefieldType() const
 	return getBattle()->battlefieldType;
 }
 
-std::vector<std::shared_ptr<const CObstacleInstance>> CBattleInfoEssentials::battleGetAllObstacles(boost::optional<BattlePerspective::BattlePerspective> perspective) const
+std::vector<std::shared_ptr<const StaticObstacle>> CBattleInfoEssentials::battleGetAllObstacles(boost::optional<BattlePerspective::BattlePerspective> perspective) const
 {
-	std::vector<std::shared_ptr<const CObstacleInstance> > ret;
+	std::vector<std::shared_ptr<const StaticObstacle> > ret;
 	RETURN_IF_NOT_BATTLE(ret);
 
 	if(!perspective)
@@ -55,7 +55,7 @@ std::vector<std::shared_ptr<const CObstacleInstance>> CBattleInfoEssentials::bat
 	return ret;
 }
 
-bool CBattleInfoEssentials::battleIsObstacleVisibleForSide(const CObstacleInstance & coi, BattlePerspective::BattlePerspective side) const
+bool CBattleInfoEssentials::battleIsObstacleVisibleForSide(const StaticObstacle & coi, BattlePerspective::BattlePerspective side) const
 {
 	RETURN_IF_NOT_BATTLE(false);
 	return side == BattlePerspective::ALL_KNOWING || coi.visibleForSide(side, battleHasNativeStack(side));
@@ -104,15 +104,6 @@ TStacks CBattleInfoEssentials::battleAliveStacks(ui8 side) const
 	return battleGetStacksIf([=](const CStack * s){
 		return s->isValidTarget(false) && s->side == side;
 	});
-}
-
-int CBattleInfoEssentials::battleGetMoatDmg() const
-{
-	RETURN_IF_NOT_BATTLE(0);
-	auto town = getBattle()->town;
-	if(!town)
-		return 0;
-	return town->town->moatDamage;
 }
 
 const CGTownInstance * CBattleInfoEssentials::battleGetDefendedTown() const

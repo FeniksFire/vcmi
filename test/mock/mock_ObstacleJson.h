@@ -16,7 +16,20 @@ class ObstacleJsonMock : public ObstacleJson
 public:
 	MOCK_CONST_METHOD0(getArea, ObstacleArea());
 	MOCK_CONST_METHOD0(getSurface, ObstacleSurface());
-	MOCK_CONST_METHOD0(getHeight, int32_t());
-	MOCK_CONST_METHOD0(getWidth, int32_t());
-	MOCK_CONST_METHOD0(getGraphicsName, std::string());
+	MOCK_CONST_METHOD0(getOffsetGraphicsInY, int32_t());
+	MOCK_CONST_METHOD0(getOffsetGraphicsInX, int32_t());
+	MOCK_CONST_METHOD0(canBeRemovedBySpell, bool());
+	MOCK_CONST_METHOD0(getPosition, int16_t());
+	MOCK_CONST_METHOD0(getPlace, std::vector<std::string>());
+
+	MOCK_CONST_METHOD0(getDamage, int32_t());
+	MOCK_CONST_METHOD0(getSpellLevel, int8_t());
+	MOCK_CONST_METHOD0(getSpellPower, int32_t());
+	MOCK_CONST_METHOD0(getBattleSide, int8_t());
+	MOCK_CONST_METHOD0(isVisibleForAnotherSide, int8_t());
+	MOCK_CONST_METHOD0(getTurnsRemaining, int16_t());
+
+	MOCK_CONST_METHOD0(getType, ObstacleType());
+	MOCK_CONST_METHOD0(getGraphicsName, std::string ());
+	MOCK_CONST_METHOD0(randomPosition, bool());
 };

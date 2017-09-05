@@ -476,6 +476,13 @@ public:
 		this->read((void*)data.c_str(),length);
 	}
 
+	void load(boost::uuids::uuid &data)
+	{
+		std::string val;
+		load(val);
+		data = boost::lexical_cast<boost::uuids::uuid>(val);
+	}
+
 	template <BOOST_VARIANT_ENUM_PARAMS(typename T)>
 	void load(boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> &data)
 	{

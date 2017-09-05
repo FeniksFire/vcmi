@@ -11,9 +11,7 @@
 #include "StdInc.h"
 #include "ObstacleSurface.h"
 
-bool ObstacleSurface::isAppropriateForSurface(ETerrainType terrainType, BFieldType battlefieldType) const
+bool ObstacleSurface::isAppropriateForSurface(BFieldType battlefieldType) const
 {
-	if(battlefieldType != BFieldType::NONE)
-		return vstd::contains(battlefieldSurface, battlefieldType);
-	return vstd::contains(areaSurface, terrainType);
+	return vstd::contains(battlefieldSurface, battlefieldType);
 }

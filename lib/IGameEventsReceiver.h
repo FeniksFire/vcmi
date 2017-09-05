@@ -13,7 +13,6 @@
 #include "battle/BattleHex.h"
 #include "GameConstants.h"
 #include "int3.h"
-
 class CGTownInstance;
 class CCreature;
 class CArmedInstance;
@@ -44,7 +43,7 @@ struct BattleAttack;
 struct SetStackEffect;
 struct BattleTriggerEffect;
 class CComponent;
-struct CObstacleInstance;
+struct StaticObstacle;
 struct CPackForServer;
 class EVictoryLossCheckResult;
 
@@ -66,10 +65,10 @@ public:
 	virtual void battleStart(const CCreatureSet *army1, const CCreatureSet *army2, int3 tile, const CGHeroInstance *hero1, const CGHeroInstance *hero2, bool side){}; //called by engine when battle starts; side=0 - left, side=1 - right
 	virtual void battleStacksHealedRes(const std::vector<std::pair<ui32, ui32> > & healedStacks, bool lifeDrain, bool tentHeal, si32 lifeDrainFrom){}; //called when stacks are healed / resurrected first element of pair - stack id, second - healed hp
 	virtual void battleNewStackAppeared(const CStack * stack){}; //not called at the beginning of a battle or by resurrection; called eg. when elemental is summoned
-	virtual void battleObstaclesRemoved(const std::set<si32> & removedObstacles){}; //called when a certain set  of obstacles is removed from batlefield; IDs of them are given
+	virtual void battleObstaclesRemoved(const std::set<boost::uuids::uuid> & removedObstacles){}; //called when a certain set  of obstacles is removed from batlefield; IDs of them are given
 	virtual void battleCatapultAttacked(const CatapultAttack & ca){}; //called when catapult makes an attack
 	virtual void battleStacksRemoved(const BattleStacksRemoved & bsr){}; //called when certain stack is completely removed from battlefield
-	virtual void battleObstaclePlaced(const CObstacleInstance &obstacle){};
+	virtual void battleObstaclePlaced(const StaticObstacle &obstacle){};
 	virtual void battleGateStateChanged(const EGateState state){};
 };
 
