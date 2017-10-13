@@ -4638,7 +4638,7 @@ bool CGameHandler::handleDamageFromObstacle(const CStack * curStack, bool stackI
 		if(obstacle->getType() == ObstacleType::MOAT)
 		{
 			const MoatObstacle* moat = dynamic_cast<const MoatObstacle *>(obstacle.get());;
-			damage = moat->damage;
+			damage = moat->getDamage();
 			if(!containDamageFromMoat)
 				containDamageFromMoat = true;
 			else
@@ -6317,7 +6317,7 @@ void CGameHandler::handleCheatCode(std::string & cheat, PlayerColor player, cons
 		cheated = false;
 }
 
-void CGameHandler::removeObstacle(const StaticObstacle &obstacle)
+void CGameHandler::removeObstacle(const Obstacle &obstacle)
 {
 	ObstaclesRemoved obsRem;
 	obsRem.id.insert(obstacle.getID());

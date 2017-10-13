@@ -829,9 +829,9 @@ std::pair<ui32, ui32> CBattleInfoCallback::battleEstimateDamage(CRandomGenerator
 	return ret;
 }
 
-std::vector<std::shared_ptr<const StaticObstacle>> CBattleInfoCallback::battleGetAllObstaclesOnPos(BattleHex tile, bool onlyBlocking) const
+std::vector<std::shared_ptr<const Obstacle>> CBattleInfoCallback::battleGetAllObstaclesOnPos(BattleHex tile, bool onlyBlocking) const
 {
-	std::vector<std::shared_ptr<const StaticObstacle>> obstacles = std::vector<std::shared_ptr<const StaticObstacle>>();
+	std::vector<std::shared_ptr<const Obstacle>> obstacles = std::vector<std::shared_ptr<const Obstacle>>();
 	RETURN_IF_NOT_BATTLE(obstacles);
 	for(auto & obs : battleGetAllObstacles())
 	{
@@ -844,9 +844,9 @@ std::vector<std::shared_ptr<const StaticObstacle>> CBattleInfoCallback::battleGe
 	return obstacles;
 }
 
-std::vector<std::shared_ptr<const StaticObstacle>> CBattleInfoCallback::getAllAffectedObstaclesByStack(const CStack * stack) const
+std::vector<std::shared_ptr<const Obstacle>> CBattleInfoCallback::getAllAffectedObstaclesByStack(const CStack * stack) const
 {
-	std::vector<std::shared_ptr<const StaticObstacle>> affectedObstacles = std::vector<std::shared_ptr<const StaticObstacle>>();
+	std::vector<std::shared_ptr<const Obstacle>> affectedObstacles = std::vector<std::shared_ptr<const Obstacle>>();
 	RETURN_IF_NOT_BATTLE(affectedObstacles);
 	if(stack->alive())
 	{
@@ -926,7 +926,7 @@ AccessibilityInfo CBattleInfoCallback::getAccesibility() const
 	}
 
 	//obstacles
-	for(const auto &obst : battleGetAllObstacles())
+	for(const auto & obst : battleGetAllObstacles())
 	{
 		if(obst->blocksTiles())
 			for(auto hex : obst->getArea().getFields())

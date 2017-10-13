@@ -26,7 +26,7 @@ class CToggleButton;
 class CToggleGroup;
 struct BattleResult;
 struct BattleSpellCast;
-struct StaticObstacle;
+class Obstacle;
 template <typename T> struct CondSh;
 struct SetStackEffect;
 struct BattleAction;
@@ -77,7 +77,7 @@ struct BattleObjectsByHex
 	typedef std::vector<int> TWallList;
 	typedef std::vector<const CStack *> TStackList;
 	typedef std::vector<const BattleEffect *> TEffectList;
-	typedef std::vector<std::shared_ptr<const StaticObstacle>> TObstacleList;
+	typedef std::vector<std::shared_ptr<const Obstacle>> TObstacleList;
 
 	struct HexData
 	{
@@ -236,7 +236,7 @@ private:
 
 	void showAliveStacks(SDL_Surface *to, std::vector<const CStack *> stacks);
 	void showStacks(SDL_Surface *to, std::vector<const CStack *> stacks);
-	void showObstacles(SDL_Surface *to, std::vector<std::shared_ptr<const StaticObstacle>> &obstacles);
+	void showObstacles(SDL_Surface * to, std::vector<std::shared_ptr<const Obstacle>> &obstacles);
 	void showPiecesOfWall(SDL_Surface *to, std::vector<int> pieces);
 
 	void showBattleEffects(SDL_Surface *to, const std::vector<const BattleEffect *> &battleEffects);
@@ -245,7 +245,7 @@ private:
 	BattleObjectsByHex sortObjectsByHex();
 	void updateBattleAnimations();
 
-	Point getObstaclePosition(int imageHeight, const StaticObstacle &obstacle);
+	Point getObstaclePosition(int imageHeight, const Obstacle & obstacle);
 	void redrawBackgroundWithHexes(const CStack *activeStack);
 	/** End of battle screen blitting methods */
 
@@ -351,7 +351,7 @@ public:
 	bool canStackMoveHere (const CStack *sactive, BattleHex MyNumber); //TODO: move to BattleState / callback
 
 	BattleHex fromWhichHexAttack(BattleHex myNumber);
-	void obstaclePlaced(const StaticObstacle & oi);
+	void obstaclePlaced(const Obstacle & oi);
 
 	void gateStateChanged(const EGateState state);
 

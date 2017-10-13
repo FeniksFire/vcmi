@@ -17,6 +17,7 @@
 class CStack;
 class CStackInstance;
 class CStackBasicDescriptor;
+class ObstacleJson;
 
 struct DLL_LINKAGE BattleInfo : public CBonusSystemNode, public CBattleInfoCallback
 {
@@ -25,7 +26,7 @@ struct DLL_LINKAGE BattleInfo : public CBonusSystemNode, public CBattleInfoCallb
 	const CGTownInstance * town; //used during town siege, nullptr if this is not a siege (note that fortless town IS also a siege)
 	int3 tile; //for background and bonuses
 	std::vector<CStack*> stacks;
-	std::vector<std::shared_ptr<StaticObstacle> > obstacles;
+	std::vector<std::shared_ptr<Obstacle> > obstacles;
 	SiegeInfo si;
 
 	BFieldType battlefieldType; //like !!BA:B
@@ -81,7 +82,7 @@ struct DLL_LINKAGE BattleInfo : public CBonusSystemNode, public CBattleInfoCallb
 
 	static BattleInfo * setupBattle(int3 tile, ETerrainType terrain, BFieldType battlefieldType, const CArmedInstance * armies[2], const CGHeroInstance * heroes[2], std::string creatureBankName, const CGTownInstance * town);
 	void setupObstacles(std::string creatureBankName);
-	void setupInherentObstacles(std::string creatureBankName);
+	void setupInherentObstacles(const std::vector<std::shared_ptr<ObstacleJson>> obstaclesConfigs, std::string creatureBankName);
 
 	//bool hasNativeStack(ui8 side) const;
 

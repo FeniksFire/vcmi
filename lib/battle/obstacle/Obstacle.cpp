@@ -21,6 +21,26 @@ boost::uuids::uuid Obstacle::getID() const
 	return ID;
 }
 
+ObstacleArea Obstacle::getArea() const
+{
+	return area;
+}
+
+void Obstacle::setArea(ObstacleArea zone)
+{
+	area = zone;
+}
+
+ObstacleGraphicsInfo Obstacle::getGraphicsInfo() const
+{
+	return graphicsInfo;
+}
+
+void Obstacle::setGraphicsInfo(ObstacleGraphicsInfo info)
+{
+	graphicsInfo = info;
+}
+
 bool Obstacle::stopsMovement() const
 {
 	return getType() == ObstacleType::QUICKSAND || getType() == ObstacleType::MOAT;

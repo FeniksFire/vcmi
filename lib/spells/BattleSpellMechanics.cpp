@@ -570,9 +570,10 @@ bool LandMineMechanics::requiresCreatureTarget() const
 void LandMineMechanics::setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const
 {
 	obstacle->obstacleType = ObstacleType::LAND_MINE;
-	obstacle->graphicsName = "C09SPF1.def";
-	obstacle->area.setPosition(position);
-	obstacle->area.setArea(std::vector<BattleHex>(1, obstacle->area.getPosition()));
+	ObstacleGraphicsInfo graphicsInfo = obstacle->getGraphicsInfo();
+	graphicsInfo.setGraphicsName("C09SPF1.def");
+	obstacle->setGraphicsInfo(graphicsInfo);
+	obstacle->setArea(ObstacleArea(std::vector<BattleHex>(1, 0),position));
 	obstacle->turnsRemaining = -1;
 	obstacle->visibleForAnotherSide = false;
 }
@@ -591,9 +592,10 @@ bool QuicksandMechanics::requiresCreatureTarget() const
 void QuicksandMechanics::setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const
 {
 	obstacle->obstacleType = ObstacleType::QUICKSAND;
-	obstacle->graphicsName = "C17SPE1.def";
-	obstacle->area.setPosition(position);
-	obstacle->area.setArea(std::vector<BattleHex>(1, obstacle->area.getPosition()));
+	ObstacleGraphicsInfo graphicsInfo = obstacle->getGraphicsInfo();
+	graphicsInfo.setGraphicsName("C17SPE1.def");
+	obstacle->setGraphicsInfo(graphicsInfo);
+	obstacle->setArea(ObstacleArea(std::vector<BattleHex>(1, 0),position));
 	obstacle->turnsRemaining = -1;
 	obstacle->visibleForAnotherSide = false;
 }
@@ -669,9 +671,10 @@ void FireWallMechanics::applyBattleEffects(const SpellCastEnvironment * env, con
 void FireWallMechanics::setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const
 {
 	obstacle->obstacleType = ObstacleType::FIRE_WALL;
-	obstacle->graphicsName = "C07SPF61.def";
-	obstacle->area.setPosition(position);
-	obstacle->area.setArea(std::vector<BattleHex>(1, obstacle->area.getPosition()));
+	ObstacleGraphicsInfo graphicsInfo = obstacle->getGraphicsInfo();
+	graphicsInfo.setGraphicsName("C07SPF61.def");
+	obstacle->setGraphicsInfo(graphicsInfo);
+	obstacle->setArea(ObstacleArea(std::vector<BattleHex>(1, 0),position));
 	obstacle->turnsRemaining = 2;
 	obstacle->visibleForAnotherSide = true;
 }
@@ -702,30 +705,36 @@ void ForceFieldMechanics::applyBattleEffects(const SpellCastEnvironment * env, c
 void ForceFieldMechanics::setupObstacle(SpellCreatedObstacle * obstacle, BattleHex position) const
 {
 	obstacle->obstacleType = ObstacleType::FORCE_FIELD;
-	obstacle->area.setPosition(position);
-	obstacle->area.setArea(rangeInHexes(obstacle->area.getPosition(), obstacle->spellLevel, obstacle->casterSide));
+
+	ObstacleArea area;
+	area.setArea(rangeInHexes(position, obstacle->spellLevel, obstacle->casterSide));
+	area.setPosition(position);
+	obstacle->setArea(area);
+
+	ObstacleGraphicsInfo graphicsInfo = obstacle->getGraphicsInfo();
 	obstacle->turnsRemaining = 2;
 	if(obstacle->casterSide)
 	{
-		obstacle->offsetGraphicsInX = -18;
-		obstacle->offsetGraphicsInY = -21;
+		graphicsInfo.setOffsetGraphicsInX(-18);
+		graphicsInfo.setOffsetGraphicsInY(-21);
 	}
 	obstacle->visibleForAnotherSide = true;
 
 	if (obstacle->getArea().getFields().size() > 2)
 	{
 		if(!obstacle->casterSide)
-			obstacle->graphicsName = "C15SPE10.def";
+			graphicsInfo.setGraphicsName("C15SPE10.def");
 		else
-			obstacle->graphicsName = "C15SPE7.def";
+			graphicsInfo.setGraphicsName("C15SPE7.def");
 	}
 	else
 	{
 		if(!obstacle->casterSide)
-			obstacle->graphicsName = "C15SPE1.def";
+			graphicsInfo.setGraphicsName("C15SPE1.def");
 		else
-			obstacle->graphicsName = "C15SPE4.def";
+			graphicsInfo.setGraphicsName("C15SPE4.def");
 	}
+	obstacle->setGraphicsInfo(graphicsInfo);
 }
 
 ///RemoveObstacleMechanics
@@ -743,7 +752,7 @@ void RemoveObstacleMechanics::applyBattleEffects(const SpellCastEnvironment * en
 		bool complain = true;
 		for(auto & i : obstacleToRemove)
 		{
-			if(canRemove(i.get(), parameters.spellLvl))
+			if(canRemove(i.get()))
 			{
 				obr.id.insert(i->getID());
 				complain = false;
@@ -766,10 +775,8 @@ ESpellCastProblem::ESpellCastProblem RemoveObstacleMechanics::canBeCast(const CB
 		return ESpellCastProblem::INVALID;
 	}
 
-	const int spellLevel = caster->getSpellSchoolLevel(owner);
-
 	for(auto obstacle : cb->battleGetAllObstacles())
-		if(canRemove(obstacle.get(), spellLevel))
+		if(canRemove(obstacle.get()))
 			return ESpellCastProblem::OK;
 
 	return ESpellCastProblem::NO_APPROPRIATE_TARGET;
@@ -777,39 +784,19 @@ ESpellCastProblem::ESpellCastProblem RemoveObstacleMechanics::canBeCast(const CB
 
 ESpellCastProblem::ESpellCastProblem RemoveObstacleMechanics::canBeCastAt(const CBattleInfoCallback * cb, const ECastingMode::ECastingMode mode, const ISpellCaster * caster, BattleHex destination) const
 {
-	const auto level = caster->getSpellSchoolLevel(owner);
 	auto obstacles = cb->battleGetAllObstaclesOnPos(destination, false);
 	if(!obstacles.empty())
 	{
 		for(auto & i : obstacles)
-			if(canRemove(i.get(), level))
+			if(canRemove(i.get()))
 				return ESpellCastProblem::OK;
 	}
 	return ESpellCastProblem::NO_APPROPRIATE_TARGET;
 }
 
-bool RemoveObstacleMechanics::canRemove(const StaticObstacle * obstacle, const int spellLevel) const
+bool RemoveObstacleMechanics::canRemove(const Obstacle * obstacle) const
 {
-	switch (obstacle->getType())
-	{
-	case ObstacleType::STATIC:
-		return obstacle->canRemovedBySpell();
-	case ObstacleType::MOAT:
-		return obstacle->canRemovedBySpell();
-	case ObstacleType::FIRE_WALL:
-		if(spellLevel >= 2)
-			return true;
-		break;
-	case ObstacleType::QUICKSAND:
-	case ObstacleType::LAND_MINE:
-	case ObstacleType::FORCE_FIELD:
-		if(spellLevel >= 3)
-			return true;
-		break;
-	default:
-		break;
-	}
-	return false;
+	return obstacle->canRemovedBySpell();
 }
 
 bool RemoveObstacleMechanics::requiresCreatureTarget() const

@@ -26,9 +26,9 @@ BFieldType CBattleInfoEssentials::battleGetBattlefieldType() const
 	return getBattle()->battlefieldType;
 }
 
-std::vector<std::shared_ptr<const StaticObstacle>> CBattleInfoEssentials::battleGetAllObstacles(boost::optional<BattlePerspective::BattlePerspective> perspective) const
+std::vector<std::shared_ptr<const Obstacle>> CBattleInfoEssentials::battleGetAllObstacles(boost::optional<BattlePerspective::BattlePerspective> perspective) const
 {
-	std::vector<std::shared_ptr<const StaticObstacle> > ret;
+	std::vector<std::shared_ptr<const Obstacle> > ret;
 	RETURN_IF_NOT_BATTLE(ret);
 
 	if(!perspective)
@@ -55,7 +55,7 @@ std::vector<std::shared_ptr<const StaticObstacle>> CBattleInfoEssentials::battle
 	return ret;
 }
 
-bool CBattleInfoEssentials::battleIsObstacleVisibleForSide(const StaticObstacle & coi, BattlePerspective::BattlePerspective side) const
+bool CBattleInfoEssentials::battleIsObstacleVisibleForSide(const Obstacle & coi, BattlePerspective::BattlePerspective side) const
 {
 	RETURN_IF_NOT_BATTLE(false);
 	return side == BattlePerspective::ALL_KNOWING || coi.visibleForSide(side, battleHasNativeStack(side));

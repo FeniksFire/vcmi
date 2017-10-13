@@ -11,7 +11,9 @@
 #include "ObstacleArea.h"
 #include "ObstacleSurface.h"
 #include "ObstacleType.h"
-#include "JsonNode.h"
+#include "ObstacleGraphicsInfo.h"
+#include "../../JsonNode.h"
+
 
 class DLL_LINKAGE ObstacleJson
 {
@@ -22,8 +24,7 @@ protected:
 public:
 	virtual ObstacleArea getArea() const;
 	virtual ObstacleSurface getSurface() const;
-	virtual int32_t getOffsetGraphicsInY() const;
-	virtual int32_t getOffsetGraphicsInX() const;
+	virtual ObstacleGraphicsInfo getGraphicsInfo() const;
 	virtual bool canBeRemovedBySpell() const;
 	virtual int16_t getPosition() const;
 	virtual std::vector<std::string> getPlace() const;
@@ -36,7 +37,6 @@ public:
 	virtual int16_t getTurnsRemaining() const;
 
 	virtual ObstacleType getType() const;
-	virtual std::string getGraphicsName() const;
 	virtual bool randomPosition() const;
 	ObstacleJson(JsonNode jsonNode);
 	ObstacleJson();

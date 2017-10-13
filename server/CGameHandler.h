@@ -198,7 +198,7 @@ public:
 	void stackTurnTrigger(const CStack *stack);
 	bool handleDamageFromObstacle(const CStack * curStack, bool stackIsMoving = false); //checks if obstacle is land mine and handles possible consequences
 
-	void removeObstacle(const StaticObstacle &obstacle);
+	void removeObstacle(const Obstacle &obstacle);
 	bool queryReply( QueryID qid, const JsonNode & answer, PlayerColor player );
 	bool hireHero( const CGObjectInstance *obj, ui8 hid, PlayerColor player );
 	bool buildBoat( ObjectInstanceID objid );

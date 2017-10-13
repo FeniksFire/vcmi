@@ -220,7 +220,7 @@ public:
 	void battleObstaclesRemoved(const std::set<boost::uuids::uuid> & removedObstacles) override; //called when a certain set  of obstacles is removed from batlefield; IDs of them are given
 	void battleCatapultAttacked(const CatapultAttack & ca) override; //called when catapult makes an attack
 	void battleStacksRemoved(const BattleStacksRemoved & bsr) override; //called when certain stack is completely removed from battlefield
-	void battleObstaclePlaced(const StaticObstacle &obstacle) override;
+	void battleObstaclePlaced(const Obstacle & obstacle) override;
 	void battleGateStateChanged(const EGateState state) override;
 	void yourTacticPhase(int distance) override;
 

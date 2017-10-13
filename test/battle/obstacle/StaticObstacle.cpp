@@ -9,4 +9,10 @@
  */
 
 #include "StdInc.h"
+#include "lib/battle/obstacle/StaticObstacle.h"
 
+TEST(StaticObstacleTest, getType)
+{
+	StaticObstacle obstacle;
+	ASSERT_EQ(obstacle.getType(), ObstacleType::STATIC);
+}

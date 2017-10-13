@@ -167,4 +167,3 @@ TEST_F(ObstacleAreaTest, getPosition)
 	area.setPosition(5);
 	EXPECT_EQ(area.getPosition(), 5);
 }
-

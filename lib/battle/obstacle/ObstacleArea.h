@@ -9,7 +9,7 @@
  */
 #pragma once
 #include "../BattleHex.h"
-
+#include "boost/algorithm/searching/boyer_moore.hpp"
 class DLL_LINKAGE ObstacleArea
 {
 	std::vector<BattleHex> area;
@@ -27,6 +27,8 @@ public:
 
 	std::vector<BattleHex> getFields() const;
 	ObstacleArea();
+	ObstacleArea(std::vector<BattleHex> zone, BattleHex position);
+	ObstacleArea(ObstacleArea zone, BattleHex position);
 
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{

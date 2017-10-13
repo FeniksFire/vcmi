@@ -43,7 +43,7 @@ struct BattleAttack;
 struct SetStackEffect;
 struct BattleTriggerEffect;
 class CComponent;
-struct StaticObstacle;
+class Obstacle;
 struct CPackForServer;
 class EVictoryLossCheckResult;
 
@@ -68,7 +68,7 @@ public:
 	virtual void battleObstaclesRemoved(const std::set<boost::uuids::uuid> & removedObstacles){}; //called when a certain set  of obstacles is removed from batlefield; IDs of them are given
 	virtual void battleCatapultAttacked(const CatapultAttack & ca){}; //called when catapult makes an attack
 	virtual void battleStacksRemoved(const BattleStacksRemoved & bsr){}; //called when certain stack is completely removed from battlefield
-	virtual void battleObstaclePlaced(const StaticObstacle &obstacle){};
+	virtual void battleObstaclePlaced(const Obstacle & obstacle){};
 	virtual void battleGateStateChanged(const EGateState state){};
 };
 

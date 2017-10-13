@@ -1,5 +1,5 @@
 /*
- * StaticObstacle.cpp, part of VCMI engine
+ * SpellCreatedObstacle.cpp, part of VCMI engine
  *
  * Authors: listed in file AUTHORS in main folder
  *
@@ -17,8 +17,6 @@
 
 SpellCreatedObstacle::SpellCreatedObstacle()
 {
-	offsetGraphicsInX = 0;
-	offsetGraphicsInY = 0;
 	casterSide = -1;
 	spellLevel = -1;
 	casterSpellPower = -1;
@@ -28,16 +26,31 @@ SpellCreatedObstacle::SpellCreatedObstacle()
 
 SpellCreatedObstacle::SpellCreatedObstacle(ObstacleJson info)
 {
-	offsetGraphicsInX = info.getOffsetGraphicsInX();
-	offsetGraphicsInY = info.getOffsetGraphicsInY();
-	area = info.getArea();
-	area.moveAreaToField(info.getPosition());
+	setArea(ObstacleArea(info.getArea(), info.getPosition()));
 	spellLevel = info.getSpellLevel();
-	graphicsName = info.getGraphicsName();;
 	turnsRemaining = info.getTurnsRemaining();
 	casterSpellPower = info.getSpellPower();
 	visibleForAnotherSide = info.isVisibleForAnotherSide();
 	casterSide = info.getBattleSide();
+	setGraphicsInfo(info.getGraphicsInfo());
+}
+
+bool SpellCreatedObstacle::canRemovedBySpell() const
+{
+	switch (getType())
+	{
+	case ObstacleType::FIRE_WALL:
+		if(spellLevel >= 2)
+			return true;
+		break;
+	case ObstacleType::QUICKSAND:
+	case ObstacleType::LAND_MINE:
+	case ObstacleType::FORCE_FIELD:
+		if(spellLevel >= 3)
+			return true;
+		break;
+	}
+	return false;
 }
 
 bool SpellCreatedObstacle::visibleForSide(ui8 side, bool hasNativeStack) const

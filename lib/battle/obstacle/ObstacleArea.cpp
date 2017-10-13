@@ -33,7 +33,7 @@ int ObstacleArea::getWidth() const
 	int minX = GameConstants::BFIELD_WIDTH;
 	for(auto i : area)
 	{
-		while(i<0)
+		while(i < 0)
 			i.hex += GameConstants::BFIELD_WIDTH;
 		if(i.getX() > maxX)
 			maxX = i.getX();
@@ -86,17 +86,32 @@ void ObstacleArea::moveAreaToField(BattleHex offset)
 	for(auto &field : area)
 	{
 		field.hex += offset.hex - position;
-		if(position.getY() % 2 != offset.getY() % 2){
+		if(position.getY() % 2 != offset.getY() % 2)
+		{
 			if(offset.getY() % 2 == 0 && field.getY() % 2 == 1)
 				field.moveInDirection(BattleHex::RIGHT);
 			if(offset.getY() % 2 == 1 && field.getY() % 2 == 0)
 				field.moveInDirection(BattleHex::LEFT);
 		}
 	}
-	position = offset;
+	setPosition(offset);
 }
 
 ObstacleArea::ObstacleArea()
 {
-	position = 0;
+	setPosition(0);
+}
+
+ObstacleArea::ObstacleArea(std::vector<BattleHex> zone, BattleHex position)
+{
+	setArea(zone);
+	setPosition(0);
+	moveAreaToField(position);
+}
+
+ObstacleArea::ObstacleArea(ObstacleArea zone, BattleHex position)
+{
+	setArea(zone.getFields());
+	setPosition(zone.getPosition());
+	moveAreaToField(position);
 }

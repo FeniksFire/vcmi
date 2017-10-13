@@ -8,9 +8,10 @@
  *
  */
 #pragma once
-#include "StaticObstacle.h"
+#include "Obstacle.h"
+#include "ObstacleJson.h"
 
-class DLL_LINKAGE SpellCreatedObstacle : public StaticObstacle
+class DLL_LINKAGE SpellCreatedObstacle : public Obstacle
 {
 public:
 	ObstacleType obstacleType;
@@ -23,6 +24,7 @@ public:
 	SpellCreatedObstacle();
 	SpellCreatedObstacle(ObstacleJson info);
 
+	virtual bool canRemovedBySpell() const override;
 	virtual bool visibleForSide(ui8 side, bool hasNativeStack) const override;
 	virtual ObstacleType getType() const override;
 
@@ -30,7 +32,7 @@ public:
 
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{
-		h & static_cast<StaticObstacle&>(*this);
+		h & static_cast<Obstacle&>(*this);
 		h & turnsRemaining;
 		h & casterSpellPower;
 		h & spellLevel;

@@ -20,13 +20,16 @@ set(lib_SRCS
 		battle/RandGen.cpp
 		battle/RangeGenerator.cpp
 
-		battle/obstacle/ObstacleRandomGenerator.cpp
-		battle/obstacle/ObstacleArea.cpp
-		battle/obstacle/ObstacleSurface.cpp
-		battle/obstacle/ObstacleJson.cpp
 		battle/obstacle/Obstacle.cpp
-		battle/obstacle/StaticObstacle.cpp
+		battle/obstacle/ObstacleArea.cpp
+		battle/obstacle/ObstacleGraphicsInfo.cpp
+		battle/obstacle/ObstacleJson.cpp
+		battle/obstacle/ObstacleRandomGenerator.cpp
+		battle/obstacle/ObstacleSurface.cpp
 		battle/obstacle/SpellCreatedObstacle.cpp
+		battle/obstacle/SpellCreatedObstacle.cpp
+		battle/obstacle/StaticObstacle.cpp
+		battle/obstacle/MoatObstacle.cpp
 
 		filesystem/AdapterLoaders.cpp
 		filesystem/CArchiveLoader.cpp
@@ -164,12 +167,14 @@ set(lib_HEADERS
 
 		battle/obstacle/Obstacle.h
 		battle/obstacle/ObstacleArea.h
-		battle/obstacle/ObstacleSurface.h
-		battle/obstacle/ObstacleRandomGenerator.h
-		battle/obstacle/ObstacleType.h
+		battle/obstacle/ObstacleGraphicsInfo.h
 		battle/obstacle/ObstacleJson.h
-		battle/obstacle/StaticObstacle.h
+		battle/obstacle/ObstacleRandomGenerator.h
+		battle/obstacle/ObstacleSurface.h
+		battle/obstacle/ObstacleType.h
 		battle/obstacle/SpellCreatedObstacle.h
+		battle/obstacle/StaticObstacle.h
+		battle/obstacle/MoatObstacle.h
 
 		filesystem/AdapterLoaders.h
 		filesystem/CArchiveLoader.h

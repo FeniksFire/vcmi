@@ -19,7 +19,7 @@
 #include "ResourceSet.h"
 #include "CGameStateFwd.h"
 #include "mapping/CMapDefines.h"
-#include "battle/obstacle/StaticObstacle.h"
+#include "battle/obstacle/Obstacle.h"
 #include "battle/obstacle/SpellCreatedObstacle.h".h"
 
 #include "spells/ViewSpellInt.h"
@@ -1875,7 +1875,7 @@ struct BattleObstaclePlaced : public CPackForClient
 	DLL_LINKAGE void applyGs(CGameState *gs); //effect
 	void applyCl(CClient *cl); //play animations & stuff
 
-	std::shared_ptr<StaticObstacle> obstacle;
+	std::shared_ptr<Obstacle> obstacle;
 
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{

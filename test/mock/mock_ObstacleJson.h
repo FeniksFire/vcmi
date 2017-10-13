@@ -32,4 +32,5 @@ public:
 	MOCK_CONST_METHOD0(getType, ObstacleType());
 	MOCK_CONST_METHOD0(getGraphicsName, std::string ());
 	MOCK_CONST_METHOD0(randomPosition, bool());
+	
 };

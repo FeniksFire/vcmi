@@ -1040,7 +1040,7 @@ void CPlayerInterface::battleAttack(const BattleAttack * ba)
 		battleInt->displaySpellHit(spellID, curAction->destinationTile);
 	}
 }
-void CPlayerInterface::battleObstaclePlaced(const StaticObstacle &obstacle)
+void CPlayerInterface::battleObstaclePlaced(const Obstacle & obstacle)
 {
 	EVENT_HANDLER_CALLED_BY_CLIENT;
 	BATTLE_EVENT_POSSIBLE_RETURN;

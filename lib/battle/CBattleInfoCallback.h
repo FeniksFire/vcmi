@@ -16,7 +16,7 @@ class CGHeroInstance;
 class CStack;
 class ISpellCaster;
 class CSpell;
-struct StaticObstacle;
+class Obstacle;
 class IBonusBearer;
 class CRandomGenerator;
 
@@ -41,8 +41,8 @@ public:
 	//battle
 	boost::optional<int> battleIsFinished() const; //return none if battle is ongoing; otherwise the victorious side (0/1) or 2 if it is a draw
 
-	std::vector<std::shared_ptr<const StaticObstacle>> battleGetAllObstaclesOnPos(BattleHex tile, bool onlyBlocking = true) const; //blocking obstacles makes tile inaccessible, others cause special effects (like Land Mines, Moat, Quicksands)
-	std::vector<std::shared_ptr<const StaticObstacle>> getAllAffectedObstaclesByStack(const CStack * stack) const;
+	std::vector<std::shared_ptr<const Obstacle>> battleGetAllObstaclesOnPos(BattleHex tile, bool onlyBlocking = true) const; //blocking obstacles makes tile inaccessible, others cause special effects (like Land Mines, Moat, Quicksands)
+	std::vector<std::shared_ptr<const Obstacle>> getAllAffectedObstaclesByStack(const CStack * stack) const;
 
 	const CStack * battleGetStackByPos(BattleHex pos, bool onlyAlive = true) const; //returns stack info by given pos
 	void battleGetStackQueue(std::vector<const CStack *> &out, const int howMany, const int turn = 0, int lastMoved = -1) const;

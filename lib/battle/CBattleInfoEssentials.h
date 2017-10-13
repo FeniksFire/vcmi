@@ -14,7 +14,7 @@
 class CGTownInstance;
 class CGHeroInstance;
 class CStack;
-struct StaticObstacle;
+class Obstacle;
 class IBonusBearer;
 struct InfoAboutHero;
 class CArmedInstance;
@@ -48,7 +48,7 @@ public:
 
 	ETerrainType battleTerrainType() const;
 	BFieldType battleGetBattlefieldType() const;
-	std::vector<std::shared_ptr<const StaticObstacle> > battleGetAllObstacles(boost::optional<BattlePerspective::BattlePerspective> perspective = boost::none) const; //returns all obstacles on the battlefield
+	std::vector<std::shared_ptr<const Obstacle> > battleGetAllObstacles(boost::optional<BattlePerspective::BattlePerspective> perspective = boost::none) const; //returns all obstacles on the battlefield
 
 	/** @brief Main method for getting battle stacks
 	 *
@@ -89,7 +89,7 @@ public:
 	///returns all alive stacks from particular side excluding turrets
 	TStacks battleAliveStacks(ui8 side) const;
 	const CStack * battleGetStackByID(int ID, bool onlyAlive = true) const; //returns stack info by given ID
-	bool battleIsObstacleVisibleForSide(const StaticObstacle & coi, BattlePerspective::BattlePerspective side) const;
+	bool battleIsObstacleVisibleForSide(const Obstacle & coi, BattlePerspective::BattlePerspective side) const;
 
 	///returns player that controls given stack; mind control included
 	PlayerColor battleGetOwner(const CStack * stack) const;

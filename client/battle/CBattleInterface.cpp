@@ -171,7 +171,7 @@ CBattleInterface::CBattleInterface(const CCreatureSet *army1, const CCreatureSet
 		if (siegeLevel >= 2) //citadel or castle
 		{
 			//print mlip
-			SDL_Surface	* mlip = BitmapHandler::loadBitmap( siegeH->getSiegeName(14) );
+			SDL_Surface * mlip = BitmapHandler::loadBitmap( siegeH->getSiegeName(14) );
 
 			auto & info = siegeH->town->town->clientInfo;
 			Point mlipPos(info.siegePositions[14].x, info.siegePositions[14].y);
@@ -2664,27 +2664,27 @@ Rect CBattleInterface::hexPosition(BattleHex hex) const
 	return Rect(x, y, w, h);
 }
 
-void CBattleInterface::obstaclePlaced(const StaticObstacle & oi)
+void CBattleInterface::obstaclePlaced(const Obstacle & oi)
 {
 	waitForAnims();
-	assert(!oi.graphicsName.empty());
+	assert(!oi.getGraphicsInfo().getGraphicsName().empty());
 
 	int imageHeight = 0;
-	ResourceID resID(oi.graphicsName);
+	ResourceID resID(oi.getGraphicsInfo().getGraphicsName());
 	if(resID.getType() == EResType::ANIMATION)
 	{
-		CAnimation anim(oi.graphicsName);
+		CAnimation anim(oi.getGraphicsInfo().getGraphicsName());
 		anim.preload();
-		int frameIndex = ((animCount+1) *25 / getAnimSpeed()) % anim.size();
+		int frameIndex = ((animCount + 1) * 25 / getAnimSpeed()) % anim.size();
 		imageHeight = anim.getImage(frameIndex)->height();
 	}
 	else if(resID.getType() == EResType::IMAGE)
 	{
-		imageHeight = BitmapHandler::loadBitmap(oi.graphicsName)->h;
+		imageHeight = BitmapHandler::loadBitmap(oi.getGraphicsInfo().getGraphicsName())->h;
 	}
 
 	Point whereTo = getObstaclePosition(imageHeight, oi);
-	addNewAnim(new CEffectAnimation(this, oi.graphicsName, whereTo.x, whereTo.y));
+	addNewAnim(new CEffectAnimation(this, oi.getGraphicsInfo().getGraphicsName(), whereTo.x, whereTo.y));
 }
 
 void CBattleInterface::gateStateChanged(const EGateState state)
@@ -3285,28 +3285,28 @@ void CBattleInterface::showStacks(SDL_Surface *to, std::vector<const CStack *> s
 	}
 }
 
-void CBattleInterface::showObstacles(SDL_Surface *to, std::vector<std::shared_ptr<const StaticObstacle> > &obstacles)
+void CBattleInterface::showObstacles(SDL_Surface * to, std::vector<std::shared_ptr<const Obstacle> > &obstacles)
 {
 	for (auto & obstacle : obstacles)
 	{
-		ResourceID resID(obstacle->graphicsName);
+		ResourceID resID(obstacle->getGraphicsInfo().getGraphicsName());
 		Point p(0,0);
 		if(resID.getType() == EResType::ANIMATION)
 		{
-			CAnimation anim(obstacle->graphicsName);
+			CAnimation anim(obstacle->getGraphicsInfo().getGraphicsName());
 			anim.preload();
-			int frameIndex = ((animCount+1) *25 / getAnimSpeed()) % anim.size();
+			int frameIndex = ((animCount + 1) * 25 / getAnimSpeed()) % anim.size();
 			auto img = anim.getImage(frameIndex);
-			if(obstacle->area.getPosition() != 0)
+			if(obstacle->getArea().getPosition() != 0)
 				p = getObstaclePosition(img->height(), *obstacle);
-			img->draw(to,p.x + obstacle->offsetGraphicsInX, p.y + obstacle->offsetGraphicsInY);
+			img->draw(to, p.x + obstacle->getGraphicsInfo().getOffsetGraphicsInX(), p.y + obstacle->getGraphicsInfo().getOffsetGraphicsInY());
 		}
 		else if(resID.getType() == EResType::IMAGE)
 		{
-			auto bitmap = BitmapHandler::loadBitmap(obstacle->graphicsName);
-			if(obstacle->area.getPosition() != 0)
+			auto bitmap = BitmapHandler::loadBitmap(obstacle->getGraphicsInfo().getGraphicsName());
+			if(obstacle->getArea().getPosition() != 0)
 				p = getObstaclePosition(bitmap->h, *obstacle);
-			blitAt(bitmap, p.x + obstacle->offsetGraphicsInX, p.y + obstacle->offsetGraphicsInY, to);
+			blitAt(bitmap, p.x + obstacle->getGraphicsInfo().getOffsetGraphicsInX(), p.y + obstacle->getGraphicsInfo().getOffsetGraphicsInY(), to);
 		}
 	}
 }
@@ -3512,7 +3512,7 @@ void CBattleInterface::updateBattleAnimations()
 	}
 }
 
-Point CBattleInterface::getObstaclePosition(int imageHeight, const StaticObstacle &obstacle)
+Point CBattleInterface::getObstaclePosition(int imageHeight, const Obstacle & obstacle)
 {
 	int offset = imageHeight % 42;
 	if (obstacle.getType() == ObstacleType::STATIC)
@@ -3525,7 +3525,7 @@ Point CBattleInterface::getObstaclePosition(int imageHeight, const StaticObstacl
 		offset -= 42;
 	}
 
-	Rect r = hexPosition(obstacle.area.getPosition());
+	Rect r = hexPosition(obstacle.getArea().getPosition());
 	r.y += 42 - imageHeight + offset;
 	return r.topLeft();
 }

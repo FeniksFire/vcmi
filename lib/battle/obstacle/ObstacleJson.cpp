@@ -12,18 +12,18 @@
 
 ObstacleType ObstacleJson::typeConvertFromString(std::string type) const
 {
-		if(type == "static")
-			return ObstacleType::STATIC;
-		else if(type == "moat")
-			return ObstacleType::MOAT;
-		else if(type == "firewall")
-			return ObstacleType::FIRE_WALL;
-		else if(type == "forcefield")
-			return ObstacleType::FORCE_FIELD;
-		else if(type == "landmine")
-			return ObstacleType::LAND_MINE;
-		else if(type == "quicksand")
-			return ObstacleType::QUICKSAND;
+	if(type == "static")
+		return ObstacleType::STATIC;
+	else if(type == "moat")
+		return ObstacleType::MOAT;
+	else if(type == "firewall")
+		return ObstacleType::FIRE_WALL;
+	else if(type == "forcefield")
+		return ObstacleType::FORCE_FIELD;
+	else if(type == "landmine")
+		return ObstacleType::LAND_MINE;
+	else if(type == "quicksand")
+		return ObstacleType::QUICKSAND;
 }
 
 ObstacleArea ObstacleJson::getArea() const
@@ -33,21 +33,20 @@ ObstacleArea ObstacleJson::getArea() const
 	return area;
 }
 
+ObstacleGraphicsInfo ObstacleJson::getGraphicsInfo() const
+{
+	ObstacleGraphicsInfo info;
+	info.setGraphicsName(config["graphics"].String());
+	info.setOffsetGraphicsInX(config["offsetGraphicsInX"].Integer());
+	info.setOffsetGraphicsInY(config["offsetGraphicsInY"].Integer());
+	return info;
+}
+
 ObstacleSurface ObstacleJson::getSurface() const
 {
 	ObstacleSurface surface;
 	surface.battlefieldSurface = config["battlefieldSurface"].convertTo<std::vector<BFieldType>>();
 	return surface;
-}
-
-int32_t ObstacleJson::getOffsetGraphicsInY() const
-{
-	return config["offsetGraphicsInY"].Integer();
-}
-
-int32_t ObstacleJson::getOffsetGraphicsInX() const
-{
-	return config["offsetGraphicsInX"].Integer();
 }
 
 bool ObstacleJson::canBeRemovedBySpell() const
@@ -108,11 +107,6 @@ int16_t ObstacleJson::getTurnsRemaining() const
 ObstacleType ObstacleJson::getType() const
 {
 	return typeConvertFromString(config["type"].String());
-}
-
-std::string ObstacleJson::getGraphicsName() const
-{
-	return config["graphics"].String();
 }
 
 bool ObstacleJson::randomPosition() const

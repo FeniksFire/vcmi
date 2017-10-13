@@ -16,6 +16,8 @@
 #include "../CGeneralTextHandler.h"
 #include "battle/obstacle/ObstacleJson.h"
 #include "battle/obstacle/ObstacleRandomGenerator.h"
+#include "battle/obstacle/StaticObstacle.h"
+#include "battle/obstacle/MoatObstacle.h"
 
 const CStack * BattleInfo::getNextStack() const
 {
@@ -466,7 +468,10 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 void BattleInfo::setupObstacles(std::string creatureBankName)
 {
 	const JsonNode obstacleConfig(JsonNode(ResourceID("config/obstacles.json")));
-	setupInherentObstacles(creatureBankName);
+	std::vector<std::shared_ptr<ObstacleJson>> obstaclesConfig;
+	for(auto i : obstacleConfig["InherentObstacles"].Vector())
+		obstaclesConfig.push_back(std::make_shared<ObstacleJson>(i));
+	setupInherentObstacles(obstaclesConfig, creatureBankName);
 
 	if (town == nullptr && creatureBankName.empty())
 	{
@@ -494,7 +499,7 @@ void BattleInfo::setupObstacles(std::string creatureBankName)
 			{
 				ObstacleJson info(obstacleConfig["obstacles"].Vector().at(id));
 
-				auto obstPtr = std::make_shared<StaticObstacle>(info);
+				auto obstPtr = std::make_shared<StaticObstacle>(&info);
 				obstacles.push_back(obstPtr);
 
 				for(BattleHex blocked : obstPtr->getArea().getFields())
@@ -569,55 +574,52 @@ void BattleInfo::setupObstacles(std::string creatureBankName)
 
 }
 
-void BattleInfo::setupInherentObstacles(std::string creatureBankName)
+void BattleInfo::setupInherentObstacles(const std::vector<std::shared_ptr<ObstacleJson>> obstaclesConfig, std::string creatureBankName)
 {
-	const JsonNode obstacleConfig(JsonNode(ResourceID("config/obstacles.json")));
-
-	for(auto i : obstacleConfig["InherentObstacles"].Vector())
+	for(auto info : obstaclesConfig)
 	{
-		 ObstacleJson info(i);
-		 if(town && town->fortLevel() >= CGTownInstance::CITADEL && vstd::contains(info.getPlace(), town->town->faction->name)
-				 || vstd::contains(info.getPlace(), creatureBankName)
-				 || info.getSurface().isAppropriateForSurface(battlefieldType))
+		 if(town && town->fortLevel() >= CGTownInstance::CITADEL && vstd::contains(info->getPlace(), town->town->faction->name)
+				 || vstd::contains(info->getPlace(), creatureBankName)
+				 || info->getSurface().isAppropriateForSurface(battlefieldType))
 		 {
-			 switch(info.getType())
+			 switch(info->getType())
 			 {
 			 case ObstacleType::STATIC:
 			 {
-				 auto staticObstacle = std::make_shared<StaticObstacle>(info);
+				 auto staticObstacle = std::make_shared<StaticObstacle>(info.get());
 				 obstacles.push_back(staticObstacle);
 			 }
 				 break;
 			 case ObstacleType::MOAT:
 			 {
-				 auto moatObstacle = std::make_shared<MoatObstacle>(info);
+				 auto moatObstacle = std::make_shared<MoatObstacle>(*info.get());
 				 obstacles.push_back(moatObstacle);
 			 }
 				 break;
 			 case ObstacleType::FIRE_WALL:
 			 {
-					auto firewallObstacle = std::make_shared<SpellCreatedObstacle>(info);
+					auto firewallObstacle = std::make_shared<SpellCreatedObstacle>(*info.get());
 					firewallObstacle->obstacleType = ObstacleType::FIRE_WALL;
 					obstacles.push_back(firewallObstacle);
 			 }
 				 break;
 			 case ObstacleType::FORCE_FIELD:
 			 {
-					auto forcefieldObstacle = std::make_shared<SpellCreatedObstacle>(info);
+					auto forcefieldObstacle = std::make_shared<SpellCreatedObstacle>(*info.get());
 					forcefieldObstacle->obstacleType = ObstacleType::FORCE_FIELD;
 					obstacles.push_back(forcefieldObstacle);
 			 }
 				 break;
 			 case ObstacleType::LAND_MINE:
 			 {
-					auto landmineObstacle = std::make_shared<SpellCreatedObstacle>(info);
+					auto landmineObstacle = std::make_shared<SpellCreatedObstacle>(*info.get());
 					landmineObstacle->obstacleType = ObstacleType::LAND_MINE;
 					obstacles.push_back(landmineObstacle);
 			 }
 				 break;
 			 case ObstacleType::QUICKSAND:
 			 {
-					auto quicksandObstacle = std::make_shared<SpellCreatedObstacle>(info);
+					auto quicksandObstacle = std::make_shared<SpellCreatedObstacle>(*info.get());
 					quicksandObstacle->obstacleType = ObstacleType::QUICKSAND;
 					obstacles.push_back(quicksandObstacle);
 			 }
