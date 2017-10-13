@@ -33,6 +33,17 @@ public:
 
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{
+		if(version < 777 & !h.saving)
+		{
+			si32 id;
+			BattleHex pos;
+			ui8 obstacleType;
+			si32 uniqueID;
+			h & id;
+			h & uniqueID;
+			h & obstacleType;
+			h & pos;
+		}
 		h & ID;
 		h & area;
 		h & graphicsInfo;

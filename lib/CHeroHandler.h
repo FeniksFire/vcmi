@@ -205,6 +205,29 @@ public:
 	}
 };
 
+struct CObstacleInfo // for backward compatibility
+{
+	si32 ID = 0;
+	std::string defName = "l";
+	std::vector<ETerrainType> allowedTerrains;
+	std::vector<BFieldType> allowedSpecialBfields;
+	ui8 isAbsoluteObstacle = 0;
+	si32 width, height = 0;
+	std::vector<si16> blockedTiles;
+
+	template <typename Handler> void serialize(Handler &h, const int version)
+	{
+		h & ID;
+		h & defName;
+		h & allowedTerrains;
+		h & allowedSpecialBfields;
+		h & isAbsoluteObstacle;
+		h & width;
+		h & height;
+		h & blockedTiles;
+}
+};
+
 class DLL_LINKAGE CHeroHandler : public IHandlerBase
 {
 	/// expPerLEvel[i] is amount of exp needed to reach level i;
@@ -291,5 +314,12 @@ public:
 		h & expPerLevel;
 		h & ballistics;
 		h & terrCosts;
+		if(version < 777 && !h.saving)
+		{
+			std::map<int, CObstacleInfo> obstacles;
+			std::map<int, CObstacleInfo> absoluteObstacles;
+			h & obstacles;
+			h & absoluteObstacles;
+		}
 	}
 };

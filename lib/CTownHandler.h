@@ -271,6 +271,17 @@ public:
 		h & warMachine;
 		h & clientInfo;
 		h & defaultTavernChance;
+
+		if(version < 777 && !h.saving)
+		{
+			si32 moatDamage;
+			h & moatDamage;
+		}
+		if(version >= 758 && version < 777)
+		{
+			std::vector<BattleHex> moatHexes;
+			h & moatHexes;
+		}
 	}
 };
 
