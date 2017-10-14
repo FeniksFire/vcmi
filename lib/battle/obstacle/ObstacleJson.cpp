@@ -10,7 +10,7 @@
 #include "StdInc.h"
 #include "ObstacleJson.h"
 
-ObstacleType ObstacleJson::typeConvertFromString(std::string type) const
+ObstacleType ObstacleJson::typeConvertFromString(const std::string type) const
 {
 	if(type == "static")
 		return ObstacleType::STATIC;

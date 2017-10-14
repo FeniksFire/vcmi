@@ -8,7 +8,7 @@
  *
  */
 #include "StdInc.h"
-#include "RangeGenerator.h".h"
+#include "RangeGenerator.h"
 
 RangeGenerator::RangeGenerator(std::function<int ()> _myRand, std::vector<int> indexes):
 	remainingCount(indexes.size()),

@@ -21,7 +21,6 @@ SpellCreatedObstacle::SpellCreatedObstacle()
 	spellLevel = -1;
 	casterSpellPower = -1;
 	turnsRemaining = -1;
-	visibleForAnotherSide = -1;
 }
 
 SpellCreatedObstacle::SpellCreatedObstacle(ObstacleJson info)
@@ -35,18 +34,18 @@ SpellCreatedObstacle::SpellCreatedObstacle(ObstacleJson info)
 	setGraphicsInfo(info.getGraphicsInfo());
 }
 
-bool SpellCreatedObstacle::canRemovedBySpell() const
+bool SpellCreatedObstacle::canRemovedBySpell(int8_t levelOfSpellRemoval) const
 {
 	switch (getType())
 	{
 	case ObstacleType::FIRE_WALL:
-		if(spellLevel >= 2)
+		if(levelOfSpellRemoval >= 2)
 			return true;
 		break;
 	case ObstacleType::QUICKSAND:
 	case ObstacleType::LAND_MINE:
 	case ObstacleType::FORCE_FIELD:
-		if(spellLevel >= 3)
+		if(levelOfSpellRemoval >= 3)
 			return true;
 		break;
 	}

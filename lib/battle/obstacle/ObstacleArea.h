@@ -9,7 +9,7 @@
  */
 #pragma once
 #include "../BattleHex.h"
-#include "boost/algorithm/searching/boyer_moore.hpp"
+
 class DLL_LINKAGE ObstacleArea
 {
 	std::vector<BattleHex> area;

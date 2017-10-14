@@ -15,16 +15,16 @@ class DLL_LINKAGE SpellCreatedObstacle : public Obstacle
 {
 public:
 	ObstacleType obstacleType;
-	si8 turnsRemaining;
-	si8 casterSpellPower;
-	si8 spellLevel;
-	si8 casterSide;
-	si8 visibleForAnotherSide;
+	int32_t turnsRemaining;
+	int32_t casterSpellPower;
+	int8_t spellLevel;
+	int8_t casterSide;
+	bool visibleForAnotherSide = true;
 
 	SpellCreatedObstacle();
 	SpellCreatedObstacle(ObstacleJson info);
 
-	virtual bool canRemovedBySpell() const override;
+	virtual bool canRemovedBySpell(int8_t levelOfSpellRemoval) const override;
 	virtual bool visibleForSide(ui8 side, bool hasNativeStack) const override;
 	virtual ObstacleType getType() const override;
 

@@ -10,16 +10,11 @@
 #include "StdInc.h"
 #include "StaticObstacle.h"
 
-bool StaticObstacle::canRemovedBySpell() const
-{
-	return canBeRemovedBySpell;
-}
-
 StaticObstacle::StaticObstacle()
 {
 }
 
-StaticObstacle::StaticObstacle(ObstacleJson info, int16_t position)
+StaticObstacle::StaticObstacle(const ObstacleJson & info, int16_t position)
 {
 	if(!info.randomPosition())
 		position = info.getPosition();
@@ -28,7 +23,7 @@ StaticObstacle::StaticObstacle(ObstacleJson info, int16_t position)
 	setGraphicsInfo(info.getGraphicsInfo());
 }
 
-StaticObstacle::StaticObstacle(ObstacleJson * info, int16_t position)
+StaticObstacle::StaticObstacle(const ObstacleJson * info, int16_t position)
 {
 	if(!info->randomPosition())
 		position = info->getPosition();
@@ -40,6 +35,11 @@ StaticObstacle::StaticObstacle(ObstacleJson * info, int16_t position)
 StaticObstacle::~StaticObstacle()
 {
 
+}
+
+bool StaticObstacle::canRemovedBySpell(int8_t levelOfSpellRemoval) const
+{
+	return canBeRemovedBySpell;
 }
 
 ObstacleType StaticObstacle::getType() const

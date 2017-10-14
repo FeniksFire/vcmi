@@ -15,14 +15,14 @@
 class DLL_LINKAGE StaticObstacle : public Obstacle
 {
 public:
-	bool canBeRemovedBySpell = 0;
+	bool canBeRemovedBySpell = false;
 
 	StaticObstacle();
-	StaticObstacle(ObstacleJson info, int16_t position = 0);
-	StaticObstacle(ObstacleJson * info,int16_t position = 0);
+	StaticObstacle(const ObstacleJson & info, int16_t position = 0);
+	StaticObstacle(const ObstacleJson * info,int16_t position = 0);
 	virtual ~StaticObstacle();
 
-	virtual bool canRemovedBySpell() const;
+	virtual bool canRemovedBySpell(int8_t levelOfSpellRemoval) const;
 	virtual ObstacleType getType() const;
 	virtual bool visibleForSide(ui8 side, bool hasNativeStack) const;
 	virtual void battleTurnPassed();

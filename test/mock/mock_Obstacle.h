@@ -16,6 +16,6 @@ class ObstacleMock : public Obstacle
 public:
 	MOCK_CONST_METHOD0(getType, ObstacleType());
 	MOCK_CONST_METHOD2(visibleForSide, bool(ui8 side, bool hasNativeStack));
-	MOCK_CONST_METHOD0(canRemovedBySpell, bool());
+	MOCK_CONST_METHOD1(canRemovedBySpell, bool(int8_t levelOfSpellRemoval));
 	MOCK_METHOD0(battleTurnPassed, void());
 };

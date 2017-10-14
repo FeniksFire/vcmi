@@ -752,7 +752,7 @@ void RemoveObstacleMechanics::applyBattleEffects(const SpellCastEnvironment * en
 		bool complain = true;
 		for(auto & i : obstacleToRemove)
 		{
-			if(canRemove(i.get()))
+			if(canRemove(i.get(), parameters.spellLvl))
 			{
 				obr.id.insert(i->getID());
 				complain = false;
@@ -774,9 +774,9 @@ ESpellCastProblem::ESpellCastProblem RemoveObstacleMechanics::canBeCast(const CB
 		logGlobal->warn("Invalid spell cast attempt: spell %s, mode %d", owner->name, mode); //should not even try to do it
 		return ESpellCastProblem::INVALID;
 	}
-
+	const int spellLevel = caster->getSpellSchoolLevel(owner);
 	for(auto obstacle : cb->battleGetAllObstacles())
-		if(canRemove(obstacle.get()))
+		if(canRemove(obstacle.get(), spellLevel))
 			return ESpellCastProblem::OK;
 
 	return ESpellCastProblem::NO_APPROPRIATE_TARGET;
@@ -785,18 +785,19 @@ ESpellCastProblem::ESpellCastProblem RemoveObstacleMechanics::canBeCast(const CB
 ESpellCastProblem::ESpellCastProblem RemoveObstacleMechanics::canBeCastAt(const CBattleInfoCallback * cb, const ECastingMode::ECastingMode mode, const ISpellCaster * caster, BattleHex destination) const
 {
 	auto obstacles = cb->battleGetAllObstaclesOnPos(destination, false);
+	const auto level = caster->getSpellSchoolLevel(owner);
 	if(!obstacles.empty())
 	{
 		for(auto & i : obstacles)
-			if(canRemove(i.get()))
+			if(canRemove(i.get(), level))
 				return ESpellCastProblem::OK;
 	}
 	return ESpellCastProblem::NO_APPROPRIATE_TARGET;
 }
 
-bool RemoveObstacleMechanics::canRemove(const Obstacle * obstacle) const
+bool RemoveObstacleMechanics::canRemove(const Obstacle * obstacle, const int8_t spellLevel) const
 {
-	return obstacle->canRemovedBySpell();
+	return obstacle->canRemovedBySpell(spellLevel);
 }
 
 bool RemoveObstacleMechanics::requiresCreatureTarget() const

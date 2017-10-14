@@ -8,7 +8,7 @@
  *
  */
 #pragma once
-#include "battle/RangeGenerator.h".h"
+#include "battle/RangeGenerator.h"
 #include "battle/RandGen.h"
 
 class DLL_LINKAGE ObstacleRandomGenerator

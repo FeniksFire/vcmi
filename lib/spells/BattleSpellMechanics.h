@@ -163,7 +163,7 @@ public:
 protected:
 	void applyBattleEffects(const SpellCastEnvironment * env, const BattleSpellCastParameters & parameters, SpellCastContext & ctx) const override;
 private:
-	bool canRemove(const Obstacle * obstacle) const;
+	bool canRemove(const Obstacle * obstacle, const int8_t spellLevel) const;
 };
 
 ///all rising spells

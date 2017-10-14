@@ -18,7 +18,7 @@ public:
 	virtual ~Obstacle() {}
 	virtual ObstacleType getType() const = 0;
 	virtual bool visibleForSide(ui8 side, bool hasNativeStack) const = 0;
-	virtual bool canRemovedBySpell() const = 0;
+	virtual bool canRemovedBySpell(int8_t levelOfSpellRemoval) const = 0;
 	virtual void battleTurnPassed() = 0;
 
 	boost::uuids::uuid getID() const;
@@ -49,7 +49,7 @@ public:
 		h & graphicsInfo;
 	}
 private:
-	boost::uuids::uuid generateID();
+	static boost::uuids::uuid generateID();
 	boost::uuids::uuid ID = generateID();
 	ObstacleArea area;
 	ObstacleGraphicsInfo graphicsInfo;

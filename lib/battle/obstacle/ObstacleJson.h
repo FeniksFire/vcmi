@@ -18,7 +18,7 @@
 class DLL_LINKAGE ObstacleJson
 {
 private:
-	ObstacleType typeConvertFromString(std::string type) const;
+	ObstacleType typeConvertFromString(const std::string type) const;
 protected:
 	JsonNode config;
 public:
@@ -34,7 +34,7 @@ public:
 	virtual int32_t getSpellPower() const;
 	virtual int8_t getBattleSide() const;
 	virtual int8_t isVisibleForAnotherSide() const;
-	virtual int16_t getTurnsRemaining() const;
+	virtual int32_t getTurnsRemaining() const;
 
 	virtual ObstacleType getType() const;
 	virtual bool randomPosition() const;

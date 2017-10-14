@@ -469,7 +469,7 @@ void BattleInfo::setupObstacles(std::string creatureBankName)
 {
 	const JsonNode obstacleConfig(JsonNode(ResourceID("config/obstacles.json")));
 	std::vector<std::shared_ptr<ObstacleJson>> obstaclesConfig;
-	for(auto i : obstacleConfig["InherentObstacles"].Vector())
+	for(auto i : obstacleConfig["inherentObstacles"].Vector())
 		obstaclesConfig.push_back(std::make_shared<ObstacleJson>(i));
 	setupInherentObstacles(obstaclesConfig, creatureBankName);
 
