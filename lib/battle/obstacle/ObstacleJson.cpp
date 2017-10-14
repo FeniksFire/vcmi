@@ -97,7 +97,7 @@ int8_t ObstacleJson::isVisibleForAnotherSide() const
 	return config["visibleForAnotherSide"].Integer();
 }
 
-int16_t ObstacleJson::getTurnsRemaining() const
+int32_t ObstacleJson::getTurnsRemaining() const
 {
 	if(config["turnsRemaining"].isNull())
 		return -1;

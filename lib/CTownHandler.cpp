@@ -547,8 +547,7 @@ void CTownHandler::loadSiegeScreen(CTown &town, const JsonNode & source)
 	pos[5]  = JsonToPoint(source["walls"]["bottomMid"]);
 	pos[4]  = JsonToPoint(source["walls"]["bottom"]);
 
-	pos[13] = JsonToPoint(source["moat"]["moat"]);
-	pos[14] = JsonToPoint(source["moat"]["bank"]);
+	pos[14] = JsonToPoint(source["mlip"]["mlip"]);
 
 	pos[11] = JsonToPoint(source["static"]["bottom"]);
 	pos[12] = JsonToPoint(source["static"]["top"]);

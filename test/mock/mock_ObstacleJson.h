@@ -27,7 +27,7 @@ public:
 	MOCK_CONST_METHOD0(getSpellPower, int32_t());
 	MOCK_CONST_METHOD0(getBattleSide, int8_t());
 	MOCK_CONST_METHOD0(isVisibleForAnotherSide, int8_t());
-	MOCK_CONST_METHOD0(getTurnsRemaining, int16_t());
+	MOCK_CONST_METHOD0(getTurnsRemaining, int32_t());
 
 	MOCK_CONST_METHOD0(getType, ObstacleType());
 	MOCK_CONST_METHOD0(getGraphicsName, std::string ());
