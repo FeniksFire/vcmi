@@ -18,7 +18,7 @@ StaticObstacle::StaticObstacle(const ObstacleJson & info, int16_t position)
 {
 	if(!info.randomPosition())
 		position = info.getPosition();
-	setArea(ObstacleArea(info.getArea(),position));
+	setArea(ObstacleArea(info.getArea(), position));
 	canBeRemovedBySpell = info.canBeRemovedBySpell();
 	setGraphicsInfo(info.getGraphicsInfo());
 }

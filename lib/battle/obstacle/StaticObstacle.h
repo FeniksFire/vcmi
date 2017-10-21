@@ -19,7 +19,7 @@ public:
 
 	StaticObstacle();
 	StaticObstacle(const ObstacleJson & info, int16_t position = 0);
-	StaticObstacle(const ObstacleJson * info,int16_t position = 0);
+	StaticObstacle(const ObstacleJson * info, int16_t position = 0);
 	virtual ~StaticObstacle();
 
 	virtual bool canRemovedBySpell(int8_t levelOfSpellRemoval) const;

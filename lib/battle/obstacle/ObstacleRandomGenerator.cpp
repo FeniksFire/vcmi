@@ -27,13 +27,23 @@ std::vector<int> ObstacleRandomGenerator::getIndexesFromTerrainBattles(bool canB
 	return indexes;
 }
 
-int ObstacleRandomGenerator::randomTilesAmountToBlock(int min, int max)
-{
-	return r.rand(min, max);
-}
-
 ObstacleRandomGenerator::ObstacleRandomGenerator(int3 worldMapTile)
 {
 	r.srand(worldMapTile);
 	r.rand(1,8);
+}
+
+void ObstacleRandomGenerator::randomTilesAmountToBlock(int min, int max)
+{
+	setTilesAmountToBlock(r.rand(min, max));
+}
+
+void ObstacleRandomGenerator::setTilesAmountToBlock(int amount)
+{
+	tilesToBlock = amount;
+}
+
+int ObstacleRandomGenerator::getTilesAmountToBlock()
+{
+	return tilesToBlock;
 }

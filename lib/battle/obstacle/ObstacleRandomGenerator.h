@@ -10,13 +10,22 @@
 #pragma once
 #include "battle/RangeGenerator.h"
 #include "battle/RandGen.h"
+#include "battle/obstacle/ObstacleJson.h"
 
 class DLL_LINKAGE ObstacleRandomGenerator
 {	
 public:
 	RandGen r;
 	std::vector<int> getIndexesFromTerrainBattles(bool canBeRemovedBySpell);
-	int randomTilesAmountToBlock(int min, int max);
 
 	ObstacleRandomGenerator(int3 worldMapTile);
+	void randomTilesAmountToBlock(int min, int max);
+	void setTilesAmountToBlock(int amount);
+	int getTilesAmountToBlock();
+	int tilesToBlock;
+
+
+	std::vector<std::shared_ptr<ObstacleJson>> appropriateObstacleConfigs;
+
+private:
 };

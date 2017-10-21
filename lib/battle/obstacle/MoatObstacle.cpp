@@ -20,9 +20,11 @@ MoatObstacle::MoatObstacle()
 
 }
 
-MoatObstacle::MoatObstacle(ObstacleJson info)
+MoatObstacle::MoatObstacle(ObstacleJson info, int16_t position)
 {
-	setArea(ObstacleArea(info.getArea(), info.getPosition()));
+	if(!info.randomPosition())
+		position = info.getPosition();
+	setArea(ObstacleArea(info.getArea(), position));
 	setDamage(info.getDamage());
 	setGraphicsInfo(info.getGraphicsInfo());
 	canBeRemovedBySpell = info.canBeRemovedBySpell();;

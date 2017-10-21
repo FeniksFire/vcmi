@@ -473,60 +473,75 @@ void BattleInfo::setupObstacles(std::string creatureBankName)
 		obstaclesConfig.push_back(std::make_shared<ObstacleJson>(i));
 	setupInherentObstacles(obstaclesConfig, creatureBankName);
 
+	std::vector<std::shared_ptr<ObstacleJson>> randomObstaclesConfig;
+	for(auto i : obstacleConfig["obstacles"].Vector())
+		randomObstaclesConfig.push_back(std::make_shared<ObstacleJson>(i));
+	setupRandomObstacles(randomObstaclesConfig, creatureBankName);
+}
+
+void BattleInfo::setupInherentObstacles(const std::vector<std::shared_ptr<ObstacleJson>> obstaclesConfig, std::string creatureBankName)
+{
+	for(auto info : obstaclesConfig)
+	{
+		 if(town && town->fortLevel() >= CGTownInstance::CITADEL && vstd::contains(info->getPlace(), town->town->faction->name)
+				 || vstd::contains(info->getPlace(), creatureBankName)
+				 || info->getSurface().isAppropriateForSurface(battlefieldType))
+		{
+			obstacles.push_back(initObstacleFromJson(info));
+		}
+	}
+}
+
+void BattleInfo::setupRandomObstacles(const std::vector<std::shared_ptr<ObstacleJson> > obstaclesConfigs, std::string creatureBankName)
+{
+	auto getBlockedTiles = [](std::vector<std::shared_ptr<Obstacle>> obstacles)
+	{
+		std::vector<BattleHex> blockedTiles;
+		for(auto & obstacle : obstacles)
+			for(auto blocked : obstacle->getArea().getFields())
+				blockedTiles.push_back(blocked);
+		return blockedTiles;
+	};
+	auto appropriateObstacle = [&](int id) -> bool
+	{
+			return obstaclesConfigs.at(id)->getSurface().isAppropriateForSurface(battlefieldType);
+	};
 	if (town == nullptr && creatureBankName.empty())
 	{
 		ObstacleRandomGenerator randGen(tile);
-
+		randGen.randomTilesAmountToBlock(5,12);
 		auto ourRand = [&](){ return randGen.r.rand(); };
-		int tilesToBlock = randGen.randomTilesAmountToBlock(5,12);
-
-		for(auto ob : obstacles)
-			tilesToBlock -= ob->getArea().getFields().size();
-		if(tilesToBlock<=0)
+		randGen.tilesToBlock -= getBlockedTiles(obstacles).size();
+		if(randGen.getTilesAmountToBlock()<=0)
 			return;
-		std::vector<BattleHex> blockedTiles;
-
-		auto appropriateStaticObstacle = [&](int id) -> bool
-		{
-				return ObstacleJson(obstacleConfig["obstacles"].Vector().at(id)).getSurface().isAppropriateForSurface(battlefieldType);
-		};
-
 		if(randGen.r.rand(1,100) <= 40)
 		{
-			RangeGenerator obidgen(ourRand, randGen.getIndexesFromTerrainBattles(0));
-			auto id = obidgen.getSuchNumber(appropriateStaticObstacle);
+			auto id = RangeGenerator(ourRand, randGen.getIndexesFromTerrainBattles(0)).getSuchNumber(appropriateObstacle);
 			if(id!=-1)
 			{
-				ObstacleJson info(obstacleConfig["obstacles"].Vector().at(id));
-
-				auto obstPtr = std::make_shared<StaticObstacle>(&info);
-				obstacles.push_back(obstPtr);
-
-				for(BattleHex blocked : obstPtr->getArea().getFields())
-					blockedTiles.push_back(blocked);
-				tilesToBlock -= obstPtr->getArea().getFields().size() / 2;
+				obstacles.push_back(initObstacleFromJson(obstaclesConfigs.at(id)));
+				randGen.tilesToBlock -= obstacles.back()->getArea().getFields().size() / 2;
 			}
 		}
 
 		RangeGenerator obidgen(ourRand, randGen.getIndexesFromTerrainBattles(1));
-		while(tilesToBlock > 0)
+		while(randGen.getTilesAmountToBlock() > 0)
 		{
-			auto tileAccessibility = getAccesibility();
-			const int id = obidgen.getSuchNumber(appropriateStaticObstacle);
+			const int id = obidgen.getSuchNumber(appropriateObstacle);
 			if(id==-1)
-				break;
-			const ObstacleJson info(obstacleConfig["obstacles"].Vector().at(id));
+				return;
 
 			auto validPosition = [&](BattleHex pos) -> bool
 			{
-				auto area = info.getArea();
+				auto tileAccessibility = getAccesibility();
+				auto area = obstaclesConfigs.at(id)->getArea();
 				if(area.getHeight() >= pos.getY())
 					return false;
 				if(pos.getX() == 0)
 					return false;
 				if(pos.getX() + area.getWidth() > 15)
 					return false;
-				if(vstd::contains(blockedTiles, pos))
+				if(vstd::contains(getBlockedTiles(obstacles), pos))
 					return false;
 
 				area.moveAreaToField(pos);
@@ -537,95 +552,69 @@ void BattleInfo::setupObstacles(std::string creatureBankName)
 					for(BattleHex hex : blocked.neighbouringTiles())
 						if(tileAccessibility[hex] == EAccessibility::UNAVAILABLE)
 							return false;
-					if(vstd::contains(blockedTiles, blocked))
+					if(vstd::contains(getBlockedTiles(obstacles), blocked))
 						return false;
-					int x = blocked.getX();
-					if(x <= 2 || x >= 14)
+					if(blocked.getX() <= 2 || blocked.getX() >= 14)
 						return false;
 				}
 				return true;
 			};
-			if(info.randomPosition())
-			{
-				std::vector<int> fields;
-				for(int i = 18; i<=168; i++)
-					fields.push_back(i);
-				RangeGenerator posgenerator(ourRand, fields);
-				int pos = posgenerator.getSuchNumber(validPosition);
-				if(pos==-1)
-					break;
-				auto obstPtr = std::make_shared<StaticObstacle>(info, pos);
-				obstacles.push_back(obstPtr);
-				for(BattleHex blocked : obstPtr->getArea().getFields())
-					blockedTiles.push_back(blocked);
-				tilesToBlock -= info.getArea().getFields().size();
-			}
-			else
-			{
-				auto obstPtr = std::make_shared<StaticObstacle>(info);
-				obstacles.push_back(obstPtr);
-				for(BattleHex blocked : obstPtr->getArea().getFields())
-					blockedTiles.push_back(blocked);
-				tilesToBlock -= info.getArea().getFields().size();
-			}
-
+			std::vector<int> fields;
+			for(int i = 18; i<=168; i++)
+				fields.push_back(i);
+			int pos = RangeGenerator(ourRand, fields).getSuchNumber(validPosition);
+			if(pos==-1)
+				return;
+			obstacles.push_back(initObstacleFromJson(obstaclesConfigs.at(id), pos));
+			randGen.tilesToBlock -= obstacles.back()->getArea().getFields().size();
 		}
 	}
-
 }
 
-void BattleInfo::setupInherentObstacles(const std::vector<std::shared_ptr<ObstacleJson>> obstaclesConfig, std::string creatureBankName)
+std::shared_ptr<Obstacle> BattleInfo::initObstacleFromJson(std::shared_ptr<ObstacleJson> json, int16_t position)
 {
-	for(auto info : obstaclesConfig)
+	switch(json->getType())
 	{
-		 if(town && town->fortLevel() >= CGTownInstance::CITADEL && vstd::contains(info->getPlace(), town->town->faction->name)
-				 || vstd::contains(info->getPlace(), creatureBankName)
-				 || info->getSurface().isAppropriateForSurface(battlefieldType))
-		 {
-			 switch(info->getType())
-			 {
-			 case ObstacleType::STATIC:
-			 {
-				 auto staticObstacle = std::make_shared<StaticObstacle>(info.get());
-				 obstacles.push_back(staticObstacle);
-			 }
-				 break;
-			 case ObstacleType::MOAT:
-			 {
-				 auto moatObstacle = std::make_shared<MoatObstacle>(*info.get());
-				 obstacles.push_back(moatObstacle);
-			 }
-				 break;
-			 case ObstacleType::FIRE_WALL:
-			 {
-					auto firewallObstacle = std::make_shared<SpellCreatedObstacle>(*info.get());
-					firewallObstacle->obstacleType = ObstacleType::FIRE_WALL;
-					obstacles.push_back(firewallObstacle);
-			 }
-				 break;
-			 case ObstacleType::FORCE_FIELD:
-			 {
-					auto forcefieldObstacle = std::make_shared<SpellCreatedObstacle>(*info.get());
-					forcefieldObstacle->obstacleType = ObstacleType::FORCE_FIELD;
-					obstacles.push_back(forcefieldObstacle);
-			 }
-				 break;
-			 case ObstacleType::LAND_MINE:
-			 {
-					auto landmineObstacle = std::make_shared<SpellCreatedObstacle>(*info.get());
-					landmineObstacle->obstacleType = ObstacleType::LAND_MINE;
-					obstacles.push_back(landmineObstacle);
-			 }
-				 break;
-			 case ObstacleType::QUICKSAND:
-			 {
-					auto quicksandObstacle = std::make_shared<SpellCreatedObstacle>(*info.get());
-					quicksandObstacle->obstacleType = ObstacleType::QUICKSAND;
-					obstacles.push_back(quicksandObstacle);
-			 }
-				 break;
-			 }
-		}
+	case ObstacleType::STATIC:
+	{
+		auto staticObstacle = std::make_shared<StaticObstacle>(*json.get(), position);
+		return staticObstacle;
+	}
+		break;
+	case ObstacleType::MOAT:
+	{
+		auto moatObstacle = std::make_shared<MoatObstacle>(*json.get(), position);
+		return moatObstacle;
+	}
+		break;
+	case ObstacleType::FIRE_WALL:
+	{
+		   auto firewallObstacle = std::make_shared<SpellCreatedObstacle>(*json.get(), position);
+		   firewallObstacle->obstacleType = ObstacleType::FIRE_WALL;
+		   return firewallObstacle;
+	}
+		break;
+	case ObstacleType::FORCE_FIELD:
+	{
+		   auto forcefieldObstacle = std::make_shared<SpellCreatedObstacle>(*json.get(), position);
+		   forcefieldObstacle->obstacleType = ObstacleType::FORCE_FIELD;
+		   return forcefieldObstacle;
+	}
+		break;
+	case ObstacleType::LAND_MINE:
+	{
+		   auto landmineObstacle = std::make_shared<SpellCreatedObstacle>(*json.get(), position);
+		   landmineObstacle->obstacleType = ObstacleType::LAND_MINE;
+		   return landmineObstacle;
+	}
+		break;
+	case ObstacleType::QUICKSAND:
+	{
+		   auto quicksandObstacle = std::make_shared<SpellCreatedObstacle>(*json.get(), position);
+		   quicksandObstacle->obstacleType = ObstacleType::QUICKSAND;
+		   return quicksandObstacle;
+	}
+		break;
 	}
 }
 

@@ -23,9 +23,11 @@ SpellCreatedObstacle::SpellCreatedObstacle()
 	turnsRemaining = -1;
 }
 
-SpellCreatedObstacle::SpellCreatedObstacle(ObstacleJson info)
+SpellCreatedObstacle::SpellCreatedObstacle(ObstacleJson info, int16_t position)
 {
-	setArea(ObstacleArea(info.getArea(), info.getPosition()));
+	if(!info.randomPosition())
+		position = info.getPosition();
+	setArea(ObstacleArea(info.getArea(), position));
 	spellLevel = info.getSpellLevel();
 	turnsRemaining = info.getTurnsRemaining();
 	casterSpellPower = info.getSpellPower();

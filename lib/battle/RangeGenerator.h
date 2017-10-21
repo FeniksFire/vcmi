@@ -15,6 +15,7 @@ struct RangeGenerator
 	int generateNumber();
 	//get number fulfilling predicate. Never gives the same number twice.
 	int getSuchNumber(std::function<bool(int)> goodNumberPred = nullptr);
+
 	int remainingCount;
 	std::vector<bool> remaining;
 	std::vector<int> obstacleIndexes;

@@ -83,7 +83,8 @@ struct DLL_LINKAGE BattleInfo : public CBonusSystemNode, public CBattleInfoCallb
 	static BattleInfo * setupBattle(int3 tile, ETerrainType terrain, BFieldType battlefieldType, const CArmedInstance * armies[2], const CGHeroInstance * heroes[2], std::string creatureBankName, const CGTownInstance * town);
 	void setupObstacles(std::string creatureBankName);
 	void setupInherentObstacles(const std::vector<std::shared_ptr<ObstacleJson>> obstaclesConfigs, std::string creatureBankName);
-
+	void setupRandomObstacles(const std::vector<std::shared_ptr<ObstacleJson>> obstaclesConfigs, std::string creatureBankName);
+	std::shared_ptr<Obstacle> initObstacleFromJson(std::shared_ptr<ObstacleJson> json, int16_t position = 0);
 	//bool hasNativeStack(ui8 side) const;
 
 	PlayerColor theOtherPlayer(PlayerColor player) const;

@@ -12,8 +12,6 @@
 
 class DLL_LINKAGE ObstacleArea
 {
-	std::vector<BattleHex> area;
-	BattleHex position;
 public:
 	void addField(BattleHex field);
 	void setArea(std::vector<BattleHex> fields);
@@ -35,4 +33,7 @@ public:
 		h & area;
 		h & position;
 	}
+private:
+	std::vector<BattleHex> area;
+	BattleHex position;
 };

@@ -22,7 +22,7 @@ public:
 	bool visibleForAnotherSide = true;
 
 	SpellCreatedObstacle();
-	SpellCreatedObstacle(ObstacleJson info);
+	SpellCreatedObstacle(ObstacleJson info, int16_t position = 0);
 
 	virtual bool canRemovedBySpell(int8_t levelOfSpellRemoval) const override;
 	virtual bool visibleForSide(ui8 side, bool hasNativeStack) const override;

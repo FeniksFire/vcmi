@@ -14,7 +14,7 @@ class DLL_LINKAGE MoatObstacle : public StaticObstacle
 {
 public:
 	MoatObstacle();
-	MoatObstacle(ObstacleJson info);
+	MoatObstacle(ObstacleJson info, int16_t position = 0);
 
 	int32_t getDamage() const;
 	void setDamage(int32_t value);
