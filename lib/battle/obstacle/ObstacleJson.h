@@ -34,6 +34,7 @@ public:
 
 	virtual ObstacleType getType() const;
 	virtual bool randomPosition() const;
+	virtual bool isInherent();
 	ObstacleJson(JsonNode jsonNode);
 	ObstacleJson();
 protected:

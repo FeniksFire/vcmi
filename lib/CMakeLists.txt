@@ -19,6 +19,7 @@ set(lib_SRCS
 		battle/SiegeInfo.cpp
 		battle/RandGen.cpp
 		battle/RangeGenerator.cpp
+		battle/handler/BattlefieldHandler.cpp
 
 		battle/obstacle/Obstacle.cpp
 		battle/obstacle/ObstacleArea.cpp
@@ -164,6 +165,7 @@ set(lib_HEADERS
 		battle/SiegeInfo.h
 		battle/RandGen.h
 		battle/RangeGenerator.h
+		battle/handler/BattlefieldHandler.h
 
 		battle/obstacle/Obstacle.h
 		battle/obstacle/ObstacleArea.h

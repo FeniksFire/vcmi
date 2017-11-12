@@ -114,6 +114,11 @@ bool ObstacleJson::randomPosition() const
 	return config["position"].isNull();
 }
 
+bool ObstacleJson::isInherent()
+{
+	return config["inherent"].Bool();
+}
+
 ObstacleJson::ObstacleJson(JsonNode jsonNode) : config(jsonNode)
 {
 

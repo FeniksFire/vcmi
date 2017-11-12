@@ -12,6 +12,7 @@
 #include "../CStack.h"
 #include "../NetPacks.h"
 #include "../filesystem/Filesystem.h"
+#include "../battle/handler/BattlefieldHandler.h"
 #include "../mapObjects/CGTownInstance.h"
 #include "../CGeneralTextHandler.h"
 #include "battle/obstacle/ObstacleJson.h"
@@ -467,15 +468,16 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 
 void BattleInfo::setupObstacles(std::string creatureBankName)
 {
-	const JsonNode obstacleConfig(JsonNode(ResourceID("config/obstacles.json")));
-	std::vector<std::shared_ptr<ObstacleJson>> obstaclesConfig;
-	for(auto i : obstacleConfig["inherentObstacles"].Vector())
-		obstaclesConfig.push_back(std::make_shared<ObstacleJson>(i));
-	setupInherentObstacles(obstaclesConfig, creatureBankName);
+	std::vector<std::shared_ptr<ObstacleJson>> obstaclesConfig, randomObstaclesConfig;
 
-	std::vector<std::shared_ptr<ObstacleJson>> randomObstaclesConfig;
-	for(auto i : obstacleConfig["obstacles"].Vector())
-		randomObstaclesConfig.push_back(std::make_shared<ObstacleJson>(i));
+	for(auto i : VLC->battlefieldHandler->getObstacleConfigs())
+	{
+		if(i->isInherent())
+			obstaclesConfig.push_back(i);
+		else
+			randomObstaclesConfig.push_back(i);
+	}
+	setupInherentObstacles(obstaclesConfig, creatureBankName);
 	setupRandomObstacles(randomObstaclesConfig, creatureBankName);
 }
 

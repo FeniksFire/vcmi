@@ -12,6 +12,7 @@
 #include <boost/mpl/for_each.hpp>
 
 #include "CTypeList.h"
+#include "../battle/handler/BattlefieldHandler.h"
 #include "../mapObjects/CGHeroInstance.h"
 
 class CStackInstance;

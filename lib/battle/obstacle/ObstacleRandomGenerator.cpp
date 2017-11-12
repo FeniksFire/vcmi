@@ -18,11 +18,16 @@ std::vector<int> ObstacleRandomGenerator::getIndexesFromTerrainBattles(bool canB
 {
 	std::vector<int> indexes;
 	const JsonNode obstacleConfig(ResourceID("config/obstacles.json"));
-	for(int i = 0; i < obstacleConfig["obstacles"].Vector().size(); i++)
+	int index = 0;
+	for(auto i : obstacleConfig.Struct())
 	{
-		auto info = ObstacleJson(obstacleConfig["obstacles"].Vector().at(i));
-		if(canBeRemovedBySpell == info.canBeRemovedBySpell() && info.getPlace().empty())
-				indexes.push_back(i);
+		if(!ObstacleJson(i.second).isInherent())
+		{
+			auto info = ObstacleJson(i.second);
+			if(canBeRemovedBySpell == info.canBeRemovedBySpell() && info.getPlace().empty())
+					indexes.push_back(index);
+			index++;
+		}
 	}
 	return indexes;
 }
