@@ -47,7 +47,7 @@ public:
 	BattlePerspective::BattlePerspective battleGetMySide() const;
 
 	ETerrainType battleTerrainType() const;
-	BFieldType battleGetBattlefieldType() const;
+	BattlefieldType battleGetBattlefieldType() const;
 	std::vector<std::shared_ptr<const Obstacle> > battleGetAllObstacles(boost::optional<BattlePerspective::BattlePerspective> perspective = boost::none) const; //returns all obstacles on the battlefield
 
 	/** @brief Main method for getting battle stacks

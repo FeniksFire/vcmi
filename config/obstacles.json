@@ -4,10 +4,10 @@
 //
 // Their properties:
 // * "battlefieldSurface" vector of BFieldType where obstacle is appropriate:
-//   1. sand/shore   2. sand/mesas   3. dirt/birches   4. dirt/hills   5. dirt/pines   6. grass/hills   7. grass/pines
-//8. lava   9. magic plains   10. snow/mountains   11. snow/trees   12. subterranean   13. swamp/trees   14. fiery fields
-//15. rock lands   16. magic clouds   17. lucid pools   18. holy ground   19. clover field   20. evil fog
-//21. "favorable winds" text on magic plains background   22. cursed ground   23. rough   24. ship to ship   25. ship
+//   1. sandShore   2. sandMesas   3. dirtBirches   4. dirtHills   5. dirtPines   6. grassHills   7. grassPines
+//8. lava   9. magicPlains   10. snowMountains  11. snowTrees   12. subterranean   13. swampTrees   14. fieryFields
+//15. rocklands   16. magicClouds   17. lucidPools  18. holyGround   19. cloverField   20. evilFog
+//21. favorableWinds 22. cursedGrounds  23. rough   24. shipToShip   25. ship
 
 
 // * "blockedTiles": for absolute obstacles contains absolute coordinates. For usual obstacles contains offsets relative to the obstacle position (that is bottom left corner). If obstacle is placed in an odd row (counting from 0) and the blocked tile is in an even row, position will be shifted one tile to the left. Thanks to that ie. -16 is always top-right hex, no matter where the obstale will get placed.

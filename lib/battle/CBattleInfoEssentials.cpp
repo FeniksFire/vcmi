@@ -20,9 +20,9 @@ ETerrainType CBattleInfoEssentials::battleTerrainType() const
 	return getBattle()->terrainType;
 }
 
-BFieldType CBattleInfoEssentials::battleGetBattlefieldType() const
+BattlefieldType CBattleInfoEssentials::battleGetBattlefieldType() const
 {
-	RETURN_IF_NOT_BATTLE(BFieldType::NONE);
+	RETURN_IF_NOT_BATTLE(BattlefieldType::NONE);
 	return getBattle()->battlefieldType;
 }
 

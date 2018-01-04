@@ -600,7 +600,7 @@ void CSpellWindow::SpellArea::clickLeft(tribool down, bool previousState)
 						owner->myInt->showInfoDialog(boost::str(boost::format(CGI->generaltexth->allTexts[536])
 							% artName % owner->myHero->name));
 					}
-					else if(b && b->source == Bonus::TERRAIN_OVERLAY && b->sid == BFieldType::CURSED_GROUND)
+					else if(b && b->source == Bonus::TERRAIN_OVERLAY && b->sid == BattlefieldType::CURSED_GROUND)
 					{
 						owner->myInt->showInfoDialog(CGI->generaltexth->allTexts[537]);
 					}

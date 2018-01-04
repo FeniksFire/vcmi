@@ -188,3 +188,69 @@ std::ostream & operator<<(std::ostream & os, const EPathfindingLayer pathfinding
 	if (it == pathfinderLayerToString.end()) return os << "<Unknown type>";
 	else return os << it->second;
 }
+
+std::string BattlefieldType::toString()
+{
+	switch(num)
+	{
+	case SAND_SHORE:
+		return "sandShore";
+	case SAND_MESAS:
+		return "sandMesas";
+	case DIRT_BIRCHES:
+		return "dirtBirches";
+	case DIRT_HILLS:
+		return "dirtHills";
+	case DIRT_PINES:
+		return "dirtPines";
+	case GRASS_HILLS:
+		return "grassHills";
+	case GRASS_PINES:
+		return "grassPines";
+	case LAVA:
+		return "lava";
+	case MAGIC_PLAINS:
+		return "magicPlains";
+	case SNOW_MOUNTAINS:
+		return "snowMountains";
+	case SNOW_TREES:
+		return "snowTrees";
+	case SUBTERRANEAN:
+		return "subterranean";
+	case SWAMP_TREES:
+		return "swampTrees";
+	case FIERY_FIELDS:
+		return "fieryFields";
+	case ROCKLANDS:
+		return "rocklands";
+	case MAGIC_CLOUDS:
+		return "magicClouds";
+	case LUCID_POOLS:
+		return "lucidPools";
+	case HOLY_GROUND:
+		return "holyGround";
+	case CLOVER_FIELD:
+		return "cloverField";
+	case EVIL_FOG:
+		return "evilFog";
+	case FAVORABLE_WINDS:
+		return "favorableWinds";
+	case CURSED_GROUND:
+		return "cursedGround";
+	case ROUGH:
+		return "rough";
+	case SHIP_TO_SHIP:
+		return "shipToShip";
+	case SHIP:
+		return "ship";
+	}
+	return "none";
+}
+
+BattlefieldType::EBattlefieldType BattlefieldType::fromString(std::string type)
+{
+	for(auto battlefield = BattlefieldType(-1); battlefield <= BattlefieldType(24); battlefield = BattlefieldType(battlefield+1))
+		if(type == battlefield.toString())
+			return battlefield;
+	return EBattlefieldType::NONE;
+}

@@ -29,7 +29,7 @@ struct DLL_LINKAGE BattleInfo : public CBonusSystemNode, public CBattleInfoCallb
 	std::vector<std::shared_ptr<Obstacle> > obstacles;
 	SiegeInfo si;
 
-	BFieldType battlefieldType; //like !!BA:B
+	BattlefieldType battlefieldType; //like !!BA:B
 	ETerrainType terrainType; //used for some stack nativity checks (not the bonus limiters though that have their own copy)
 
 	ui8 tacticsSide; //which side is requested to play tactics phase
@@ -80,7 +80,7 @@ struct DLL_LINKAGE BattleInfo : public CBonusSystemNode, public CBattleInfoCallb
 
 	void localInit();
 
-	static BattleInfo * setupBattle(int3 tile, ETerrainType terrain, BFieldType battlefieldType, const CArmedInstance * armies[2], const CGHeroInstance * heroes[2], std::string creatureBankName, const CGTownInstance * town);
+	static BattleInfo * setupBattle(int3 tile, ETerrainType terrain, BattlefieldType battlefieldType, const CArmedInstance * armies[2], const CGHeroInstance * heroes[2], std::string creatureBankName, const CGTownInstance * town);
 	void setupObstacles(std::string creatureBankName);
 	void setupInherentObstacles(const std::vector<std::shared_ptr<ObstacleJson>> obstaclesConfigs, std::string creatureBankName);
 	void setupRandomObstacles(const std::vector<std::shared_ptr<ObstacleJson>> obstaclesConfigs, std::string creatureBankName);

@@ -27,6 +27,7 @@ set(test_SRCS
  		battle/BattleHexTest.cpp
  		battle/CHealthTest.cpp
 		battle/BattleInfoTest.cpp
+		battle/BattlefieldTypeTest.cpp
 
  		map/CMapEditManagerTest.cpp
  		map/CMapFormatTest.cpp

@@ -174,7 +174,7 @@ namespace CGH
 	}
 }
 
-BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType battlefieldType, const CArmedInstance * armies[2], const CGHeroInstance * heroes[2], std::string creatureBankName, const CGTownInstance * town)
+BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BattlefieldType battlefieldType, const CArmedInstance * armies[2], const CGHeroInstance * heroes[2], std::string creatureBankName, const CGTownInstance * town)
 {
 	CMP_stack cmpst;
 	auto curB = new BattleInfo();
@@ -351,23 +351,23 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 	int bonusSubtype = -1;
 	switch(battlefieldType)
 	{
-	case BFieldType::MAGIC_PLAINS:
+	case BattlefieldType::MAGIC_PLAINS:
 		{
 			bonusSubtype = 0;
 		}
-	case BFieldType::FIERY_FIELDS:
+	case BattlefieldType::FIERY_FIELDS:
 		{
 			if(bonusSubtype == -1) bonusSubtype = 1;
 		}
-	case BFieldType::ROCKLANDS:
+	case BattlefieldType::ROCKLANDS:
 		{
 			if(bonusSubtype == -1) bonusSubtype = 8;
 		}
-	case BFieldType::MAGIC_CLOUDS:
+	case BattlefieldType::MAGIC_CLOUDS:
 		{
 			if(bonusSubtype == -1) bonusSubtype = 2;
 		}
-	case BFieldType::LUCID_POOLS:
+	case BattlefieldType::LUCID_POOLS:
 		{
 			if(bonusSubtype == -1) bonusSubtype = 4;
 		}
@@ -376,7 +376,7 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 			curB->addNewBonus(std::make_shared<Bonus>(Bonus::ONE_BATTLE, Bonus::MAGIC_SCHOOL_SKILL, Bonus::TERRAIN_OVERLAY, 3, battlefieldType, bonusSubtype));
 			break;
 		}
-	case BFieldType::HOLY_GROUND:
+	case BattlefieldType::HOLY_GROUND:
 		{
 			std::string goodArmyDesc = VLC->generaltexth->arraytxt[123];
 			goodArmyDesc.erase(goodArmyDesc.size() - 2, 2); //omitting hardcoded +1 in description
@@ -386,14 +386,14 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 			curB->addNewBonus(std::make_shared<Bonus>(Bonus::ONE_BATTLE, Bonus::MORALE, Bonus::TERRAIN_OVERLAY, -1, battlefieldType, evilArmyDesc, 0)->addLimiter(evil));
 			break;
 		}
-	case BFieldType::CLOVER_FIELD:
+	case BattlefieldType::CLOVER_FIELD:
 		{ //+2 luck bonus for neutral creatures
 			std::string desc = VLC->generaltexth->arraytxt[83];
 			desc.erase(desc.size() - 2, 2);
 			curB->addNewBonus(std::make_shared<Bonus>(Bonus::ONE_BATTLE, Bonus::LUCK, Bonus::TERRAIN_OVERLAY, +2, battlefieldType, desc, 0)->addLimiter(neutral));
 			break;
 		}
-	case BFieldType::EVIL_FOG:
+	case BattlefieldType::EVIL_FOG:
 		{
 			std::string goodArmyDesc = VLC->generaltexth->arraytxt[126];
 			goodArmyDesc.erase(goodArmyDesc.size() - 2, 2);
@@ -403,7 +403,7 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, BFieldType
 			curB->addNewBonus(std::make_shared<Bonus>(Bonus::ONE_BATTLE, Bonus::MORALE, Bonus::TERRAIN_OVERLAY, +1, battlefieldType, evilArmyDesc, 0)->addLimiter(evil));
 			break;
 		}
-	case BFieldType::CURSED_GROUND:
+	case BattlefieldType::CURSED_GROUND:
 		{
 			curB->addNewBonus(std::make_shared<Bonus>(Bonus::ONE_BATTLE, Bonus::NO_MORALE, Bonus::TERRAIN_OVERLAY, 0, battlefieldType, VLC->generaltexth->arraytxt[112], 0));
 			curB->addNewBonus(std::make_shared<Bonus>(Bonus::ONE_BATTLE, Bonus::NO_LUCK, Bonus::TERRAIN_OVERLAY, 0, battlefieldType, VLC->generaltexth->arraytxt[81], 0));
@@ -666,7 +666,7 @@ CStack * BattleInfo::getStack(int stackID, bool onlyAlive)
 
 BattleInfo::BattleInfo()
 	: round(-1), activeStack(-1), selectedStack(-1), town(nullptr), tile(-1,-1,-1),
-	battlefieldType(BFieldType::NONE), terrainType(ETerrainType::WRONG),
+	battlefieldType(BattlefieldType::NONE), terrainType(ETerrainType::WRONG),
 	tacticsSide(0), tacticDistance(0)
 {
 	setBattle(this);

@@ -11,13 +11,37 @@
 #include "StdInc.h"
 #include "lib/battle/obstacle/ObstacleSurface.h"
 
-TEST(ObstacleSurfaceTest, isAppropriateForSurface)
+class ObstacleSurfaceTest : public ::testing::Test
 {
+public:
 	ObstacleSurface terrain;
-	EXPECT_FALSE(terrain.isAppropriateForSurface(BFieldType::ROCKLANDS));
-	terrain.battlefieldSurface.push_back(BFieldType::SAND_SHORE);
-	terrain.battlefieldSurface.push_back(BFieldType::SHIP);
-	EXPECT_TRUE(terrain.isAppropriateForSurface(BFieldType::SAND_SHORE));
-	EXPECT_TRUE(terrain.isAppropriateForSurface(BFieldType::SHIP));
-	EXPECT_FALSE(terrain.isAppropriateForSurface(BFieldType::SHIP_TO_SHIP));
+
+	void isAppropriate(BattlefieldType type, bool expect = true)
+	{
+		if(expect)
+			EXPECT_TRUE(terrain.isAppropriateForSurface(type));
+		else
+			EXPECT_FALSE(terrain.isAppropriateForSurface(type));
+	}
+};
+
+TEST_F(ObstacleSurfaceTest, isAppropriateForSurface)
+{
+	isAppropriate(BattlefieldType::ROCKLANDS, false);
+	terrain.battlefieldSurface.push_back(BattlefieldType::SAND_SHORE);
+	terrain.battlefieldSurface.push_back(BattlefieldType::SHIP);
+	isAppropriate(BattlefieldType::SAND_SHORE);
+	isAppropriate(BattlefieldType::SHIP);
+	isAppropriate(BattlefieldType::SHIP_TO_SHIP, false);
 }
+
+TEST_F(ObstacleSurfaceTest, addingFromStringToSurface)
+{
+	isAppropriate(BattlefieldType::ROCKLANDS, false);
+	terrain.battlefieldSurface.push_back(BattlefieldType::fromString("ship"));
+	terrain.battlefieldSurface.push_back(BattlefieldType::fromString("sandShore"));
+	isAppropriate(BattlefieldType::SAND_SHORE);
+	isAppropriate(BattlefieldType::SHIP);
+	isAppropriate(BattlefieldType::SHIP_TO_SHIP, false);
+}
+

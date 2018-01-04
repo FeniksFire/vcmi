@@ -1937,9 +1937,9 @@ void CGameHandler::setupBattle(int3 tile, const CArmedInstance *armies[2], const
 	if (gs->map->isCoastalTile(tile)) //coastal tile is always ground
 		terrain = ETerrainType::SAND;
 
-	BFieldType terType = gs->battleGetBattlefieldType(tile, getRandomGenerator());
+	BattlefieldType terType = gs->battleGetBattlefieldType(tile, getRandomGenerator());
 	if (heroes[0] && heroes[0]->boat && heroes[1] && heroes[1]->boat)
-		terType = BFieldType::SHIP_TO_SHIP;
+		terType = BattlefieldType::SHIP_TO_SHIP;
 
 	//send info about battles
 	BattleStart bs;

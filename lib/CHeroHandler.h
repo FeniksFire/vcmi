@@ -210,7 +210,7 @@ struct CObstacleInfo // for backward compatibility
 	si32 ID = 0;
 	std::string defName = "l";
 	std::vector<ETerrainType> allowedTerrains;
-	std::vector<BFieldType> allowedSpecialBfields;
+	std::vector<BattlefieldType> allowedSpecialBfields;
 	ui8 isAbsoluteObstacle = 0;
 	si32 width, height = 0;
 	std::vector<si16> blockedTiles;
