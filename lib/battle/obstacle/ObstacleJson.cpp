@@ -45,7 +45,9 @@ ObstacleGraphicsInfo ObstacleJson::getGraphicsInfo() const
 ObstacleSurface ObstacleJson::getSurface() const
 {
 	ObstacleSurface surface;
-	surface.battlefieldSurface = config["battlefieldSurface"].convertTo<std::vector<BattlefieldType>>();
+	auto battlefieldTypes = config["battlefieldSurface"].convertTo<std::vector<std::string>>();
+	for(auto type : battlefieldTypes)
+		surface.battlefieldSurface.push_back(BattlefieldType::fromString(type));
 	return surface;
 }
 
