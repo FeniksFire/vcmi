@@ -57,3 +57,13 @@ void StaticObstacle::battleTurnPassed()
 {
 
 }
+
+bool StaticObstacle::blocksTiles() const
+{
+	return true;
+}
+
+bool StaticObstacle::stopsMovement() const
+{
+	return false;
+}

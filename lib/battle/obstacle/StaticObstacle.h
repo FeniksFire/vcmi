@@ -15,21 +15,24 @@
 class DLL_LINKAGE StaticObstacle : public Obstacle
 {
 public:
-	bool canBeRemovedBySpell = false;
-
 	StaticObstacle();
 	StaticObstacle(const ObstacleJson & info, int16_t position = 0);
 	StaticObstacle(const ObstacleJson * info, int16_t position = 0);
 	virtual ~StaticObstacle();
 
-	virtual bool canRemovedBySpell(int8_t levelOfSpellRemoval) const;
-	virtual ObstacleType getType() const;
-	virtual bool visibleForSide(ui8 side, bool hasNativeStack) const;
-	virtual void battleTurnPassed();
+	ObstacleType getType() const override;
+	bool visibleForSide(ui8 side, bool hasNativeStack) const override;
+	bool canRemovedBySpell(int8_t levelOfSpellRemoval) const override;
+	void battleTurnPassed() override;
+
+	bool blocksTiles() const override;
+	bool stopsMovement() const override;
 
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{
 		h & static_cast<Obstacle&>(*this);
 		h & canBeRemovedBySpell;
 	}
+protected:
+	bool canBeRemovedBySpell = false;
 };

@@ -15,55 +15,9 @@ using namespace ::testing;
 
 TEST(ObstacleTest, checkID)
 {
-	ASSERT_NE(ObstacleMock().getID(), ObstacleMock().getID());
-	ASSERT_NE(ObstacleMock().getID(), ObstacleMock().getID());
-	ASSERT_NE(ObstacleMock().getID(), ObstacleMock().getID());
-}
-
-TEST(ObstacleTest, blocksTiles)
-{
-	ObstacleMock mock;
-
-	EXPECT_CALL(mock, getType()).Times(AtLeast(1)).WillRepeatedly(Return(ObstacleType::STATIC));
-	EXPECT_TRUE(mock.blocksTiles());
-
-	EXPECT_CALL(mock, getType()).Times(AtLeast(1)).WillRepeatedly(Return(ObstacleType::MOAT));
-	EXPECT_FALSE(mock.blocksTiles());
-
-	EXPECT_CALL(mock, getType()).Times(AtLeast(1)).WillRepeatedly(Return(ObstacleType::QUICKSAND));
-	EXPECT_FALSE(mock.blocksTiles());
-
-	EXPECT_CALL(mock, getType()).Times(AtLeast(1)).WillRepeatedly(Return(ObstacleType::LAND_MINE));
-	EXPECT_FALSE(mock.blocksTiles());
-
-	EXPECT_CALL(mock, getType()).Times(AtLeast(1)).WillRepeatedly(Return(ObstacleType::FIRE_WALL));
-	EXPECT_FALSE(mock.blocksTiles());
-
-	EXPECT_CALL(mock, getType()).Times(AtLeast(1)).WillRepeatedly(Return(ObstacleType::FORCE_FIELD));
-	EXPECT_TRUE(mock.blocksTiles());
-}
-
-TEST(ObstacleTest, stopsMovement)
-{
-	ObstacleMock mock;
-
-	EXPECT_CALL(mock, getType()).Times(AtLeast(1)).WillRepeatedly(Return(ObstacleType::STATIC));
-	EXPECT_FALSE(mock.stopsMovement());
-
-	EXPECT_CALL(mock, getType()).Times(AtLeast(1)).WillRepeatedly(Return(ObstacleType::MOAT));
-	EXPECT_TRUE(mock.stopsMovement());
-
-	EXPECT_CALL(mock, getType()).Times(AtLeast(1)).WillRepeatedly(Return(ObstacleType::QUICKSAND));
-	EXPECT_TRUE(mock.stopsMovement());
-
-	EXPECT_CALL(mock, getType()).Times(AtLeast(1)).WillRepeatedly(Return(ObstacleType::LAND_MINE));
-	EXPECT_FALSE(mock.stopsMovement());
-
-	EXPECT_CALL(mock, getType()).Times(AtLeast(1)).WillRepeatedly(Return(ObstacleType::FIRE_WALL));
-	EXPECT_FALSE(mock.stopsMovement());
-
-	EXPECT_CALL(mock, getType()).Times(AtLeast(1)).WillRepeatedly(Return(ObstacleType::FORCE_FIELD));
-	EXPECT_FALSE(mock.stopsMovement());
+	ASSERT_NE(ObstacleMock().ID.getID(), ObstacleMock().ID.getID());
+	ASSERT_NE(ObstacleMock().ID.getID(), ObstacleMock().ID.getID());
+	ASSERT_NE(ObstacleMock().ID.getID(), ObstacleMock().ID.getID());
 }
 
 TEST(ObstacleTest, setupArea)

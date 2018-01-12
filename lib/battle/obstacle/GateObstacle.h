@@ -1,5 +1,5 @@
 /*
- * MoatObstacle.h, part of VCMI engine
+ * GateObstacle.h, part of VCMI engine
  *
  * Authors: listed in file AUTHORS in main folder
  *
@@ -7,27 +7,27 @@
  * Full text of license available in license.txt file, in main folder
  *
  */
-#pragma once
-#include "StaticObstacle.h"
 
-class DLL_LINKAGE MoatObstacle : public StaticObstacle
+#include "BridgeObstacle.h"
+#pragma once
+
+class DLL_LINKAGE GateObstacle : public BridgeObstacle
 {
 public:
-	MoatObstacle();
-	MoatObstacle(ObstacleJson info, int16_t position = 0);
-
-	int32_t getDamage() const;
-	void setDamage(int32_t value);
+	GateObstacle();
+	GateObstacle(ObstacleJson info, int16_t position = 0);
 	ObstacleType getType() const override;
-
 	bool blocksTiles() const override;
 	bool stopsMovement() const override;
 
+	bool isOpen() const;
+	void setState(EGateState gateState);
+	EGateState getState() const;
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{
-		h & static_cast<StaticObstacle&>(*this);
-		h & damage;
+		h & static_cast<BridgeObstacle&>(*this);
+		h & state;
 	}
-private:
-	int32_t damage = 0;
+protected:
+	EGateState state = EGateState::NONE;
 };

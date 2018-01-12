@@ -16,6 +16,10 @@ ObstacleType ObstacleJson::typeConvertFromString(const std::string type) const
 		return ObstacleType::STATIC;
 	else if(type == "moat")
 		return ObstacleType::MOAT;
+	else if(type == "bridge")
+		return ObstacleType::BRIDGE;
+	else if(type == "gate")
+		return ObstacleType::GATE;
 	else if(type == "firewall")
 		return ObstacleType::FIRE_WALL;
 	else if(type == "forcefield")
@@ -26,13 +30,12 @@ ObstacleType ObstacleJson::typeConvertFromString(const std::string type) const
 		return ObstacleType::QUICKSAND;
 }
 
-ObstacleArea ObstacleJson::getArea() const
+ObstacleArea ObstacleJson::getArea(std::string fieldName) const
 {
 	ObstacleArea area;
-	area.setArea(config["blockedTiles"].convertTo<std::vector<BattleHex>>());
+	area.setArea(config[fieldName].convertTo<std::vector<BattleHex>>());
 	return area;
 }
-
 ObstacleGraphicsInfo ObstacleJson::getGraphicsInfo() const
 {
 	ObstacleGraphicsInfo info;

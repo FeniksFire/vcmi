@@ -1042,7 +1042,12 @@ std::set<BattleHex> CBattleInfoCallback::getStoppers(BattlePerspective::BattlePe
 				range::copy(oi->getArea().getFields(), vstd::set_inserter(ret));
 		}
 	}
-
+	for(auto &oi : battleGetAllObstacles(whichSidePerspective))
+	{
+		if(oi->getType() == ObstacleType::BRIDGE)
+			for(auto hex : oi->getArea().getFields())
+				ret.erase(hex);
+	}
 	return ret;
 }
 

@@ -22,6 +22,8 @@
 #include "../mapObjects/MapObjects.h"
 #include "../battle/obstacle/StaticObstacle.h"
 #include "../battle/obstacle/MoatObstacle.h"
+#include "../battle/obstacle/BridgeObstacle.h"
+#include "../battle/obstacle/GateObstacle.h"
 
 class BinarySerializer;
 class BinaryDeserializer;
@@ -200,6 +202,8 @@ void registerTypesMapObjects2(Serializer &s)
 
 	s.template registerType<Obstacle, StaticObstacle>();
 	s.template registerType<StaticObstacle, MoatObstacle>();
+	s.template registerType<StaticObstacle, BridgeObstacle>();
+	s.template registerType<BridgeObstacle, GateObstacle>();
 	s.template registerType<Obstacle, SpellCreatedObstacle>();
 }
 template<typename Serializer>

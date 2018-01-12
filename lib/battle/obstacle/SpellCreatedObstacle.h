@@ -14,22 +14,23 @@
 class DLL_LINKAGE SpellCreatedObstacle : public Obstacle
 {
 public:
+	SpellCreatedObstacle();
+	SpellCreatedObstacle(ObstacleJson info, int16_t position = 0);
+
+	ObstacleType getType() const override;
+	bool visibleForSide(ui8 side, bool hasNativeStack) const override;
+	bool canRemovedBySpell(int8_t levelOfSpellRemoval) const override;
+	void battleTurnPassed() override;
+
+	bool blocksTiles() const override;
+	bool stopsMovement() const override;
+
 	ObstacleType obstacleType;
 	int32_t turnsRemaining;
 	int32_t casterSpellPower;
 	int8_t spellLevel;
 	int8_t casterSide;
 	bool visibleForAnotherSide = true;
-
-	SpellCreatedObstacle();
-	SpellCreatedObstacle(ObstacleJson info, int16_t position = 0);
-
-	virtual bool canRemovedBySpell(int8_t levelOfSpellRemoval) const override;
-	virtual bool visibleForSide(ui8 side, bool hasNativeStack) const override;
-	virtual ObstacleType getType() const override;
-
-	virtual void battleTurnPassed() override;
-
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{
 		h & static_cast<Obstacle&>(*this);

@@ -1161,10 +1161,10 @@ int CGameHandler::moveStack(int stack, BattleHex dest)
 	}
 
 	bool canUseGate = false;
-	auto dbState = gs->curB->si.gateState;
+	auto gate = gs->curB->gate;
 	if(battleGetSiegeLevel() > 0 && curStack->side == BattleSide::DEFENDER &&
-		dbState != EGateState::DESTROYED &&
-		dbState != EGateState::BLOCKED)
+		gate.getState() != EGateState::DESTROYED &&
+		gate.getState() != EGateState::BLOCKED)
 	{
 		canUseGate = true;
 	}
@@ -1206,7 +1206,7 @@ int CGameHandler::moveStack(int stack, BattleHex dest)
 	{
 		if (path.second <= creSpeed && path.first.size() > 0)
 		{
-			if (canUseGate && dbState != EGateState::OPENED &&
+			if (canUseGate && gate.getState() != EGateState::OPENED &&
 				occupyGateDrawbridgeHex(dest))
 			{
 				BattleUpdateGateState db;
@@ -1251,7 +1251,7 @@ int CGameHandler::moveStack(int stack, BattleHex dest)
 				};
 
 				auto hex = path.first[i];
-				if (!openGateAtHex.isValid() && dbState != EGateState::OPENED)
+				if (!openGateAtHex.isValid() && gate.getState() != EGateState::OPENED)
 				{
 					if (needOpenGates(hex))
 						openGateAtHex = path.first[i+1];
@@ -1267,10 +1267,10 @@ int CGameHandler::moveStack(int stack, BattleHex dest)
 
 					//gate may be opened and then closed during stack movement, but not other way around
 					if (openGateAtHex.isValid())
-						dbState = EGateState::OPENED;
+						gate.setState(EGateState::OPENED);
 				}
 
-				if (!gateMayCloseAtHex.isValid() && dbState != EGateState::CLOSED)
+				if (!gateMayCloseAtHex.isValid() && gate.getState() != EGateState::CLOSED)
 				{
 					if (hex == ESiegeHex::GATE_INNER && i-1 >= 0 && path.first[i-1] != ESiegeHex::GATE_OUTER)
 					{
@@ -3718,7 +3718,7 @@ static EndAction end_action;
 void CGameHandler::updateGateState()
 {
 	BattleUpdateGateState db;
-	db.state = gs->curB->si.gateState;
+	db.state = gs->curB->gate.getState();
 	if (gs->curB->si.wallState[EWallPart::GATE] == EWallState::DESTROYED)
 	{
 		db.state = EGateState::DESTROYED;
@@ -3744,7 +3744,7 @@ void CGameHandler::updateGateState()
 	else
 		db.state = EGateState::CLOSED;
 
-	if (db.state != gs->curB->si.gateState)
+	if (db.state != gs->curB->gate.getState())
 		sendAndApply(&db);
 }
 
@@ -6320,7 +6320,7 @@ void CGameHandler::handleCheatCode(std::string & cheat, PlayerColor player, cons
 void CGameHandler::removeObstacle(const Obstacle &obstacle)
 {
 	ObstaclesRemoved obsRem;
-	obsRem.id.insert(obstacle.getID());
+	obsRem.id.insert(obstacle.ID.getID());
 	sendAndApply(&obsRem);
 }
 

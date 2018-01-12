@@ -21,6 +21,8 @@ set(lib_SRCS
 		battle/RangeGenerator.cpp
 		battle/handler/BattlefieldHandler.cpp
 
+		battle/obstacle/BridgeObstacle.cpp
+		battle/obstacle/GateObstacle.cpp
 		battle/obstacle/Obstacle.cpp
 		battle/obstacle/ObstacleArea.cpp
 		battle/obstacle/ObstacleGraphicsInfo.cpp
@@ -140,6 +142,7 @@ set(lib_SRCS
 		JsonNode.cpp
 		LogicalExpression.cpp
 		NetPacksLib.cpp
+		UUID.cpp
 		ResourceSet.cpp
 		VCMIDirs.cpp
 		VCMI_Lib.cpp
@@ -167,6 +170,8 @@ set(lib_HEADERS
 		battle/RangeGenerator.h
 		battle/handler/BattlefieldHandler.h
 
+		battle/obstacle/BridgeObstacle.h
+		battle/obstacle/GateObstacle.h
 		battle/obstacle/Obstacle.h
 		battle/obstacle/ObstacleArea.h
 		battle/obstacle/ObstacleGraphicsInfo.h
@@ -303,6 +308,7 @@ set(lib_HEADERS
 		LogicalExpression.h
 		NetPacksBase.h
 		NetPacks.h
+		UUID.h
 		ResourceSet.h
 		ScopeGuard.h
 		StartInfo.h

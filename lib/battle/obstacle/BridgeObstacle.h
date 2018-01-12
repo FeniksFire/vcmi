@@ -1,5 +1,5 @@
 /*
- * MoatObstacle.h, part of VCMI engine
+ * BridgeObstacle.h, part of VCMI engine
  *
  * Authors: listed in file AUTHORS in main folder
  *
@@ -10,24 +10,18 @@
 #pragma once
 #include "StaticObstacle.h"
 
-class DLL_LINKAGE MoatObstacle : public StaticObstacle
+
+class DLL_LINKAGE BridgeObstacle : public StaticObstacle
 {
 public:
-	MoatObstacle();
-	MoatObstacle(ObstacleJson info, int16_t position = 0);
-
-	int32_t getDamage() const;
-	void setDamage(int32_t value);
+	BridgeObstacle();
+	BridgeObstacle(ObstacleJson info, int16_t position = 0);
 	ObstacleType getType() const override;
-
 	bool blocksTiles() const override;
 	bool stopsMovement() const override;
 
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{
 		h & static_cast<StaticObstacle&>(*this);
-		h & damage;
 	}
-private:
-	int32_t damage = 0;
 };

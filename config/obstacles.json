@@ -1361,5 +1361,27 @@
 	"graphics" : "C09SPF1.def",
 	"place" : ["Tower", "Crypt"],
 	"inherent" : true
+},
+"castleBridge" :
+{
+	"type" : "bridge",
+	"blockedTiles" : [4,94],
+	"offsetGraphicsInX" : 383,
+	"offsetGraphicsInY" : 95,
+	"graphics" : "",
+	"canBeRemoved" : true,
+	"place" : ["Fortress"],
+	"inherent" : true
+},
+"castleGate" :
+{
+	"type" : "gate",
+	"blockedTiles" : [94,95,96],
+	"offsetGraphicsInX" : 383,
+	"offsetGraphicsInY" : 95,
+	"graphics" : "",
+	"canBeRemoved" : true,
+	"place" : ["Fortress"],
+	"inherent" : true
 }
 }

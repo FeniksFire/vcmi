@@ -14,7 +14,6 @@
 struct DLL_LINKAGE SiegeInfo
 {
 	std::array<si8, EWallPart::PARTS_COUNT> wallState;
-	EGateState gateState;
 
 	SiegeInfo();
 
@@ -24,6 +23,5 @@ struct DLL_LINKAGE SiegeInfo
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{
 		h & wallState;
-		h & gateState;
 	}
 };

@@ -19,6 +19,8 @@
 #include "battle/obstacle/ObstacleRandomGenerator.h"
 #include "battle/obstacle/StaticObstacle.h"
 #include "battle/obstacle/MoatObstacle.h"
+#include "battle/obstacle/BridgeObstacle.h"
+#include "battle/obstacle/GateObstacle.h"
 
 const CStack * BattleInfo::getNextStack() const
 {
@@ -204,8 +206,6 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, Battlefiel
 	//setting up siege obstacles
 	if (town && town->hasFort())
 	{
-		curB->si.gateState = EGateState::CLOSED;
-
 		for (int b = 0; b < curB->si.wallState.size(); ++b)
 		{
 			curB->si.wallState[b] = EWallState::INTACT;
@@ -468,6 +468,9 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, Battlefiel
 
 void BattleInfo::setupObstacles(std::string creatureBankName)
 {
+	if (town && town->hasFort())
+		gate.setState(EGateState::CLOSED);
+
 	std::vector<std::shared_ptr<ObstacleJson>> obstaclesConfig, randomObstaclesConfig;
 
 	for(auto i : VLC->battlefieldHandler->getObstacleConfigs())
@@ -587,6 +590,18 @@ std::shared_ptr<Obstacle> BattleInfo::initObstacleFromJson(std::shared_ptr<Obsta
 	{
 		auto moatObstacle = std::make_shared<MoatObstacle>(*json.get(), position);
 		return moatObstacle;
+	}
+		break;
+	case ObstacleType::BRIDGE:
+	{
+		auto bridgeObstacle = std::make_shared<BridgeObstacle>(*json.get(), position);
+		return bridgeObstacle;
+	}
+		break;
+	case ObstacleType::GATE:
+	{
+		auto gateObstacle = std::make_shared<BridgeObstacle>(*json.get(), position);
+		return gateObstacle;
 	}
 		break;
 	case ObstacleType::FIRE_WALL:

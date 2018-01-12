@@ -83,3 +83,13 @@ void SpellCreatedObstacle::battleTurnPassed()
 	if(turnsRemaining > 0)
 		turnsRemaining--;
 }
+
+bool SpellCreatedObstacle::blocksTiles() const
+{
+	return getType() == ObstacleType::FORCE_FIELD;
+}
+
+bool SpellCreatedObstacle::stopsMovement() const
+{
+	return getType() == ObstacleType::QUICKSAND;
+}

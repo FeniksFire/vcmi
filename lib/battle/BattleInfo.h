@@ -13,7 +13,7 @@
 #include "../HeroBonus.h"
 #include "CBattleInfoCallback.h"
 #include "../int3.h"
-
+#include "obstacle/GateObstacle.h"
 class CStack;
 class CStackInstance;
 class CStackBasicDescriptor;
@@ -27,6 +27,7 @@ struct DLL_LINKAGE BattleInfo : public CBonusSystemNode, public CBattleInfoCallb
 	int3 tile; //for background and bonuses
 	std::vector<CStack*> stacks;
 	std::vector<std::shared_ptr<Obstacle> > obstacles;
+	GateObstacle gate;
 	SiegeInfo si;
 
 	BattlefieldType battlefieldType; //like !!BA:B
@@ -45,6 +46,7 @@ struct DLL_LINKAGE BattleInfo : public CBonusSystemNode, public CBattleInfoCallb
 		h & tile;
 		h & stacks;
 		h & obstacles;
+		h & gate;
 		h & si;
 		h & battlefieldType;
 		h & terrainType;

@@ -1325,7 +1325,7 @@ DLL_LINKAGE void BattleObstaclePlaced::applyGs(CGameState *gs)
 DLL_LINKAGE void BattleUpdateGateState::applyGs(CGameState *gs)
 {
 	if(gs->curB)
-		gs->curB->si.gateState = state;
+		gs->curB->gate.setState(state);
 }
 
 void BattleResult::applyGs(CGameState *gs)
@@ -1692,7 +1692,7 @@ DLL_LINKAGE void ObstaclesRemoved::applyGs(CGameState *gs)
 		{
 			for(int i=0; i<gs->curB->obstacles.size(); ++i)
 			{
-				if(gs->curB->obstacles[i]->getID() == rem_obst)
+				if(gs->curB->obstacles[i]->ID.getID() == rem_obst)
 				{
 					gs->curB->obstacles.erase(gs->curB->obstacles.begin() + i);
 					break;

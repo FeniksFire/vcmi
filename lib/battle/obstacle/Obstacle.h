@@ -11,6 +11,7 @@
 #include "ObstacleType.h"
 #include "ObstacleArea.h"
 #include "ObstacleGraphicsInfo.h"
+#include "../../UUID.h"
 
 class DLL_LINKAGE Obstacle
 {
@@ -21,16 +22,15 @@ public:
 	virtual bool canRemovedBySpell(int8_t levelOfSpellRemoval) const = 0;
 	virtual void battleTurnPassed() = 0;
 
-	boost::uuids::uuid getID() const;
+	virtual bool blocksTiles() const = 0;
+	virtual bool stopsMovement() const = 0;
+
+	UUID ID;
 	ObstacleArea getArea() const;
 	void setArea(ObstacleArea zone);
 
 	ObstacleGraphicsInfo getGraphicsInfo() const;
 	void setGraphicsInfo(ObstacleGraphicsInfo info);
-
-	bool blocksTiles() const;
-	bool stopsMovement() const;
-
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{
 		if(version < 777 & !h.saving)
@@ -49,8 +49,6 @@ public:
 		h & graphicsInfo;
 	}
 private:
-	static boost::uuids::uuid generateID();
-	boost::uuids::uuid ID = generateID();
 	ObstacleArea area;
 	ObstacleGraphicsInfo graphicsInfo;
 };

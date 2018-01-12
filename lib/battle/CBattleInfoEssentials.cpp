@@ -323,7 +323,7 @@ EGateState CBattleInfoEssentials::battleGetGateState() const
 	if(getBattle()->town == nullptr || getBattle()->town->fortLevel() == CGTownInstance::NONE)
 		return EGateState::NONE;
 
-	return getBattle()->si.gateState;
+	return getBattle()->gate.getState();
 }
 
 PlayerColor CBattleInfoEssentials::battleGetOwner(const CStack * stack) const

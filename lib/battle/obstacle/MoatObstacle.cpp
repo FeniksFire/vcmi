@@ -15,19 +15,24 @@ ObstacleType MoatObstacle::getType() const
 	return ObstacleType::MOAT;
 }
 
+bool MoatObstacle::blocksTiles() const
+{
+	return false;
+}
+
+bool MoatObstacle::stopsMovement() const
+{
+	return true;
+}
+
 MoatObstacle::MoatObstacle()
 {
 
 }
 
-MoatObstacle::MoatObstacle(ObstacleJson info, int16_t position)
+MoatObstacle::MoatObstacle(ObstacleJson info, int16_t position)  : StaticObstacle(info, position)
 {
-	if(!info.randomPosition())
-		position = info.getPosition();
-	setArea(ObstacleArea(info.getArea(), position));
 	setDamage(info.getDamage());
-	setGraphicsInfo(info.getGraphicsInfo());
-	canBeRemovedBySpell = info.canBeRemovedBySpell();;
 }
 
 int32_t MoatObstacle::getDamage() const

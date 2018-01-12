@@ -278,7 +278,7 @@ void DispellMechanics::applyBattleEffects(const SpellCastEnvironment * env, cons
 			if(obstacle->getType() == ObstacleType::FIRE_WALL
 				|| obstacle->getType() == ObstacleType::FORCE_FIELD
 				|| obstacle->getType() == ObstacleType::LAND_MINE)
-				packet.id.insert(obstacle->getID());
+				packet.id.insert(obstacle->ID.getID());
 		}
 
 		if(!packet.id.empty())
@@ -754,7 +754,7 @@ void RemoveObstacleMechanics::applyBattleEffects(const SpellCastEnvironment * en
 		{
 			if(canRemove(i.get(), parameters.spellLvl))
 			{
-				obr.id.insert(i->getID());
+				obr.id.insert(i->ID.getID());
 				complain = false;
 			}
 		}

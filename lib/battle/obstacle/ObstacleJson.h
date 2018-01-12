@@ -18,7 +18,7 @@
 class DLL_LINKAGE ObstacleJson
 {
 public:
-	virtual ObstacleArea getArea() const;
+	virtual ObstacleArea getArea(std::string fieldName = "blockedTiles") const;
 	virtual ObstacleSurface getSurface() const;
 	virtual ObstacleGraphicsInfo getGraphicsInfo() const;
 	virtual bool canBeRemovedBySpell() const;

@@ -17,7 +17,6 @@ SiegeInfo::SiegeInfo()
 	{
 		wallState[i] = EWallState::NONE;
 	}
-	gateState = EGateState::NONE;
 }
 
 EWallState::EWallState SiegeInfo::applyDamage(EWallState::EWallState state, unsigned int value)
