@@ -19,6 +19,8 @@
 #endif
 #include <boost/asio.hpp>
 
+#define BOOST_ASIO_ENABLE_OLD_SERVICES
+
 using namespace boost;
 using namespace boost::asio::ip;
 

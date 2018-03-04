@@ -54,7 +54,7 @@ void RemoveObstacle::apply(BattleStateProxy * battleState, RNG & rng, const Mech
 	BattleObstaclesChanged pack;
 
 	for(const auto & obstacle : getTargets(m, target, false))
-		pack.changes.emplace_back(obstacle->getID(), BattleChanges::EOperation::REMOVE);
+		pack.changes.emplace_back(obstacle->ID, BattleChanges::EOperation::REMOVE);
 
 	if(!pack.changes.empty())
 		battleState->apply(&pack);

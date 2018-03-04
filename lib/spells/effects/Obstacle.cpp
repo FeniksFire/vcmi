@@ -245,7 +245,7 @@ bool Obstacle::isHexAvailable(const CBattleInfoCallback * cb, const BattleHex & 
 	auto obst = cb->battleGetAllObstaclesOnPos(hex, false);
 
 	for(auto & i : obst)
-		if(i->obstacleType != Obstacle::MOAT)
+		if(i->getType() != ObstacleType::MOAT)
 			return false;
 
 	if(cb->battleGetSiegeLevel() != 0)
@@ -285,9 +285,20 @@ void Obstacle::placeObstacles(BattleStateProxy * battleState, const Mechanics * 
 	for(const Destination & destination : target)
 	{
 		SpellCreatedObstacle obstacle;
-		obstacle.pos = destination.hexValue;
-		obstacle.obstacleType = ObstacleType::STATIC;
-		obstacle.ID = m->getSpellIndex();
+		ObstacleArea area;
+		area.setPosition(destination.hexValue);
+		
+		for(auto & shape : options.shape)
+		{
+			BattleHex hex = destination.hexValue;
+			
+			for(auto direction : shape)
+				hex.moveInDirection(direction, false);
+			area.addField(hex);
+		}
+		obstacle.setArea(area);
+		
+		obstacle.ID = SpellID(m->getSpellIndex());
 
 		obstacle.turnsRemaining = turnsRemaining;
 		obstacle.casterSpellPower = m->getEffectPower();
@@ -301,22 +312,12 @@ void Obstacle::placeObstacles(BattleStateProxy * battleState, const Mechanics * 
 		obstacle.removeOnTrigger = removeOnTrigger;
 
 		obstacle.appearAnimation = options.appearAnimation;
+		
+		
+		
 		obstacle.animation = options.animation;
 
 		obstacle.animationYOffset = options.offsetY;
-
-		obstacle.customSize.clear();
-		obstacle.customSize.reserve(options.shape.size());
-
-		for(auto & shape : options.shape)
-		{
-			BattleHex hex = destination.hexValue;
-
-			for(auto direction : shape)
-				hex.moveInDirection(direction, false);
-
-			obstacle.customSize.emplace_back(hex);
-		}
 
 		pack.changes.emplace_back();
 		obstacle.toInfo(pack.changes.back());

@@ -14,7 +14,8 @@
 #include "spells/CSpellHandler.h"
 #include "filesystem/ResourceID.h"
 #include "battle/obstacle/ObstacleJson.h"
-
+#include "UUID.h"
+#include "NetPacks.h"
 #include "../../serializer/JsonDeserializer.h"
 #include "../../serializer/JsonSerializer.h"
 
@@ -28,8 +29,7 @@ SpellCreatedObstacle::SpellCreatedObstacle()
 	trigger(false),
 	trap(false),
 	removeOnTrigger(false),
-	revealed(false),
-	obstacleType(ObstacleType::SPELL_CREATED)
+	revealed(false)
 {
 }
 
@@ -48,6 +48,7 @@ SpellCreatedObstacle::SpellCreatedObstacle(ObstacleJson info, int16_t position)
 
 bool SpellCreatedObstacle::canRemovedBySpell(int8_t levelOfSpellRemoval) const
 {
+	/*
 	switch (getType())
 	{
 	case ObstacleType::FIRE_WALL:
@@ -62,6 +63,7 @@ bool SpellCreatedObstacle::canRemovedBySpell(int8_t levelOfSpellRemoval) const
 		break;
 	}
 	return false;
+	*/
 }
 
 bool SpellCreatedObstacle::visibleForSide(ui8 side, bool hasNativeStack) const
@@ -75,7 +77,7 @@ bool SpellCreatedObstacle::visibleForSide(ui8 side, bool hasNativeStack) const
 
 ObstacleType SpellCreatedObstacle::getType() const
 {
-	return obstacleType;
+	return ObstacleType::SPELL_CREATED;
 }
 
 void SpellCreatedObstacle::battleTurnPassed()
@@ -102,7 +104,7 @@ bool SpellCreatedObstacle::triggersEffects() const
 
 void SpellCreatedObstacle::toInfo(ObstacleChanges & info)
 {
-	info.id = uniqueID;
+	info.id = Obstacle::ID;
 	info.operation = ObstacleChanges::EOperation::ADD;
 
 	info.data.clear();
@@ -112,7 +114,7 @@ void SpellCreatedObstacle::toInfo(ObstacleChanges & info)
 
 void SpellCreatedObstacle::fromInfo(const ObstacleChanges & info)
 {
-	uniqueID = info.id;
+	Obstacle::ID = info.id;
 
 	if(info.operation != ObstacleChanges::EOperation::ADD)
 		logGlobal->error("ADD operation expected");
@@ -123,9 +125,6 @@ void SpellCreatedObstacle::fromInfo(const ObstacleChanges & info)
 
 void SpellCreatedObstacle::serializeJson(JsonSerializeFormat & handler)
 {
-	handler.serializeInt("spell", ID);
-	handler.serializeInt("position", pos);
-
 	handler.serializeInt("turnsRemaining", turnsRemaining);
 	handler.serializeInt("casterSpellPower", casterSpellPower);
 	handler.serializeInt("spellLevel", spellLevel);
@@ -136,17 +135,24 @@ void SpellCreatedObstacle::serializeJson(JsonSerializeFormat & handler)
 	handler.serializeBool("trigger", trigger);
 	handler.serializeBool("trap", trap);
 	handler.serializeBool("removeOnTrigger", removeOnTrigger);
-
+	
 	handler.serializeString("appearAnimation", appearAnimation);
+	
 	handler.serializeString("animation", animation);
-
 	handler.serializeInt("animationYOffset", animationYOffset);
-
+	
+	setGraphicsInfo(ObstacleGraphicsInfo(animation, 0, animationYOffset));
 	{
 		JsonArraySerializer customSizeJson = handler.enterArray("customSize");
-		customSizeJson.syncSize(customSize, JsonNode::JsonType::DATA_INTEGER);
-
+		
+		ObstacleArea area = getArea();
+		
 		for(size_t index = 0; index < customSizeJson.size(); index++)
-			customSizeJson.serializeInt(index, customSize.at(index));
+		{
+			BattleHex hex;
+			customSizeJson.serializeInt(index, hex);
+			area.addField(hex);
+		}
+		setArea(area);
 	}
 }

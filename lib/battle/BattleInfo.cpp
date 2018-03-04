@@ -736,7 +736,7 @@ void BattleInfo::moveUnit(uint32_t id, BattleHex destination)
 
 	for(auto & oi : obstacles)
 	{
-		if((oi->getType() == ObstacleType::SPELL_CREATED) && vstd::contains(oi->getArea(), destination))
+		if((oi->getType() == ObstacleType::SPELL_CREATED) && vstd::contains(oi->getArea().getFields(), destination))
 		{
 			SpellCreatedObstacle * obstacle = dynamic_cast<SpellCreatedObstacle*>(oi.get());
 			assert(obstacle);
@@ -956,11 +956,11 @@ void BattleInfo::addObstacle(const ObstacleChanges & changes)
 	obstacles.push_back(obstacle);
 }
 
-void BattleInfo::removeObstacle(boost::uuids::uuid id)
+void BattleInfo::removeObstacle(UUID id)
 {
 	for(int i=0; i < obstacles.size(); ++i)
 	{
-		if(obstacles[i]->ID.getID() == id)
+		if(obstacles[i]->ID.getID() == id.getID())
 		{
 			obstacles.erase(obstacles.begin() + i);
 			break;

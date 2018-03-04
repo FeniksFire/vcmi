@@ -25,6 +25,7 @@ class BattleInfo;
 #include "ConstTransitivePtr.h"
 #include "GameConstants.h"
 #include "JsonNode.h"
+#include "UUID.h"
 
 struct DLL_LINKAGE CPack
 {
@@ -319,14 +320,14 @@ public:
 class ObstacleChanges : public BattleChanges
 {
 public:
-	boost::uuids::uuid id;
+	UUID id;
 
 	ObstacleChanges()
 		: BattleChanges(EOperation::RESET_STATE)
 	{
 	}
 
-	ObstacleChanges(boost::uuids::uuid id_, EOperation operation_)
+	ObstacleChanges(UUID id_, EOperation operation_)
 		: BattleChanges(operation_),
 		id(id_)
 	{

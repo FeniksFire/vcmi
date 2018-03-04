@@ -147,7 +147,7 @@ public:
 
 		//send info about battles
 
-		BattleInfo * battle = BattleInfo::setupBattle(tile, terrain, terType, armedInstancies, heroes, false, nullptr);
+		BattleInfo * battle = BattleInfo::setupBattle(tile, terrain, terType, armedInstancies, heroes, "", nullptr);
 
 		BattleStart bs;
 		bs.info = battle;

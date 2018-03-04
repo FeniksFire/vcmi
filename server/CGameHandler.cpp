@@ -4868,7 +4868,7 @@ bool CGameHandler::handleDamageFromObstacle(const CStack * curStack, bool stackI
 	bool movementStoped = false;
 	for(auto & obstacle : getAllAffectedObstaclesByStack(curStack))
 	{
-
+	int damage = -1;
 		if(obstacle->getType() == ObstacleType::MOAT)
 		{
 			const MoatObstacle* moat = dynamic_cast<const MoatObstacle *>(obstacle.get());;
@@ -4879,7 +4879,7 @@ bool CGameHandler::handleDamageFromObstacle(const CStack * curStack, bool stackI
 				continue;
 		}
 
-		else if(obstacle->obstacleType == ObstacleType::SPELL_CREATED)
+		else if(obstacle->getType() == ObstacleType::SPELL_CREATED)
 		{
 			//helper info
 			const SpellCreatedObstacle * spellObstacle = dynamic_cast<const SpellCreatedObstacle *>(obstacle.get());
@@ -4913,8 +4913,6 @@ bool CGameHandler::handleDamageFromObstacle(const CStack * curStack, bool stackI
 		}
 		else if(obstacle->getType() == ObstacleType::MOAT)
 		{
-			auto town = gs->curB->town;
-			int damage = (town == nullptr) ? 0 : town->town->moatDamage;
 			if(!containDamageFromMoat)
 			{
 				containDamageFromMoat = true;
@@ -6602,7 +6600,7 @@ void CGameHandler::handleCheatCode(std::string & cheat, PlayerColor player, cons
 void CGameHandler::removeObstacle(const Obstacle &obstacle)
 {
 	BattleObstaclesChanged obsRem;
-	obsRem.changes.emplace_back(obstacle.uniqueID, BattleChanges::EOperation::REMOVE);
+	obsRem.changes.emplace_back(obstacle.ID, BattleChanges::EOperation::REMOVE);
 	sendAndApply(&obsRem);
 }
 

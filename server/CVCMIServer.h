@@ -10,7 +10,7 @@
 #pragma once
 
 #include <boost/program_options.hpp>
-
+#include "boost/asio.hpp"
 class CMapInfo;
 
 class CConnection;
@@ -26,7 +26,7 @@ namespace boost
 		{
 			class tcp;
 		}
-
+		
 #if BOOST_VERSION >= 106600  // Boost version >= 1.66
 		class io_context;
 		typedef io_context io_service;
@@ -34,18 +34,19 @@ namespace boost
 		class io_service;
 #endif
 
+
 		template <typename Protocol> class stream_socket_service;
-		template <typename Protocol,typename StreamSocketService>
+		template <typename Protocol>
 		class basic_stream_socket;
 
 		template <typename Protocol> class socket_acceptor_service;
-		template <typename Protocol,typename SocketAcceptorService>
+		template <typename Protocol>
 		class basic_socket_acceptor;
 	}
 };
 
-typedef boost::asio::basic_socket_acceptor<boost::asio::ip::tcp, boost::asio::socket_acceptor_service<boost::asio::ip::tcp> > TAcceptor;
-typedef boost::asio::basic_stream_socket < boost::asio::ip::tcp , boost::asio::stream_socket_service<boost::asio::ip::tcp>  > TSocket;
+typedef boost::asio::basic_socket_acceptor<boost::asio::ip::tcp> TAcceptor;
+typedef boost::asio::basic_stream_socket < boost::asio::ip::tcp > TSocket;
 
 class CVCMIServer
 {

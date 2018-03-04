@@ -33,7 +33,6 @@ public:
 
 	void serializeJson(JsonSerializeFormat & handler);
 
-	ObstacleType obstacleType;
 	int32_t turnsRemaining;
 	int32_t casterSpellPower;
 	int8_t spellLevel;
@@ -47,6 +46,11 @@ public:
 	bool removeOnTrigger;
 
 	bool revealed;
+	SpellID ID;
+
+	std::string appearAnimation;
+	std::string animation;
+	int animationYOffset;
 
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{
@@ -54,7 +58,6 @@ public:
 		h & turnsRemaining;
 		h & casterSpellPower;
 		h & spellLevel;
-		h & obstacleType;
 		h & casterSide;
 		h & visibleForAnotherSide;
 
