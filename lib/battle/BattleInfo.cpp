@@ -956,11 +956,11 @@ void BattleInfo::addObstacle(const ObstacleChanges & changes)
 	obstacles.push_back(obstacle);
 }
 
-void BattleInfo::removeObstacle(boost::uuids::uuid id)
+void BattleInfo::removeObstacle(UUID id)
 {
 	for(int i=0; i < obstacles.size(); ++i)
 	{
-		if(obstacles[i]->ID.getID() == id)
+		if(obstacles[i]->ID.getID() == id.getID())
 		{
 			obstacles.erase(obstacles.begin() + i);
 			break;

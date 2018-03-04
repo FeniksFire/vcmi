@@ -11,7 +11,7 @@
 #pragma once
 
 #include "../../lib/battle/IBattleState.h"
-
+#include "../../lib/UUID.h"
 class BattleStateMock : public IBattleState
 {
 public:
@@ -46,7 +46,7 @@ public:
 	MOCK_METHOD2(removeUnitBonus, void(uint32_t, const std::vector<Bonus> &));
 	MOCK_METHOD2(setWallState, void(int, si8));
 	MOCK_METHOD1(addObstacle, void(const ObstacleChanges &));
-	MOCK_METHOD1(removeObstacle, void(boost::uuids::uuid));
+	MOCK_METHOD1(removeObstacle, void(UUID));
 };
 
 

@@ -371,7 +371,7 @@ void HypotheticBattle::addObstacle(const ObstacleChanges & changes)
 	//TODO:HypotheticBattle::addObstacle
 }
 
-void HypotheticBattle::removeObstacle(boost::uuids::uuid id)
+void HypotheticBattle::removeObstacle(UUID id)
 {
 	//TODO:HypotheticBattle::removeObstacle
 }

@@ -60,7 +60,7 @@ std::vector<std::shared_ptr<const Obstacle>> CBattleInfoEssentials::battleGetAll
 	return ret;
 }
 
-std::shared_ptr<const Obstacle> CBattleInfoEssentials::battleGetObstacleByID(boost::uuids::uuid ID) const
+std::shared_ptr<const Obstacle> CBattleInfoEssentials::battleGetObstacleByID(UUID ID) const
 {
 	std::shared_ptr<const Obstacle> ret;
 
@@ -68,11 +68,11 @@ std::shared_ptr<const Obstacle> CBattleInfoEssentials::battleGetObstacleByID(boo
 
 	for(auto obstacle : getBattle()->getAllObstacles())
 	{
-		if(obstacle->ID.getID() == ID)
+		if(obstacle->ID.getID() == ID.getID())
 			return obstacle;
 	}
 
-	logGlobal->error("Invalid obstacle ID %d", ID);
+	logGlobal->error("Invalid obstacle ID %d", ID.getID());
 	return std::shared_ptr<const Obstacle>();
 }
 

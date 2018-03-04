@@ -13,6 +13,7 @@ class DLL_LINKAGE ObstacleGraphicsInfo
 {
 public:
 	ObstacleGraphicsInfo();
+	ObstacleGraphicsInfo(std::string graphicsName, int32_t offsetX, int32_t offsetY);
 
 	void setGraphicsName(std::string name);
 	void setOffsetGraphicsInX(int32_t value);

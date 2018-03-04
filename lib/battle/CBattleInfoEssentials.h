@@ -18,6 +18,7 @@ class Obstacle;
 class IBonusBearer;
 struct InfoAboutHero;
 class CArmedInstance;
+class UUID;
 
 typedef std::vector<const CStack *> TStacks;
 typedef std::function<bool(const CStack *)> TStackFilter;
@@ -62,7 +63,7 @@ public:
 	BattlefieldType battleGetBattlefieldType() const;
 	std::vector<std::shared_ptr<const Obstacle> > battleGetAllObstacles(boost::optional<BattlePerspective::BattlePerspective> perspective = boost::none) const; //returns all obstacles on the battlefield
 
-	std::shared_ptr<const Obstacle> battleGetObstacleByID(boost::uuids::uuid ID) const;
+	std::shared_ptr<const Obstacle> battleGetObstacleByID(UUID ID) const;
 
 	/** @brief Main method for getting battle stacks
 	 * returns also turrets and removed stacks

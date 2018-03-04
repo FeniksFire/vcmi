@@ -2664,8 +2664,6 @@ Rect CBattleInterface::hexPosition(BattleHex hex) const
 void CBattleInterface::obstaclePlaced(const Obstacle & oi)
 {
 	waitForAnims();
-	assert(!oi.getGraphicsInfo().getGraphicsName().empty());
-	
 	int imageHeight = 0;
 	ResourceID resID(oi.getGraphicsInfo().getGraphicsName());
 	if(resID.getType() == EResType::ANIMATION)
@@ -3526,7 +3524,7 @@ Point CBattleInterface::getObstaclePosition(int imageHeight, const Obstacle & ob
 		if (obstacle.getArea().getFields().front() < 0  || offset > 37) //second or part is for holy ground ID=62,65,63
 			offset -= 42;
 	}
-	else if (obstacle.getType() == ObstacleType::QUICKSAND)
+	else if (obstacle.getType() == ObstacleType::SPELL_CREATED)
 	{
 		offset -= 42;
 	}

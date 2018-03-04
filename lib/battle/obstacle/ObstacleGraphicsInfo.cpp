@@ -7,6 +7,7 @@
  * Full text of license available in license.txt file, in main folder
  *
  */
+#include <lib/serializer/JsonSerializeFormat.h>
 #include "StdInc.h"
 #include "ObstacleGraphicsInfo.h"
 
@@ -14,6 +15,14 @@ ObstacleGraphicsInfo::ObstacleGraphicsInfo()
 {
 
 }
+
+ObstacleGraphicsInfo::ObstacleGraphicsInfo(std::string graphicsName, int32_t offsetX, int32_t offsetY)
+{
+	setGraphicsName(graphicsName);
+	setOffsetGraphicsInX(offsetX);
+	setOffsetGraphicsInY(offsetY);
+}
+
 
 void ObstacleGraphicsInfo::setGraphicsName(std::string name)
 {
