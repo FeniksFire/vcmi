@@ -46,26 +46,6 @@ SpellCreatedObstacle::SpellCreatedObstacle(ObstacleJson info, int16_t position)
 	setGraphicsInfo(info.getGraphicsInfo());
 }
 
-bool SpellCreatedObstacle::canRemovedBySpell(int8_t levelOfSpellRemoval) const
-{
-	/*
-	switch (getType())
-	{
-	case ObstacleType::FIRE_WALL:
-		if(levelOfSpellRemoval >= 2)
-			return true;
-		break;
-	case ObstacleType::QUICKSAND:
-	case ObstacleType::LAND_MINE:
-	case ObstacleType::FORCE_FIELD:
-		if(levelOfSpellRemoval >= 3)
-			return true;
-		break;
-	}
-	return false;
-	*/
-}
-
 bool SpellCreatedObstacle::visibleForSide(ui8 side, bool hasNativeStack) const
 {
 	//we hide mines and not discovered quicksands
@@ -125,6 +105,7 @@ void SpellCreatedObstacle::fromInfo(const ObstacleChanges & info)
 
 void SpellCreatedObstacle::serializeJson(JsonSerializeFormat & handler)
 {
+	
 	handler.serializeInt("turnsRemaining", turnsRemaining);
 	handler.serializeInt("casterSpellPower", casterSpellPower);
 	handler.serializeInt("spellLevel", spellLevel);
@@ -140,12 +121,15 @@ void SpellCreatedObstacle::serializeJson(JsonSerializeFormat & handler)
 	
 	handler.serializeString("animation", animation);
 	handler.serializeInt("animationYOffset", animationYOffset);
+	BattleHex pos;
+	handler.serializeInt("position", pos);
 	
 	setGraphicsInfo(ObstacleGraphicsInfo(animation, 0, animationYOffset));
 	{
 		JsonArraySerializer customSizeJson = handler.enterArray("customSize");
 		
 		ObstacleArea area = getArea();
+		area.setPosition(pos);
 		
 		for(size_t index = 0; index < customSizeJson.size(); index++)
 		{
@@ -153,6 +137,7 @@ void SpellCreatedObstacle::serializeJson(JsonSerializeFormat & handler)
 			customSizeJson.serializeInt(index, hex);
 			area.addField(hex);
 		}
+		area.moveAreaToField(area.getPosition());
 		setArea(area);
 	}
 }

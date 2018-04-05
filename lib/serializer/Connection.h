@@ -11,7 +11,6 @@
 
 #include "BinaryDeserializer.h"
 #include "BinarySerializer.h"
-#include "boost/asio.hpp"
 
 struct CPack;
 
@@ -30,20 +29,20 @@ namespace boost
 #else
 		class io_service;
 #endif
-		
+
 		template <typename Protocol> class stream_socket_service;
-		template <typename Protocol>
+		template <typename Protocol,typename StreamSocketService>
 		class basic_stream_socket;
 
 		template <typename Protocol> class socket_acceptor_service;
-		template <typename Protocol>
+		template <typename Protocol,typename SocketAcceptorService>
 		class basic_socket_acceptor;
 	}
 	class mutex;
 }
 
-typedef boost::asio::basic_stream_socket <boost::asio::ip::tcp> TSocket;
-typedef boost::asio::basic_socket_acceptor <boost::asio::ip::tcp> TAcceptor;
+typedef boost::asio::basic_stream_socket < boost::asio::ip::tcp , boost::asio::stream_socket_service<boost::asio::ip::tcp>  > TSocket;
+typedef boost::asio::basic_socket_acceptor<boost::asio::ip::tcp, boost::asio::socket_acceptor_service<boost::asio::ip::tcp> > TAcceptor;
 
 /// Main class for network communication
 /// Allows establishing connection and bidirectional read-write

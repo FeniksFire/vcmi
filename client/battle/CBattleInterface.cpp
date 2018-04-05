@@ -3519,16 +3519,6 @@ void CBattleInterface::updateBattleAnimations()
 Point CBattleInterface::getObstaclePosition(int imageHeight, const Obstacle & obstacle)
 {
 	int offset = imageHeight % 42;
-	if (obstacle.getType() == ObstacleType::STATIC)
-	{
-		if (obstacle.getArea().getFields().front() < 0  || offset > 37) //second or part is for holy ground ID=62,65,63
-			offset -= 42;
-	}
-	else if (obstacle.getType() == ObstacleType::SPELL_CREATED)
-	{
-		offset -= 42;
-	}
-	
 	Rect r = hexPosition(obstacle.getArea().getPosition());
 	r.y += 42 - imageHeight + offset;
 	return r.topLeft();

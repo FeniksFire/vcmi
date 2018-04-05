@@ -953,7 +953,7 @@ void BattleInfo::addObstacle(const ObstacleChanges & changes)
 {
 	std::shared_ptr<SpellCreatedObstacle> obstacle = std::make_shared<SpellCreatedObstacle>();
 	obstacle->fromInfo(changes);
-	obstacles.push_back(obstacle);
+	obstacles.push_back(std::move(obstacle));
 }
 
 void BattleInfo::removeObstacle(UUID id)

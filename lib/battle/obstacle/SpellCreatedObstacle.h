@@ -21,7 +21,6 @@ public:
 
 	ObstacleType getType() const override;
 	bool visibleForSide(ui8 side, bool hasNativeStack) const override;
-	bool canRemovedBySpell(int8_t levelOfSpellRemoval) const override;
 	void battleTurnPassed() override;
 
 	bool blocksTiles() const override;
