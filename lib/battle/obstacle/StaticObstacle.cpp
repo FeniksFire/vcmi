@@ -37,11 +37,6 @@ StaticObstacle::~StaticObstacle()
 
 }
 
-bool StaticObstacle::canRemovedBySpell(int8_t levelOfSpellRemoval) const
-{
-	return canBeRemovedBySpell;
-}
-
 ObstacleType StaticObstacle::getType() const
 {
 	return ObstacleType::STATIC;

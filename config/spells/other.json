@@ -211,14 +211,14 @@
 						"attacker" :{
 							"shape" : [[""]],
 							"range" : [[""], ["TR"]],
-							"animation" : "C07SPF61",
-							"appearAnimation" : "C07SPF60"
+							"animation" : "C07SPF61.def",
+							"appearAnimation" : "C07SPF60.def"
 						},
 						"defender" :{
 							"shape" : [[""]],
 							"range" : [[""], ["TL"]],
-							"animation" : "C07SPF61",
-							"appearAnimation" : "C07SPF60"
+							"animation" : "C07SPF61.def",
+							"appearAnimation" : "C07SPF60.def"
 						}
 					},
 					"damage":{
