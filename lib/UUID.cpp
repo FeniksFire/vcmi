@@ -18,6 +18,6 @@ boost::uuids::uuid UUID::getID() const
 
 boost::uuids::uuid UUID::generateID()
 {
-	static boost::uuids::random_generator gen(new boost::mt19937);
+	static boost::uuids::random_generator_mt19937 gen;
 	return gen();
 }
