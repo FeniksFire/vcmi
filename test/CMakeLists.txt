@@ -103,7 +103,6 @@ set(mock_HEADERS
 		mock/mock_spells_Problem.h
 		mock/mock_spells_Spell.h
 		mock/mock_vstd_RNG.h
-		mock/mock_UnitHealthInfo.h
 		mock/mock_ObstacleJson.h
 		mock/mock_Obstacle.h
 )
