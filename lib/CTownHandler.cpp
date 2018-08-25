@@ -603,10 +603,9 @@ void CTownHandler::loadTown(CTown * town, const JsonNode & source)
 		town->primaryRes = resIter - std::begin(GameConstants::RESOURCE_NAMES);
 
 	warMachinesToLoad[town] = source["warMachine"];
+	town->mageLevel = source["mageGuild"].Float();
+	town->names = source["names"].convertTo<std::vector<std::string> >();
 	
-	town.mageLevel = source["mageGuild"].Float();
-	town.names = source["names"].convertTo<std::vector<std::string> >();
-
 	//  Horde building creature level
 	for(const JsonNode &node : source["horde"].Vector())
 		town->hordeLvl[town->hordeLvl.size()] = node.Float();

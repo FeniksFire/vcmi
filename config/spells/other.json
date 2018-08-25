@@ -19,14 +19,16 @@
 						"patchCount" : 4,
 						"turnsRemaining" : -1,
 						"attacker" :{
+							"blockedTiles" :  [0],
+							"graphics" : "C17SPE1.def",
 							"animation" : "C17SPE1",
-							"appearAnimation" : "C17SPE0",
-							"offsetY" : -42
+							"appearAnimation" : "C17SPE0"
 						},
 						"defender" :{
+							"blockedTiles" :  [0],
+							"graphics" : "C17SPE1.def",
 							"animation" : "C17SPE1",
-							"appearAnimation" : "C17SPE0",
-							"offsetY" : -42
+							"appearAnimation" : "C17SPE0"
 						}
 					}
 				}
@@ -71,10 +73,14 @@
 						"patchCount" : 4,
 						"turnsRemaining" : -1,
 						"attacker" :{
+							"blockedTiles" :  [0],
+							"graphics" : "C09SPF1.def",
 							"animation" : "C09SPF1",
 							"appearAnimation" : "C09SPF0"
 						},
 						"defender" :{
+							"blockedTiles" :  [0],
+							"graphics" : "C09SPF1.def",
 							"animation" : "C09SPF1",
 							"appearAnimation" : "C09SPF0"
 						}
@@ -135,14 +141,14 @@
 						"patchCount" : 1,
 						"turnsRemaining" : 2,
 						"attacker" :{
-							"range" : [[""]],
-							"shape" : [[""], ["TR"]],
+							"blockedTiles" :  [0, 17],
+							"graphics" : "C15SPE0.def",
 							"animation" : "C15SPE1",
 							"appearAnimation" : "C15SPE0"
 						},
 						"defender" :{
-							"range" : [[""]],
-							"shape" : [[""], ["TL"]],
+							"blockedTiles" :  [0, 18],
+							"graphics" : "C15SPE0.def",
 							"animation" : "C15SPE4",
 							"appearAnimation" : "C15SPE0"
 						}
@@ -153,12 +159,14 @@
 				"battleEffects":{
 					"obstacle":{
 						"attacker" :{
-							"shape" : [[""], ["TR"], ["TR", "TL"]],
+							"blockedTiles" :  [0, 18, 34],
+							"graphics" : "C15SPE10.def",
 							"animation" : "C15SPE10",
 							"appearAnimation" : "C15SPE9"
 						},
 						"defender" :{
-							"shape" : [[""], ["TL"], ["TL", "TR"]],
+							"blockedTiles" :  [0, 17, 34],
+							"graphics" : "C15SPE7.def",
 							"animation" : "C15SPE7",
 							"appearAnimation" : "C15SPE6"
 						}
@@ -169,12 +177,14 @@
 				"battleEffects":{
 					"obstacle":{
 						"attacker" :{
-							"shape" : [[""], ["TR"], ["TR", "TL"]],
+							"blockedTiles" :  [0, 18, 34],
+							"graphics" : "C15SPE10.def",
 							"animation" : "C15SPE10",
 							"appearAnimation" : "C15SPE9"
 						},
 						"defender" :{
-							"shape" : [[""], ["TL"], ["TL", "TR"]],
+							"blockedTiles" :  [0, 17, 34],
+							"graphics" : "C15SPE7.def",
 							"animation" : "C15SPE7",
 							"appearAnimation" : "C15SPE6"
 						}
@@ -209,14 +219,14 @@
 						"patchCount" : 1,
 						"turnsRemaining" : 2,
 						"attacker" :{
-							"shape" : [[""]],
-							"range" : [[""], ["TR"]],
+							"blockedTiles" :  [0, 18],
+							"graphics" : "C07SPF61.def",
 							"animation" : "C07SPF61.def",
 							"appearAnimation" : "C07SPF60.def"
 						},
 						"defender" :{
-							"shape" : [[""]],
-							"range" : [[""], ["TL"]],
+							"blockedTiles" :  [0, 17],
+							"graphics" : "C07SPF61.def",
 							"animation" : "C07SPF61.def",
 							"appearAnimation" : "C07SPF60.def"
 						}
@@ -232,10 +242,10 @@
 				"battleEffects":{
 					"obstacle":{
 						"attacker" :{
-							"range" : [[""], ["TR"], ["TR", "TL"]]
+							"blockedTiles" :  [0, 18, 34]
 						},
 						"defender" :{
-							"range" : [[""], ["TL"], ["TL", "TR"]]
+							"blockedTiles" :  [0, 17, 34]
 						}
 					}
 				}
@@ -244,10 +254,10 @@
 				"battleEffects":{
 					"obstacle":{
 						"attacker" :{
-							"range" : [[""], ["TR"], ["TR", "TL"]]
+							"blockedTiles" :  [0, 18, 34]
 						},
 						"defender" :{
-							"range" : [[""], ["TL"], ["TL", "TR"]]
+							"blockedTiles" :  [0, 17, 34]
 						}
 					}
 				}

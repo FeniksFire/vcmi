@@ -389,17 +389,20 @@ BattleInfo * BattleInfo::setupBattle(int3 tile, ETerrainType terrain, Battlefiel
 		}
 	}
 	curB->setupObstacles(creatureBankName);
+	
 	return curB;
 }
 
 void BattleInfo::setupObstacles(std::string creatureBankName)
 {
 	std::vector<std::shared_ptr<ObstacleJson>> obstaclesConfig, randomObstaclesConfig;
-
+	
 	for(auto i : VLC->battlefieldHandler->getObstacleConfigs())
 	{
 		if(i->isInherent())
+		{
 			obstaclesConfig.push_back(i);
+		}
 		else
 			randomObstaclesConfig.push_back(i);
 	}
@@ -411,7 +414,7 @@ void BattleInfo::setupInherentObstacles(const std::vector<std::shared_ptr<Obstac
 {
 	for(auto info : obstaclesConfig)
 	{
-		 if(town && town->fortLevel() >= CGTownInstance::CITADEL && vstd::contains(info->getPlace(), town->town->faction->name)
+		if(town && town->fortLevel() >= CGTownInstance::CITADEL && vstd::contains(info->getPlace(), town->town->faction->name)
 				 || vstd::contains(info->getPlace(), creatureBankName)
 				 || info->getSurface().isAppropriateForSurface(battlefieldType))
 		{
@@ -596,7 +599,7 @@ IBattleInfo::ObstacleCList BattleInfo::getAllObstacles() const
 
 	for(auto iter = obstacles.cbegin(); iter != obstacles.cend(); iter++)
 		ret.push_back(*iter);
-
+	
 	return ret;
 }
 

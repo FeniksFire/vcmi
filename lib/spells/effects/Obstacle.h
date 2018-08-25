@@ -19,27 +19,6 @@ namespace spells
 namespace effects
 {
 
-class ObstacleSideOptions
-{
-public:
-	using RelativeShape = std::vector<std::vector<BattleHex::EDir>>;
-
-	RelativeShape shape; //shape of single obstacle relative to obstacle position
-	RelativeShape range; //position of obstacles relative to effect destination
-
-	std::string appearAnimation;
-	std::string animation;
-
-	int offsetY;
-
-	ObstacleSideOptions();
-
-	void serializeJson(JsonSerializeFormat & handler);
-
-private:
-	void serializeRelativeShape(JsonSerializeFormat & handler, const std::string & fieldName, RelativeShape & value);
-};
-
 class Obstacle : public LocationEffect
 {
 public:
@@ -67,7 +46,8 @@ private:
 	int32_t patchCount;//random patches to place, only for massive spells
 	int32_t turnsRemaining;
 
-	std::array<ObstacleSideOptions, 2> sideOptions;
+	std::array<ObstacleArea, 2> area;
+	std::array<ObstacleGraphicsInfo, 2> info;
 
 	static bool isHexAvailable(const CBattleInfoCallback * cb, const BattleHex & hex, const bool mustBeClear);
 	static bool noRoomToPlace(Problem & problem, const Mechanics * m);

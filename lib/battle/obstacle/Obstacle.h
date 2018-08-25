@@ -48,7 +48,8 @@ public:
 		h & area;
 		h & graphicsInfo;
 	}
-private:
+
+protected:
 	ObstacleArea area;
 	ObstacleGraphicsInfo graphicsInfo;
 };

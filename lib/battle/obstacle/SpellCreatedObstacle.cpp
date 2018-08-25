@@ -105,7 +105,6 @@ void SpellCreatedObstacle::fromInfo(const ObstacleChanges & info)
 
 void SpellCreatedObstacle::serializeJson(JsonSerializeFormat & handler)
 {
-	
 	handler.serializeInt("turnsRemaining", turnsRemaining);
 	handler.serializeInt("casterSpellPower", casterSpellPower);
 	handler.serializeInt("spellLevel", spellLevel);
@@ -115,29 +114,7 @@ void SpellCreatedObstacle::serializeJson(JsonSerializeFormat & handler)
 	handler.serializeBool("passable", passable);
 	handler.serializeBool("trigger", trigger);
 	handler.serializeBool("trap", trap);
-	handler.serializeBool("removeOnTrigger", removeOnTrigger);
 	
-	handler.serializeString("appearAnimation", appearAnimation);
-	
-	handler.serializeString("animation", animation);
-	handler.serializeInt("animationYOffset", animationYOffset);
-	BattleHex pos;
-	handler.serializeInt("position", pos);
-	
-	setGraphicsInfo(ObstacleGraphicsInfo(animation, 0, animationYOffset));
-	{
-		JsonArraySerializer customSizeJson = handler.enterArray("customSize");
-		
-		ObstacleArea area = getArea();
-		area.setPosition(pos);
-		
-		for(size_t index = 0; index < customSizeJson.size(); index++)
-		{
-			BattleHex hex;
-			customSizeJson.serializeInt(index, hex);
-			area.addField(hex);
-		}
-		area.moveAreaToField(area.getPosition());
-		setArea(area);
-	}
+	handler.serializeStruct("graphics", graphicsInfo);
+	handler.serializeStruct("area", area);
 }

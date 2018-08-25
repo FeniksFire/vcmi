@@ -47,10 +47,6 @@ public:
 	bool revealed;
 	SpellID ID;
 
-	std::string appearAnimation;
-	std::string animation;
-	int animationYOffset;
-
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{
 		h & static_cast<Obstacle&>(*this);

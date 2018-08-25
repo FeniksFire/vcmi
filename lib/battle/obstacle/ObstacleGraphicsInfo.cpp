@@ -54,3 +54,10 @@ int32_t ObstacleGraphicsInfo::getOffsetGraphicsInY() const
 	return offsetGraphicsInY;
 }
 
+void ObstacleGraphicsInfo::serializeJson(JsonSerializeFormat & handler)
+{
+	handler.serializeInt("offsetY", offsetGraphicsInY);
+	handler.serializeInt("offsetX", offsetGraphicsInX);
+	handler.serializeString("name", graphicsName);
+}
+

@@ -11,6 +11,10 @@
 #include "StdInc.h"
 #include "ObstacleArea.h"
 #include "GameConstants.h"
+#include "NetPacks.h"
+#include "../../serializer/JsonDeserializer.h"
+#include "../../serializer/JsonSerializer.h"
+#include "../../serializer/JsonSerializeFormat.h"
 
 void ObstacleArea::addField(BattleHex field)
 {
@@ -114,4 +118,30 @@ ObstacleArea::ObstacleArea(ObstacleArea zone, BattleHex position)
 	setArea(zone.getFields());
 	setPosition(zone.getPosition());
 	moveAreaToField(position);
+}
+
+void ObstacleArea::serializeJson(JsonSerializeFormat &handler)
+{
+	handler.serializeInt("pos", position);
+	
+	
+	if(handler.saving)
+	{
+		JsonArraySerializer outer = handler.enterArray("area");
+		outer.syncSize(area, JsonNode::JsonType::DATA_VECTOR);
+		for(size_t outerIndex = 0; outerIndex < outer.size(); outerIndex++)
+		{
+			outer.serializeInt(outerIndex, area.at(outerIndex));
+		}
+	}
+	else
+	{
+		JsonArraySerializer customSizeJson = handler.enterArray("area");
+		for(size_t index = 0; index < customSizeJson.size(); index++)
+		{
+			BattleHex hex;
+			customSizeJson.serializeInt(index, hex);
+			addField(hex);
+		}
+	}
 }

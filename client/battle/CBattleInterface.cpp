@@ -325,10 +325,10 @@ CBattleInterface::CBattleInterface(const CCreatureSet *army1, const CCreatureSet
 	}
 
 	backgroundWithHexes = CSDL_Ext::newSurface(background->w, background->h, screen);
-
-	for (auto hex : bfield)
-		addChild(hex);
-
+	
+	for(auto hex : bfield)
+		addChild(hex.get());
+	
 	if (tacticsMode)
 		bTacticNextStack();
 
@@ -3296,6 +3296,7 @@ void CBattleInterface::showObstacles(SDL_Surface * to, std::vector<std::shared_p
 {
 	for(auto & obstacle : obstacles)
 	{
+		
 		ResourceID resID(obstacle->getGraphicsInfo().getGraphicsName());
 		Point p(0,0);
 		if(resID.getType() == EResType::ANIMATION)

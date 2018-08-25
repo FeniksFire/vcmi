@@ -22,7 +22,10 @@ public:
 	std::string getGraphicsName() const;
 	int32_t getOffsetGraphicsInX() const;
 	int32_t getOffsetGraphicsInY() const;
-
+	
+	void serializeJson(JsonSerializeFormat & handler);
+	
+	
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{
 		h & offsetGraphicsInX;

@@ -10,6 +10,8 @@
 #pragma once
 #include "../BattleHex.h"
 
+class JsonSerializeFormat;
+
 class DLL_LINKAGE ObstacleArea
 {
 public:
@@ -27,7 +29,9 @@ public:
 	ObstacleArea();
 	ObstacleArea(std::vector<BattleHex> zone, BattleHex position);
 	ObstacleArea(ObstacleArea zone, BattleHex position);
-
+	
+	void serializeJson(JsonSerializeFormat & handler);
+	
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{
 		h & area;
