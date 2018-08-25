@@ -142,13 +142,17 @@
 						"turnsRemaining" : 2,
 						"attacker" :{
 							"blockedTiles" :  [0, 17],
-							"graphics" : "C15SPE0.def",
+							"graphics" : "C15SPE1.def",
+							"offsetGraphicsInY" : 42 ,
+							"offsetGraphicsInX" : -21 ,
 							"animation" : "C15SPE1",
 							"appearAnimation" : "C15SPE0"
 						},
 						"defender" :{
 							"blockedTiles" :  [0, 18],
-							"graphics" : "C15SPE0.def",
+							"graphics" : "C15SPE4.def",
+							"offsetGraphicsInY" : 42 ,
+							"offsetGraphicsInX" : -21 ,
 							"animation" : "C15SPE4",
 							"appearAnimation" : "C15SPE0"
 						}

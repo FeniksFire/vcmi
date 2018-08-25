@@ -45,7 +45,9 @@ public:
 	bool removeOnTrigger;
 
 	bool revealed;
-	SpellID ID;
+	SpellID spellID;
+	
+	
 
 	template <typename Handler> void serialize(Handler &h, const int version)
 	{
@@ -60,6 +62,7 @@ public:
 		h & passable;
 		h & trigger;
 		h & trap;
+		h & spellID;
 	}
 };
 

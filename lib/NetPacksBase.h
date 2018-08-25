@@ -327,7 +327,8 @@ class ObstacleChanges : public BattleChanges
 {
 public:
 	UUID id;
-
+	SpellID spellID;
+	
 	ObstacleChanges()
 		: BattleChanges(EOperation::RESET_STATE)
 	{
@@ -344,5 +345,6 @@ public:
 		h & id;
 		h & data;
 		h & operation;
+		h & spellID;
 	}
 };

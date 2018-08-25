@@ -81,7 +81,7 @@ bool RemoveObstacle::canRemove(const Obstacle * obstacle) const
 
 	if(spellObstacle && !removeSpells.empty())
 	{
-		if(vstd::contains(removeSpells, SpellID(spellObstacle->ID)))
+		if(vstd::contains(removeSpells, spellObstacle->spellID))
 			return true;
 	}
 

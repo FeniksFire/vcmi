@@ -92,24 +92,7 @@ bool Obstacle::applicable(Problem & problem, const Mechanics * m, const EffectTa
 
 EffectTarget Obstacle::transformTarget(const Mechanics * m, const Target & aimPoint, const Target & spellTarget) const
 {
-	auto options = area.at(m->casterSide);
-
-	EffectTarget ret;
-
-	if(!m->isMassive())
-	{
-		for(auto & spellDestination : spellTarget)
-		{
-			options.moveAreaToField(spellDestination.hexValue);
-			
-			for(auto & hex : options.getFields())
-			{
-				ret.emplace_back(hex);
-			}
-		}
-	}
-
-	return ret;
+	return EffectTarget(spellTarget);
 }
 
 void Obstacle::apply(BattleStateProxy * battleState, RNG & rng, const Mechanics * m, const EffectTarget & target) const
@@ -219,8 +202,8 @@ void Obstacle::placeObstacles(BattleStateProxy * battleState, const Mechanics * 
 		options.moveAreaToField(destination.hexValue);
 		obstacle.setArea(options);
 		
-		obstacle.ID = SpellID(m->getSpellIndex());
-
+		obstacle.spellID = SpellID(m->getSpellIndex());
+		
 		obstacle.turnsRemaining = turnsRemaining;
 		obstacle.casterSpellPower = m->getEffectPower();
 		obstacle.spellLevel = m->getEffectLevel();//todo: level of indirect effect should be also configurable

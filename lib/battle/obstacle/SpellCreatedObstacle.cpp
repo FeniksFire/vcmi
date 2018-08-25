@@ -84,7 +84,7 @@ bool SpellCreatedObstacle::triggersEffects() const
 
 void SpellCreatedObstacle::toInfo(ObstacleChanges & info)
 {
-	info.id = Obstacle::ID;
+	info.spellID = spellID;
 	info.operation = ObstacleChanges::EOperation::ADD;
 
 	info.data.clear();
@@ -94,8 +94,7 @@ void SpellCreatedObstacle::toInfo(ObstacleChanges & info)
 
 void SpellCreatedObstacle::fromInfo(const ObstacleChanges & info)
 {
-	Obstacle::ID = info.id;
-
+	spellID = info.spellID;
 	if(info.operation != ObstacleChanges::EOperation::ADD)
 		logGlobal->error("ADD operation expected");
 

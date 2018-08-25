@@ -3301,13 +3301,29 @@ void CBattleInterface::showObstacles(SDL_Surface * to, std::vector<std::shared_p
 		Point p(0,0);
 		if(resID.getType() == EResType::ANIMATION)
 		{
+			
 			CAnimation anim(obstacle->getGraphicsInfo().getGraphicsName());
 			anim.preload();
 			int frameIndex = ((animCount + 1) * 25 / getAnimSpeed()) % anim.size();
 			auto img = anim.getImage(frameIndex);
-			if(obstacle->getArea().getPosition() != 0)
-				p = getObstaclePosition(img->height(), *obstacle);
-			img->draw(to, p.x + obstacle->getGraphicsInfo().getOffsetGraphicsInX(), p.y + obstacle->getGraphicsInfo().getOffsetGraphicsInY());
+			auto spell = dynamic_cast<SpellCreatedObstacle *>(const_cast<Obstacle *>(obstacle.get()));
+			if(obstacle->getType() == ObstacleType::SPELL_CREATED && spell && spell->spellID == SpellID::FIRE_WALL)
+			{
+				for(auto pos : spell->getArea().getFields())
+				{
+					int offset = img->height() % 42;
+					Rect destination = hexPosition(pos);
+					destination.y += 42 - img->height() + offset;
+					
+					img->draw(to, destination.x + obstacle->getGraphicsInfo().getOffsetGraphicsInX(), destination.y + obstacle->getGraphicsInfo().getOffsetGraphicsInY());
+				}
+			}
+			else
+			{
+				if(obstacle->getArea().getPosition() != 0)
+					p = getObstaclePosition(img->height(), *obstacle);
+				img->draw(to, p.x + obstacle->getGraphicsInfo().getOffsetGraphicsInX(), p.y + obstacle->getGraphicsInfo().getOffsetGraphicsInY());
+			}
 		}
 		else if(resID.getType() == EResType::IMAGE)
 		{

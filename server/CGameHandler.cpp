@@ -4784,6 +4784,7 @@ bool CGameHandler::handleDamageFromObstacle(const CStack * curStack, bool stackI
 	for(auto & obstacle : getAllAffectedObstaclesByStack(curStack))
 	{
 	int damage = -1;
+		
 		if(obstacle->getType() == ObstacleType::MOAT)
 		{
 			const MoatObstacle* moat = dynamic_cast<const MoatObstacle *>(obstacle.get());;
@@ -4813,7 +4814,7 @@ bool CGameHandler::handleDamageFromObstacle(const CStack * curStack, bool stackI
 					const CGHeroInstance * hero = gs->curB->battleGetFightingHero(spellObstacle->casterSide);
 					spells::ObstacleCasterProxy caster(this, gs->curB->sides.at(spellObstacle->casterSide).color, hero, spellObstacle);
 
-					const CSpell * sp = SpellID(spellObstacle->ID).toSpell();
+					const CSpell * sp = SpellID(spellObstacle->spellID).toSpell();
 					if(!sp)
 						COMPLAIN_RET("Invalid obstacle instance");
 
