@@ -52,7 +52,8 @@ bool SpellCreatedObstacle::visibleForSide(ui8 side, bool hasNativeStack) const
 	//quicksands are visible to the caster or if owned unit stepped into that particular patch
 	//additionally if side has a native unit, mines/quicksands will be visible
 
-	return static_cast<ui8>(casterSide) == side || !hidden || revealed || hasNativeStack;
+	//TODO contidion for revealed;
+	return static_cast<ui8>(casterSide) == side || !hidden || hasNativeStack;
 }
 
 ObstacleType SpellCreatedObstacle::getType() const
@@ -84,6 +85,7 @@ bool SpellCreatedObstacle::triggersEffects() const
 
 void SpellCreatedObstacle::toInfo(ObstacleChanges & info)
 {
+	info.id = Obstacle::ID;
 	info.spellID = spellID;
 	info.operation = ObstacleChanges::EOperation::ADD;
 
@@ -94,6 +96,7 @@ void SpellCreatedObstacle::toInfo(ObstacleChanges & info)
 
 void SpellCreatedObstacle::fromInfo(const ObstacleChanges & info)
 {
+	Obstacle::ID = info.id;
 	spellID = info.spellID;
 	if(info.operation != ObstacleChanges::EOperation::ADD)
 		logGlobal->error("ADD operation expected");
@@ -113,6 +116,8 @@ void SpellCreatedObstacle::serializeJson(JsonSerializeFormat & handler)
 	handler.serializeBool("passable", passable);
 	handler.serializeBool("trigger", trigger);
 	handler.serializeBool("trap", trap);
+	
+	handler.serializeBool("removeOnTrigger", removeOnTrigger);
 	
 	handler.serializeStruct("graphics", graphicsInfo);
 	handler.serializeStruct("area", area);

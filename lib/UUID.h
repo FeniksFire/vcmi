@@ -17,8 +17,7 @@ public:
 	{
 		h & ID;
 	}
-
-	boost::uuids::uuid ID = generateID();
 private:
+	boost::uuids::uuid ID = generateID();
 	static boost::uuids::uuid generateID();
 };

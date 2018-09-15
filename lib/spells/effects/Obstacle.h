@@ -43,6 +43,7 @@ private:
 	bool trigger;
 	bool trap;
 	bool removeOnTrigger;
+	bool consistent;
 	int32_t patchCount;//random patches to place, only for massive spells
 	int32_t turnsRemaining;
 
@@ -52,7 +53,7 @@ private:
 	static bool isHexAvailable(const CBattleInfoCallback * cb, const BattleHex & hex, const bool mustBeClear);
 	static bool noRoomToPlace(Problem & problem, const Mechanics * m);
 
-	void placeObstacles(BattleStateProxy * battleState, const Mechanics * m, const EffectTarget & target) const;
+	void placeObstacles(BattleStateProxy * battleState, const Mechanics * m, const EffectTarget & target, const ObstacleArea & area) const;
 };
 
 }

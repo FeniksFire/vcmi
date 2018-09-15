@@ -31,6 +31,7 @@ ObstacleGraphicsInfo ObstacleJson::getGraphicsInfo() const
 {
 	ObstacleGraphicsInfo info;
 	info.setGraphicsName(config["graphics"].String());
+	info.setAppearAnimation(config["appearAnimation"].String());
 	info.setOffsetGraphicsInX(config["offsetGraphicsInX"].Integer());
 	info.setOffsetGraphicsInY(config["offsetGraphicsInY"].Integer());
 	return info;

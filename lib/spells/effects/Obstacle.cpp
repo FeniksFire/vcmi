@@ -115,32 +115,46 @@ void Obstacle::apply(BattleStateProxy * battleState, RNG & rng, const Mechanics 
 		for(int i = 0; i < patchesToPut; i++)
 			randomTarget.emplace_back(availableTiles.at(i));
 
-		placeObstacles(battleState, m, randomTarget);
+		placeObstacles(battleState, m, randomTarget, area.at(m->casterSide));
+	}
+	else if(!consistent)
+	{
+		auto options = area.at(m->casterSide);
+		options.moveAreaToField(target[0].hexValue);
+		
+		EffectTarget randomTarget;
+		randomTarget.reserve(options.getFields().size());
+		for(auto i : options.getFields())
+			randomTarget.emplace_back(i);
+		
+		ObstacleArea area{{0}, 0};
+		placeObstacles(battleState, m, randomTarget, area);
 	}
 	else
 	{
-		placeObstacles(battleState, m, target);
+		placeObstacles(battleState, m, target, area.at(m->casterSide));
 	}
 }
 
 void Obstacle::serializeJsonEffect(JsonSerializeFormat & handler)
 {
-	ObstacleJson json1(handler.getCurrent()["attacker"]);
-	ObstacleJson json2(handler.getCurrent()["defender"]);
+	ObstacleJson att(handler.getCurrent()["attacker"]);
+	ObstacleJson def(handler.getCurrent()["defender"]);
 	
 	handler.serializeBool("hidden", hidden);
 	handler.serializeBool("passable", passable);
 	handler.serializeBool("trigger", trigger);
 	handler.serializeBool("trap", trap);
     handler.serializeBool("removeOnTrigger", removeOnTrigger);
+	handler.serializeBool("consistent", consistent);
 
 	handler.serializeInt("patchCount", patchCount);
 	handler.serializeInt("turnsRemaining", turnsRemaining, -1);
 	
-	area.at(BattleSide::ATTACKER) = json1.getArea();
-	area.at(BattleSide::DEFENDER) = json2.getArea();
-	info.at(BattleSide::ATTACKER) = json1.getGraphicsInfo();
-	info.at(BattleSide::DEFENDER) = json2.getGraphicsInfo();
+	area.at(BattleSide::ATTACKER) = att.getArea();
+	area.at(BattleSide::DEFENDER) = def.getArea();
+	info.at(BattleSide::ATTACKER) = att.getGraphicsInfo();
+	info.at(BattleSide::DEFENDER) = def.getGraphicsInfo();
 }
 
 bool Obstacle::isHexAvailable(const CBattleInfoCallback * cb, const BattleHex & hex, const bool mustBeClear)
@@ -186,9 +200,9 @@ bool Obstacle::noRoomToPlace(Problem & problem, const Mechanics * m)
 	return false;
 }
 
-void Obstacle::placeObstacles(BattleStateProxy * battleState, const Mechanics * m, const EffectTarget & target) const
+void Obstacle::placeObstacles(BattleStateProxy * battleState, const Mechanics * m, const EffectTarget & target, const ObstacleArea & area) const
 {
-	auto options = area.at(m->casterSide);
+	auto options = area;
 	auto graphicsinfo = info.at(m->casterSide);
 
 	BattleObstaclesChanged pack;

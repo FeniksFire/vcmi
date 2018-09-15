@@ -59,5 +59,16 @@ void ObstacleGraphicsInfo::serializeJson(JsonSerializeFormat & handler)
 	handler.serializeInt("offsetGraphicsInY", offsetGraphicsInY);
 	handler.serializeInt("offsetGraphicsInX", offsetGraphicsInX);
 	handler.serializeString("name", graphicsName);
+	handler.serializeString("appearAnimation", appearAnimation);
+}
+
+const std::string & ObstacleGraphicsInfo::getAppearAnimation() const
+{
+	return appearAnimation;
+}
+
+void ObstacleGraphicsInfo::setAppearAnimation(const std::string & appearAnimation)
+{
+	ObstacleGraphicsInfo::appearAnimation = appearAnimation;
 }
 

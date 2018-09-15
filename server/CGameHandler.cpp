@@ -4800,14 +4800,15 @@ bool CGameHandler::handleDamageFromObstacle(const CStack * curStack, bool stackI
 			//helper info
 			const SpellCreatedObstacle * spellObstacle = dynamic_cast<const SpellCreatedObstacle *>(obstacle.get());
 			const ui8 side = curStack->side;
-
+			
 			if(!spellObstacle)
 				COMPLAIN_RET("Invalid obstacle instance");
 
 			if(spellObstacle->trigger)
 			{
 				const bool oneTimeObstacle = spellObstacle->removeOnTrigger;
-
+				
+				
 				//hidden obstacle triggers effects until revealed
 				if(!(spellObstacle->hidden && gs->curB->battleIsObstacleVisibleForSide(*obstacle, (BattlePerspective::BattlePerspective)side)))
 				{
@@ -4815,6 +4816,7 @@ bool CGameHandler::handleDamageFromObstacle(const CStack * curStack, bool stackI
 					spells::ObstacleCasterProxy caster(this, gs->curB->sides.at(spellObstacle->casterSide).color, hero, spellObstacle);
 
 					const CSpell * sp = SpellID(spellObstacle->spellID).toSpell();
+					
 					if(!sp)
 						COMPLAIN_RET("Invalid obstacle instance");
 

@@ -2668,7 +2668,8 @@ void CBattleInterface::obstaclePlaced(const Obstacle & oi)
 	ResourceID resID(oi.getGraphicsInfo().getGraphicsName());
 	if(resID.getType() == EResType::ANIMATION)
 	{
-		CAnimation anim(oi.getGraphicsInfo().getGraphicsName());
+		
+		CAnimation anim(oi.getGraphicsInfo().getAppearAnimation());
 		anim.preload();
 		int frameIndex = ((animCount + 1) * 25 / getAnimSpeed()) % anim.size();
 		imageHeight = anim.getImage(frameIndex)->height();
@@ -2679,7 +2680,7 @@ void CBattleInterface::obstaclePlaced(const Obstacle & oi)
 	}
 
 	Point whereTo = getObstaclePosition(imageHeight, oi);
-	addNewAnim(new CEffectAnimation(this, oi.getGraphicsInfo().getGraphicsName(), whereTo.x, whereTo.y));
+	addNewAnim(new CEffectAnimation(this, oi.getGraphicsInfo().getAppearAnimation(), whereTo.x, whereTo.y));
 }
 
 void CBattleInterface::gateStateChanged(const EGateState state)
@@ -3301,36 +3302,20 @@ void CBattleInterface::showObstacles(SDL_Surface * to, std::vector<std::shared_p
 		Point p(0,0);
 		if(resID.getType() == EResType::ANIMATION)
 		{
-			
 			CAnimation anim(obstacle->getGraphicsInfo().getGraphicsName());
 			anim.preload();
 			int frameIndex = ((animCount + 1) * 25 / getAnimSpeed()) % anim.size();
 			auto img = anim.getImage(frameIndex);
-			auto spell = dynamic_cast<SpellCreatedObstacle *>(const_cast<Obstacle *>(obstacle.get()));
-			if(obstacle->getType() == ObstacleType::SPELL_CREATED && spell && spell->spellID == SpellID::FIRE_WALL)
-			{
-				for(auto pos : spell->getArea().getFields())
-				{
-					int offset = img->height() % 42;
-					Rect destination = hexPosition(pos);
-					destination.y += 42 - img->height() + offset;
-					
-					img->draw(to, destination.x + obstacle->getGraphicsInfo().getOffsetGraphicsInX(), destination.y + obstacle->getGraphicsInfo().getOffsetGraphicsInY());
-				}
-			}
-			else
-			{
-				if(obstacle->getArea().getPosition() != 0)
-					p = getObstaclePosition(img->height(), *obstacle);
-				img->draw(to, p.x + obstacle->getGraphicsInfo().getOffsetGraphicsInX(), p.y + obstacle->getGraphicsInfo().getOffsetGraphicsInY());
-			}
+			if(obstacle->getArea().getPosition() != 0)
+				p = getObstaclePosition(img->height(), *obstacle);
+			img->draw(to, p.x, p.y);
 		}
 		else if(resID.getType() == EResType::IMAGE)
 		{
 			auto bitmap = BitmapHandler::loadBitmap(obstacle->getGraphicsInfo().getGraphicsName());
 			if(obstacle->getArea().getPosition() != 0)
 				p = getObstaclePosition(bitmap->h, *obstacle);
-			blitAt(bitmap, p.x + obstacle->getGraphicsInfo().getOffsetGraphicsInX(), p.y + obstacle->getGraphicsInfo().getOffsetGraphicsInY(), to);
+			blitAt(bitmap, p.x, p.y, to);
 		}
 	}
 }
@@ -3537,7 +3522,8 @@ Point CBattleInterface::getObstaclePosition(int imageHeight, const Obstacle & ob
 {
 	int offset = imageHeight % 42;
 	Rect r = hexPosition(obstacle.getArea().getPosition());
-	r.y += 42 - imageHeight + offset;
+	r.y += 42 - imageHeight + offset + obstacle.getGraphicsInfo().getOffsetGraphicsInY();
+	r.x += obstacle.getGraphicsInfo().getOffsetGraphicsInX();
 	return r.topLeft();
 }
 
