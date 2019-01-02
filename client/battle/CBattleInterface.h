@@ -13,6 +13,7 @@
 #include "../../lib/GameConstants.h"
 
 #include "CBattleAnimations.h"
+#include "battle/obstacle/ObstacleState.h"
 
 #include "../../lib/spells/CSpellHandler.h" //CSpell::TAnimation
 
@@ -262,7 +263,6 @@ private:
 	void updateBattleAnimations();
 
 
-	Point getObstaclePosition(int imageHeight, const Obstacle & obstacle);
 
 	void redrawBackgroundWithHexes(const CStack *activeStack);
 	/** End of battle screen blitting methods */
@@ -271,6 +271,7 @@ private:
 
 	void setHeroAnimation(ui8 side, int phase);
 public:
+	
 	static CondSh<bool> animsAreDisplayed; //for waiting with the end of battle for end of anims
 	static CondSh<BattleAction *> givenCommand; //data != nullptr if we have i.e. moved current unit
 
@@ -372,8 +373,10 @@ public:
 	bool canStackMoveHere (const CStack *sactive, BattleHex MyNumber); //TODO: move to BattleState / callback
 
 	BattleHex fromWhichHexAttack(BattleHex myNumber);
-	void obstaclePlaced(const Obstacle & oi);
-
+	void obstacleAnimEffect(const Obstacle & oi, ObstacleState state, bool waitForAnimations = false);
+	
+	Point getObstaclePosition(int imageHeight, const Obstacle & obstacle);
+	
 	void gateStateChanged(const EGateState state);
 
 	void initStackProjectile(const CStack * stack);

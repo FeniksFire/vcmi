@@ -10,6 +10,7 @@
 #include "StdInc.h"
 #include "BattleInfo.h"
 #include "../CStack.h"
+#include "obstacle/Obstacle.h"
 #include "../NetPacks.h"
 #include "../filesystem/Filesystem.h"
 #include "../battle/handler/BattlefieldHandler.h"
@@ -600,7 +601,10 @@ IBattleInfo::ObstacleCList BattleInfo::getAllObstacles() const
 	ObstacleCList ret;
 
 	for(auto iter = obstacles.cbegin(); iter != obstacles.cend(); iter++)
+	{
 		ret.push_back(*iter);
+	}
+
 	
 	return ret;
 }
@@ -959,6 +963,14 @@ void BattleInfo::addObstacle(const ObstacleChanges & changes)
 	std::shared_ptr<SpellCreatedObstacle> obstacle = std::make_shared<SpellCreatedObstacle>();
 	obstacle->fromInfo(changes);
 	obstacles.push_back(std::move(obstacle));
+	obstacles.back()->state = ObstacleState::Default;
+}
+
+void BattleInfo::updateObstacle(const ObstacleChanges &changes)
+{
+	for(auto obstacle : obstacles)
+		if(obstacle->ID == changes.id)
+			obstacle->state = changes.state;
 }
 
 void BattleInfo::removeObstacle(UUID id)
@@ -982,6 +994,8 @@ CGHeroInstance * BattleInfo::battleGetFightingHero(ui8 side) const
 {
 	return const_cast<CGHeroInstance*>(CBattleInfoEssentials::battleGetFightingHero(side));
 }
+
+
 
 bool CMP_stack::operator()(const battle::Unit * a, const battle::Unit * b)
 {
