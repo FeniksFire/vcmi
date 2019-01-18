@@ -199,6 +199,29 @@ public:
 	EAlignment::EAlignment getAlignment() const;
 };
 
+struct CObstacleInfo // for backward compatibility
+{
+	si32 ID = 0;
+	std::string defName = "l";
+	std::vector<ETerrainType> allowedTerrains;
+	std::vector<BattlefieldType> allowedSpecialBfields;
+	ui8 isAbsoluteObstacle = 0;
+	si32 width, height = 0;
+	std::vector<si16> blockedTiles;
+	
+	template <typename Handler> void serialize(Handler &h, const int version)
+	{
+		h & ID;
+		h & defName;
+		h & allowedTerrains;
+		h & allowedSpecialBfields;
+		h & isAbsoluteObstacle;
+		h & width;
+		h & height;
+		h & blockedTiles;
+	}
+};
+
 class DLL_LINKAGE CHeroClassHandler : public IHandlerBase
 {
 	CHeroClass *loadFromJson(const JsonNode & node, const std::string & identifier);
@@ -220,29 +243,6 @@ public:
 	{
 		h & heroClasses;
 	}
-};
-
-struct CObstacleInfo // for backward compatibility
-{
-	si32 ID = 0;
-	std::string defName = "l";
-	std::vector<ETerrainType> allowedTerrains;
-	std::vector<BattlefieldType> allowedSpecialBfields;
-	ui8 isAbsoluteObstacle = 0;
-	si32 width, height = 0;
-	std::vector<si16> blockedTiles;
-
-	template <typename Handler> void serialize(Handler &h, const int version)
-	{
-		h & ID;
-		h & defName;
-		h & allowedTerrains;
-		h & allowedSpecialBfields;
-		h & isAbsoluteObstacle;
-		h & width;
-		h & height;
-		h & blockedTiles;
-}
 };
 
 class DLL_LINKAGE CHeroHandler : public IHandlerBase
@@ -297,7 +297,7 @@ public:
 
 	std::vector<JsonNode> loadLegacyData(size_t dataSize) override;
 
-	void beforeValidate(JsonNode & object) override;
+	void beforeValidate(JsonNode & object);
 	void loadObject(std::string scope, std::string name, const JsonNode & data) override;
 	void loadObject(std::string scope, std::string name, const JsonNode & data, size_t index) override;
 	void afterLoadFinalization() override;
@@ -324,8 +324,8 @@ public:
 		{
 			std::map<int, CObstacleInfo> obstacles;
 			std::map<int, CObstacleInfo> absoluteObstacles;
-		h & obstacles;
-		h & absoluteObstacles;
-	}
+			h & obstacles;
+			h & absoluteObstacles;
+		}
 	}
 };

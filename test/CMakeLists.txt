@@ -1,6 +1,10 @@
+cmake_minimum_required(VERSION 3.13)
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.10.0")
 	include(GoogleTest)
 endif()
+
+include(../cmake_modules/VCMIUtils.cmake)
+include(../cmake_modules/cotire.cmake)
 
 set(googleTest_Dir ${CMAKE_CURRENT_SOURCE_DIR}/googletest)
 if(EXISTS ${googleTest_Dir})
@@ -25,7 +29,7 @@ set(test_SRCS
 		battle/obstacle/ObstacleGraphicsInfoTest.cpp
 
  		battle/BattleHexTest.cpp
- 		battle/CBattleInfoCallbackTest.cpp
+		battle/CBattleInfoCallbackTest.cpp
  		battle/CHealthTest.cpp
 
 		battle/CUnitStateTest.cpp
@@ -99,7 +103,7 @@ set(test_HEADERS
 		
 )
 
-assign_source_group(${test_SRCS} ${test_HEADERS})
+#assign_source_group(${test_SRCS} ${test_HEADERS})
 
 set(mock_HEADERS
 		mock/mock_battle_IBattleState.h

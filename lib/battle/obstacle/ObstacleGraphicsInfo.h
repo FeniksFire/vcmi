@@ -11,6 +11,8 @@
 
 #include "ObstacleState.h"
 
+class JsonSerializeFormat;
+
 class DLL_LINKAGE ObstacleGraphicsInfo
 {
 public:

@@ -56,11 +56,11 @@ TEST(ObstacleTest, setupGraphicsInfo)
 {
 	ObstacleMock mock;
 	ObstacleGraphicsInfo info;
-	info.setGraphicsName("FIREWALL.pcx");
+	info.setGraphics("FIREWALL.pcx", ObstacleState::Appear);
 	info.setOffsetGraphicsInX(-123);
 	info.setOffsetGraphicsInY(55);
 	mock.setGraphicsInfo(info);
-	EXPECT_EQ(mock.getGraphicsInfo().getGraphicsName(), "FIREWALL.pcx");
+	EXPECT_EQ(mock.getGraphicsInfo().getGraphics(ObstacleState::Appear), "FIREWALL.pcx");
 	EXPECT_EQ(mock.getGraphicsInfo().getOffsetGraphicsInX(), -123);
 	EXPECT_EQ(mock.getGraphicsInfo().getOffsetGraphicsInY(), 55);
 
